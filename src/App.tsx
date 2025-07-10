@@ -28,8 +28,9 @@ import BooleanInput from './components/BooleanInput';
 import SplashScreen from './components/SplashScreen';
 import LandingPage from './components/LandingPage';
 import LoadingScreen from './components/LoadingScreen';
-import LoginForm from './components/LoginForm';
+import AuthForm from './components/AuthForm';
 import RecruiterDashboard from './pages/RecruiterDashboard';
+import ApplicantDashboard from './pages/ApplicantDashboard';
 
 interface FormData {
   // Step 1: Posisi & Penempatan
@@ -203,11 +204,12 @@ const positionPlacements = {
   'Telemarketing WOM': ['Tangerang City']
 };
 
-type AppState = 'splash' | 'landing' | 'loading' | 'form' | 'submitted' | 'login' | 'recruiter';
+type AppState = 'splash' | 'landing' | 'loading' | 'form' | 'submitted' | 'auth' | 'admin' | 'applicant';
 
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>('splash');
   const [session, setSession] = useState<Session | null>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -216,27 +218,53 @@ const App: React.FC = () => {
 
   // Check for existing session on app load
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
-      if (session && appState !== 'splash') {
-        setAppState('recruiter');
+      if (session) {
+        await loadUserProfile(session.user.id);
       }
     });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       if (session) {
-        setAppState('recruiter');
-      } else if (appState === 'recruiter') {
+        await loadUserProfile(session.user.id);
+      } else if (appState === 'admin' || appState === 'applicant') {
         setAppState('landing');
+        setUserProfile(null);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [appState]);
+  }, []);
 
+  const loadUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        console.error('Error loading profile:', error);
+        return;
+      }
+
+      setUserProfile(data);
+      
+      // Redirect based on role
+      if (data.role === 'admin') {
+        setAppState('admin');
+      } else {
+        setAppState('applicant');
+      }
+    } catch (error) {
+      console.error('Error loading user profile:', error);
+    }
+  };
   // Update available placements when position changes
   useEffect(() => {
     if (formData.posisiDilamar) {
@@ -301,16 +329,25 @@ const App: React.FC = () => {
     }, 3000);
   };
 
-  const handleShowLogin = () => {
-    setAppState('login');
+  const handleShowAuth = () => {
+    setAppState('auth');
   };
 
-  const handleLoginSuccess = () => {
-    setAppState('recruiter');
+  const handleAuthSuccess = async (role: 'admin' | 'applicant') => {
+    // Profile will be loaded automatically via auth state change
+    // Just wait a moment for the profile to load
+    setTimeout(() => {
+      if (role === 'admin') {
+        setAppState('admin');
+      } else {
+        setAppState('applicant');
+      }
+    }, 1000);
   };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setUserProfile(null);
     setAppState('landing');
   };
 
@@ -512,16 +549,10 @@ Mohon konfirmasi bahwa data saya telah diterima. Terima kasih! 🙏`;
   if (appState === 'landing') {
     return (
       <div className="relative">
-        <LandingPage onStartApplication={handleStartApplication} />
-        
-        {/* Floating Recruiter Login Button */}
-        <button
-          onClick={handleShowLogin}
-          className="fixed bottom-6 right-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 z-50 group"
-          title="Login Recruiter"
-        >
-          <Shield size={24} className="group-hover:rotate-12 transition-transform" />
-        </button>
+        <LandingPage 
+          onStartApplication={handleStartApplication}
+          onShowAuth={handleShowAuth}
+        />
       </div>
     );
   }
@@ -530,20 +561,27 @@ Mohon konfirmasi bahwa data saya telah diterima. Terima kasih! 🙏`;
     return <LoadingScreen isLoading={true} />;
   }
 
-  if (appState === 'login') {
+  if (appState === 'auth') {
     return (
       <div className="relative">
-        <LandingPage onStartApplication={handleStartApplication} />
-        <LoginForm 
-          onLoginSuccess={handleLoginSuccess}
+        <LandingPage 
+          onStartApplication={handleStartApplication}
+          onShowAuth={handleShowAuth}
+        />
+        <AuthForm 
+          onAuthSuccess={handleAuthSuccess}
           onCancel={() => setAppState('landing')}
         />
       </div>
     );
   }
 
-  if (appState === 'recruiter' && session) {
+  if (appState === 'admin' && session && userProfile) {
     return <RecruiterDashboard onLogout={handleLogout} />;
+  }
+
+  if (appState === 'applicant' && session && userProfile) {
+    return <ApplicantDashboard onLogout={handleLogout} userProfile={userProfile} />;
   }
 
   if (appState === 'submitted') {

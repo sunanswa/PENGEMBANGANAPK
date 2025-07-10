@@ -16,13 +16,13 @@ import {
 import { signUp, signIn, signInWithGoogle } from '../lib/supabase';
 
 interface AuthFormProps {
-  onAuthSuccess: (role: 'recruiter' | 'applicant') => void;
+  onAuthSuccess: (role: 'admin' | 'applicant') => void;
   onCancel: () => void;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onCancel }) => {
   const [mode, setMode] = useState<'login' | 'signup' | 'role-select'>('role-select');
-  const [selectedRole, setSelectedRole] = useState<'recruiter' | 'applicant' | null>(null);
+  const [selectedRole, setSelectedRole] = useState<'admin' | 'applicant' | null>(null);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -34,7 +34,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onCancel }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleRoleSelect = (role: 'recruiter' | 'applicant') => {
+  const handleRoleSelect = (role: 'admin' | 'applicant') => {
     setSelectedRole(role);
     setMode('signup');
   };
@@ -119,7 +119,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onCancel }) => {
 
       <div className="grid grid-cols-1 gap-4">
         <button
-          onClick={() => handleRoleSelect('recruiter')}
+          onClick={() => handleRoleSelect('admin')}
           className="group p-6 border-2 border-gray-200 rounded-3xl hover:border-purple-300 hover:bg-purple-50 transition-all duration-300 text-left"
         >
           <div className="flex items-center gap-4">
@@ -127,7 +127,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onCancel }) => {
               <Shield size={24} className="text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">Recruiter / HR</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-1">Admin / HR</h3>
               <p className="text-gray-600 text-sm">Kelola lowongan pekerjaan dan rekrutmen</p>
             </div>
           </div>
@@ -175,7 +175,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onCancel }) => {
           {mode === 'login' ? <LogIn size={32} className="text-white" /> : <UserPlus size={32} className="text-white" />}
         </div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {mode === 'login' ? 'Masuk ke Akun' : `Daftar sebagai ${selectedRole === 'recruiter' ? 'Recruiter' : 'Pelamar'}`}
+          {mode === 'login' ? 'Masuk ke Akun' : `Daftar sebagai ${selectedRole === 'admin' ? 'Admin' : 'Pelamar'}`}
         </h2>
         <p className="text-gray-600">
           {mode === 'login' 

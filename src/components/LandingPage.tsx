@@ -25,9 +25,10 @@ import {
 
 interface LandingPageProps {
   onStartApplication: () => void;
+  onShowAuth: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication, onShowAuth }) => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -176,14 +177,25 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication }) => {
             </div>
 
             {/* CTA Button */}
-            <button
-              onClick={onStartApplication}
-              className="group bg-gradient-to-r from-blue-500 to-orange-500 text-white px-8 sm:px-12 py-4 sm:py-6 rounded-3xl font-bold text-lg sm:text-xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 flex items-center gap-3 mx-auto"
-            >
-              <Play size={24} className="group-hover:scale-110 transition-transform" />
-              Mulai Pendaftaran Sekarang
-              <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button
+                onClick={onStartApplication}
+                className="group bg-gradient-to-r from-blue-500 to-orange-500 text-white px-8 sm:px-12 py-4 sm:py-6 rounded-3xl font-bold text-lg sm:text-xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 flex items-center gap-3"
+              >
+                <Play size={24} className="group-hover:scale-110 transition-transform" />
+                Mulai Pendaftaran Sekarang
+                <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+              
+              <button
+                onClick={onShowAuth}
+                className="group bg-white text-blue-600 border-2 border-blue-500 px-8 sm:px-12 py-4 sm:py-6 rounded-3xl font-bold text-lg sm:text-xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 flex items-center gap-3"
+              >
+                <Shield size={24} className="group-hover:rotate-12 transition-transform" />
+                Login / Daftar Akun
+                <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
 
             {/* Quick Stats */}
             <div className="mt-12 sm:mt-16 grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
@@ -415,6 +427,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication }) => {
             Daftar Sekarang - Gratis!
             <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
           </button>
+
+          <div className="mt-6">
+            <button
+              onClick={onShowAuth}
+              className="text-blue-100 hover:text-white font-semibold underline transition-colors"
+            >
+              Sudah punya akun? Login di sini
+            </button>
+          </div>
 
           <p className="text-blue-100 text-sm sm:text-base mt-6 sm:mt-8">
             Proses pendaftaran hanya membutuhkan 5-10 menit • Jangkauan nasional 70+ kota

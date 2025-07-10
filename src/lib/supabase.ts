@@ -50,7 +50,7 @@ export interface Database {
 }
 
 // Auth helper functions
-export const signUp = async (email: string, password: string, fullName: string, role: 'recruiter' | 'applicant') => {
+export const signUp = async (email: string, password: string, fullName: string, role: 'admin' | 'applicant') => {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -76,7 +76,7 @@ export const signInWithGoogle = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo: `${window.location.origin}`,
     },
   });
   return { data, error };

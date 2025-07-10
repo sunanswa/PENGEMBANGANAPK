@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   email TEXT,
   full_name TEXT,
-  role TEXT NOT NULL CHECK (role IN ('recruiter', 'applicant')) DEFAULT 'applicant',
+  role TEXT NOT NULL CHECK (role IN ('admin', 'applicant')) DEFAULT 'applicant',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -34,12 +34,12 @@ CREATE POLICY "Users can insert own profile" ON profiles
 DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON job_postings;
 
 -- Create new policies based on roles
-CREATE POLICY "Recruiters can manage job postings" ON job_postings
+CREATE POLICY "Admins can manage job postings" ON job_postings
   FOR ALL USING (
     EXISTS (
       SELECT 1 FROM profiles 
       WHERE profiles.id = auth.uid() 
-      AND profiles.role = 'recruiter'
+      AND profiles.role = 'admin'
     )
   );
 
@@ -77,12 +77,12 @@ CREATE TRIGGER on_auth_user_created
 ## 4. Setup Google OAuth (Optional)
 1. Buka Supabase Dashboard > Authentication > Providers
 2. Enable Google provider
-3. Masukkan Google OAuth credentials
-4. Tambahkan redirect URL: `http://localhost:5173/auth/callback`
+3. Masukkan Google OAuth credentials dari Google Cloud Console
+4. Tambahkan redirect URL: `http://localhost:5173`
 
 ## 5. Test Data (Optional)
 ```sql
--- Insert test recruiter account
+-- Insert test admin account
 INSERT INTO auth.users (
   instance_id,
   id,
@@ -117,5 +117,5 @@ INSERT INTO auth.users (
 Setelah menjalankan SQL di atas, aplikasi akan siap untuk:
 - Login/Register dengan email & password
 - Login dengan Google OAuth
-- Manajemen role (recruiter/applicant)
+- Manajemen role (admin/applicant)
 - Dashboard yang berbeda berdasarkan role
