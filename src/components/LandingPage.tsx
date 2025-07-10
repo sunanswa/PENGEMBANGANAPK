@@ -215,6 +215,20 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication, onShowAut
             </div>
           </div>
         </div>
+        
+        {/* BYPASS BUTTON - HAPUS sebelum production! */}
+        {onBypassAdmin && (
+          <div className="fixed bottom-6 right-6 z-50">
+            <button
+              onClick={onBypassAdmin}
+              className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-3 rounded-2xl font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+              title="Bypass ke Admin Dashboard (Development Only)"
+            >
+              <Shield size={20} />
+              <span className="hidden sm:inline">Admin Bypass</span>
+            </button>
+          </div>
+        )}
       </section>
 
       {/* Services Section */}
