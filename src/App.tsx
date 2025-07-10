@@ -218,26 +218,37 @@ const App: React.FC = () => {
 
   // Check for existing session on app load
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      if (session) {
-        await loadUserProfile(session.user.id);
-      }
+    // BYPASS: Langsung ke admin untuk development
+    setAppState('admin');
+    setSession({ user: { id: 'dummy-admin' } } as any);
+    setUserProfile({ 
+      id: 'dummy-admin',
+      full_name: 'Admin SWAPRO', 
+      role: 'admin',
+      email: 'admin@swapro.com'
     });
+    
+    // Kode asli untuk production (dikomentari sementara)
+    // supabase.auth.getSession().then(async ({ data: { session } }) => {
+    //   setSession(session);
+    //   if (session) {
+    //     await loadUserProfile(session.user.id);
+    //   }
+    // });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      if (session) {
-        await loadUserProfile(session.user.id);
-      } else if (appState === 'admin' || appState === 'applicant') {
-        setAppState('landing');
-        setUserProfile(null);
-      }
-    });
+    // const {
+    //   data: { subscription },
+    // } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    //   setSession(session);
+    //   if (session) {
+    //     await loadUserProfile(session.user.id);
+    //   } else if (appState === 'admin' || appState === 'applicant') {
+    //     setAppState('landing');
+    //     setUserProfile(null);
+    //   }
+    // });
 
-    return () => subscription.unsubscribe();
+    // return () => subscription.unsubscribe();
   }, []);
 
   const loadUserProfile = async (userId: string) => {
