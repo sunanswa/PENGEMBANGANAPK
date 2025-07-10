@@ -218,38 +218,28 @@ const App: React.FC = () => {
 
   // Check for existing session on app load
   useEffect(() => {
-    // BYPASS: Langsung ke admin untuk development
-    setAppState('admin');
-    setSession({ user: { id: 'dummy-admin' } } as any);
-    setUserProfile({ 
-      id: 'dummy-admin',
-      full_name: 'Admin SWAPRO', 
-      role: 'admin',
-      email: 'admin@swapro.com'
+    // Kode asli untuk production
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      setSession(session);
+      if (session) {
+        await loadUserProfile(session.user.id);
+      }
     });
-    
-    // Kode asli untuk production (dikomentari sementara)
-    // supabase.auth.getSession().then(async ({ data: { session } }) => {
-    //   setSession(session);
-    //   if (session) {
-    //     await loadUserProfile(session.user.id);
-    //   }
-    // });
 
-    // const {
-    //   data: { subscription },
-    // } = supabase.auth.onAuthStateChange(async (_event, session) => {
-    //   setSession(session);
-    //   if (session) {
-    //     await loadUserProfile(session.user.id);
-    //   } else if (appState === 'admin' || appState === 'applicant') {
-    //     setAppState('landing');
-    //     setUserProfile(null);
-    //   }
-    // });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSession(session);
+      if (session) {
+        await loadUserProfile(session.user.id);
+      } else if (appState === 'admin' || appState === 'applicant') {
+        setAppState('landing');
+        setUserProfile(null);
+      }
+    });
 
-    // return () => subscription.unsubscribe();
-  }, []);
+    return () => subscription.unsubscribe();
+  }, [appState]);
 
   const loadUserProfile = async (userId: string) => {
     try {
@@ -362,6 +352,17 @@ const App: React.FC = () => {
     setAppState('landing');
   };
 
+  // BYPASS FUNCTION untuk development - HAPUS sebelum production!
+  const handleBypassAdminLogin = () => {
+    setAppState('admin');
+    setSession({ user: { id: 'bypass-admin' } } as any);
+    setUserProfile({ 
+      id: 'bypass-admin',
+      full_name: 'Admin SWAPRO (Bypass)', 
+      role: 'admin',
+      email: 'admin@swapro.com'
+    });
+  };
   const updateFormData = (field: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
