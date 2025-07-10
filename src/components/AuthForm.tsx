@@ -101,7 +101,15 @@ const AuthForm: React.FC<AuthFormProps> = ({ onAuthSuccess, onCancel }) => {
       }
     } catch (error: any) {
       console.error('Auth error:', error);
-      setError(error.message || 'Terjadi kesalahan. Silakan coba lagi.');
+      
+      // Handle specific error cases
+      if (error.message === 'User already registered') {
+        setError('Email ini sudah terdaftar. Silakan masuk ke akun Anda atau gunakan email lain.');
+      } else if (error.message?.includes('user_already_exists')) {
+        setError('Email ini sudah terdaftar. Silakan masuk ke akun Anda atau gunakan email lain.');
+      } else {
+        setError(error.message || 'Terjadi kesalahan. Silakan coba lagi.');
+      }
     } finally {
       setIsLoading(false);
     }
