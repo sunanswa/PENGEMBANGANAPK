@@ -26,9 +26,10 @@ import {
 interface LandingPageProps {
   onStartApplication: () => void;
   onShowAuth: () => void;
+  onBypassAdmin?: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication, onShowAuth }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication, onShowAuth, onBypassAdmin }) => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
