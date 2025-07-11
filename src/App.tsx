@@ -206,7 +206,7 @@ const positionPlacements = {
 
 type AppState = 'splash' | 'landing' | 'loading' | 'form' | 'submitted' | 'auth' | 'admin' | 'applicant';
 
-const App: React.FC = () => {
+export default function App() {
   const [appState, setAppState] = useState<AppState>('splash');
   const [isBypassingAuth, setIsBypassingAuth] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
@@ -1244,6 +1244,3 @@ Mohon konfirmasi bahwa data saya telah diterima. Terima kasih! 🙏`;
       </div>
     </div>
   );
-};
-
-export default App;
