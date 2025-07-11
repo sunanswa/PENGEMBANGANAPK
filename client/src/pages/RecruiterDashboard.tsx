@@ -33,7 +33,8 @@ import {
   ChevronRight,
   ChevronDown,
   MoreVertical,
-  RefreshCw
+  RefreshCw,
+  User
 } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest, queryClient } from '../lib/queryClient';
@@ -261,20 +262,20 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Grid - Enhanced */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <div key={index} className={`${stat.bgColor} rounded-3xl p-6 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}>
+          <div key={index} className={`bg-white rounded-3xl p-6 border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1`}>
             <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center shadow-lg`}>
-                <stat.icon size={24} className="text-white" />
+              <div className={`w-14 h-14 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center shadow-lg`}>
+                <stat.icon size={26} className="text-white" />
               </div>
-              <span className={`text-sm font-semibold ${stat.textColor} bg-white/80 px-2 py-1 rounded-full`}>
+              <span className={`text-sm font-bold ${stat.textColor} bg-gradient-to-r ${stat.color} bg-opacity-10 px-3 py-1 rounded-full`}>
                 {stat.change}
               </span>
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-600 mb-1">{stat.title}</p>
+              <p className="text-sm font-semibold text-gray-500 mb-2">{stat.title}</p>
               <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
             </div>
           </div>
@@ -293,21 +294,29 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             <div className="space-y-3">
               <button
                 onClick={handleAddNew}
-                className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                <Plus size={20} />
+                <div className="p-1 bg-white/20 rounded-lg">
+                  <Plus size={20} />
+                </div>
                 <span className="font-semibold">Tambah Lowongan Baru</span>
               </button>
-              <button className="w-full flex items-center gap-3 p-4 bg-gray-50 text-gray-700 rounded-2xl hover:bg-gray-100 transition-all duration-300">
-                <Download size={20} />
+              <button className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 rounded-2xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300 border border-green-200">
+                <div className="p-1 bg-green-200 rounded-lg">
+                  <Download size={20} />
+                </div>
                 <span className="font-semibold">Export Data</span>
               </button>
-              <button className="w-full flex items-center gap-3 p-4 bg-gray-50 text-gray-700 rounded-2xl hover:bg-gray-100 transition-all duration-300">
-                <Upload size={20} />
+              <button className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-orange-50 to-amber-50 text-orange-700 rounded-2xl hover:from-orange-100 hover:to-amber-100 transition-all duration-300 border border-orange-200">
+                <div className="p-1 bg-orange-200 rounded-lg">
+                  <Upload size={20} />
+                </div>
                 <span className="font-semibold">Import Data</span>
               </button>
-              <button className="w-full flex items-center gap-3 p-4 bg-gray-50 text-gray-700 rounded-2xl hover:bg-gray-100 transition-all duration-300">
-                <Mail size={20} />
+              <button className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 rounded-2xl hover:from-purple-100 hover:to-pink-100 transition-all duration-300 border border-purple-200">
+                <div className="p-1 bg-purple-200 rounded-lg">
+                  <Mail size={20} />
+                </div>
                 <span className="font-semibold">Kirim Notifikasi</span>
               </button>
             </div>
@@ -319,10 +328,12 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <Activity size={20} className="text-green-500" />
+                <div className="p-2 bg-green-100 rounded-xl">
+                  <Activity size={20} className="text-green-600" />
+                </div>
                 Aktivitas Terbaru
               </h3>
-              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1">
+              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors">
                 Lihat Semua
                 <ChevronRight size={16} />
               </button>
@@ -556,113 +567,141 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-orange-50">
-      <div className="flex">
-        {/* Sidebar */}
-        <div className={`${sidebarCollapsed ? 'w-20' : 'w-64'} bg-white/90 backdrop-blur-sm border-r border-gray-200 min-h-screen transition-all duration-300 fixed lg:relative z-30`}>
-          <div className="p-6">
-            {/* Logo */}
-            <div className="flex items-center gap-3 mb-8">
-              <img 
-                src="/swapro copy.png" 
-                alt="SWAPRO Logo" 
-                className="h-10 w-10 object-contain"
-              />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      <div className="flex h-screen">
+        {/* Modern Sidebar */}
+        <div className={`${sidebarCollapsed ? 'w-20' : 'w-72'} bg-white/95 backdrop-blur-sm shadow-2xl border-r border-gray-100 transition-all duration-300 relative flex flex-col`}>
+          {/* Logo Header */}
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <Building2 size={28} className="text-white" />
+              </div>
               {!sidebarCollapsed && (
                 <div>
-                  <h1 className="text-lg font-bold text-gray-900">SWAPRO</h1>
-                  <p className="text-xs text-gray-600">Admin Dashboard</p>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    SWAPRO
+                  </h1>
+                  <p className="text-sm text-gray-500 font-medium">Admin Dashboard</p>
                 </div>
               )}
             </div>
-
-            {/* Navigation */}
-            <nav className="space-y-2">
-              {sidebarItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${
-                    activeTab === item.id
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                  title={sidebarCollapsed ? item.label : ''}
-                >
-                  <item.icon size={20} />
-                  {!sidebarCollapsed && (
-                    <span className="font-semibold">{item.label}</span>
-                  )}
-                </button>
-              ))}
-            </nav>
           </div>
 
-          {/* Sidebar Toggle */}
+          {/* Navigation Menu */}
+          <div className="flex-1 p-4 space-y-1">
+            {sidebarItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group ${
+                  activeTab === item.id
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl scale-105'
+                    : 'text-gray-600 hover:bg-gray-100/80 hover:text-gray-900 hover:scale-102'
+                }`}
+                title={sidebarCollapsed ? item.label : ''}
+              >
+                <div className={`p-2 rounded-xl transition-all ${
+                  activeTab === item.id 
+                    ? 'bg-white/20' 
+                    : 'bg-gray-100 group-hover:bg-white group-hover:shadow-sm'
+                }`}>
+                  <item.icon size={20} />
+                </div>
+                {!sidebarCollapsed && (
+                  <span className="font-semibold text-sm">{item.label}</span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Admin Profile Footer */}
+          {!sidebarCollapsed && (
+            <div className="p-4 border-t border-gray-100">
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                    <User size={20} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">Admin User</p>
+                    <p className="text-gray-600 text-xs">admin@swapro.com</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Collapse Toggle */}
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="absolute -right-3 top-20 bg-white border border-gray-200 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300"
+            className="absolute -right-3 top-20 w-6 h-6 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-10"
           >
-            <ChevronRight size={16} className={`transform transition-transform ${sidebarCollapsed ? '' : 'rotate-180'}`} />
+            <ChevronRight size={14} className={`text-gray-600 transition-transform ${sidebarCollapsed ? '' : 'rotate-180'}`} />
           </button>
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 lg:ml-0">
-          {/* Header */}
-          <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-20">
-            <div className="px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                    className="lg:hidden p-2 hover:bg-gray-100 rounded-xl transition-colors"
-                  >
-                    <MoreVertical size={20} />
-                  </button>
-                  <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Dashboard Admin SWAPRO</h1>
-                    <p className="text-gray-600">Kelola rekrutmen dan lowongan pekerjaan</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <button className="p-2 hover:bg-gray-100 rounded-xl transition-colors relative">
-                    <Bell size={20} className="text-gray-600" />
-                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-                  </button>
-                  <button className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
-                    <Settings size={20} className="text-gray-600" />
-                  </button>
-                  <button
-                    onClick={onLogout}
-                    className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors font-semibold"
-                  >
-                    <LogOut size={16} />
-                    <span className="hidden sm:inline">Logout</span>
-                  </button>
-                </div>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Modern Header */}
+          <div className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-100 px-8 py-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-1">
+                  {sidebarItems.find(item => item.id === activeTab)?.label}
+                </h2>
+                <p className="text-gray-600 text-sm">
+                  {activeTab === 'overview' && 'Dashboard dan statistik sistem rekrutmen SWAPRO'}
+                  {activeTab === 'jobs' && 'Kelola dan pantau lowongan pekerjaan dengan mudah'}
+                  {activeTab === 'applicants' && 'Data pelamar dan proses rekrutmen terkini'}
+                  {activeTab === 'analytics' && 'Analisis performa dan metrik bisnis'}
+                  {activeTab === 'settings' && 'Pengaturan sistem dan preferensi admin'}
+                </p>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <button className="p-3 text-gray-600 hover:bg-gray-100 rounded-2xl transition-all duration-300 hover:scale-105 relative" title="Notifications">
+                  <Bell size={20} />
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+                </button>
+                <button className="p-3 text-gray-600 hover:bg-gray-100 rounded-2xl transition-all duration-300 hover:scale-105" title="Settings">
+                  <Settings size={20} />
+                </button>
+                <button
+                  onClick={onLogout}
+                  className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-2xl hover:from-red-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                >
+                  <LogOut size={18} />
+                  <span className="font-semibold text-sm">Logout</span>
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Page Content */}
-          <div className="p-6">
-            {renderContent()}
+          {/* Content Area with Better Spacing */}
+          <div className="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-transparent to-blue-50/30">
+            <div className="max-w-7xl mx-auto">
+              {renderContent()}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Job Posting Form Modal */}
+      {/* Enhanced Modal for Job Form */}
       {showForm && (
-        <JobPostingForm
-          jobPosting={editingJob}
-          onSubmit={handleSubmit}
-          onCancel={() => {
-            setShowForm(false);
-            setEditingJob(null);
-          }}
-          isLoading={isSubmitting}
-        />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <JobPostingForm
+              jobPosting={editingJob}
+              onSubmit={handleSubmit}
+              onCancel={() => {
+                setShowForm(false);
+                setEditingJob(null);
+              }}
+              isLoading={createJobMutation.isPending || updateJobMutation.isPending}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
