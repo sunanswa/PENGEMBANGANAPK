@@ -1,23 +1,46 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Validate URL format
-const isValidUrl = (url: string) => {
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
+// Check if we're in development mode without Supabase configured
+const isDevelopmentMode = !supabaseUrl || !supabaseAnonKey;
+
+// Create a mock client for development mode
+const createMockSupabaseClient = () => {
+  return {
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+      signUp: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
+      signInWithPassword: () => Promise.resolve({ data: { user: null }, error: { message: 'Supabase not configured' } }),
+      signInWithOAuth: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      signOut: () => Promise.resolve({ error: null })
+    },
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          single: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
+        }),
+        order: () => Promise.resolve({ data: [], error: null })
+      }),
+      insert: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      update: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
+      delete: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
+    })
+  };
 };
 
-if (!supabaseUrl || !supabaseAnonKey || !isValidUrl(supabaseUrl)) {
-  throw new Error('Missing Supabase environment variables');
+// Initialize Supabase client or mock client
+export const supabase = isDevelopmentMode 
+  ? createMockSupabaseClient() as any
+  : createClient(supabaseUrl, supabaseAnonKey);
+
+// Log development mode status
+if (isDevelopmentMode) {
+  console.warn('⚠️ Running in development mode without Supabase. Authentication and database features will be mocked.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Types for our database
 export interface JobPosting {
