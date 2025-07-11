@@ -4,7 +4,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Check if we're in development mode without Supabase configured
-const isDevelopmentMode = !supabaseUrl || !supabaseAnonKey;
+const isDevelopmentMode = !supabaseUrl || !supabaseAnonKey || supabaseUrl === 'undefined' || supabaseAnonKey === 'undefined';
 
 // Create a mock client for development mode
 const createMockSupabaseClient = () => {
@@ -32,14 +32,25 @@ const createMockSupabaseClient = () => {
 };
 
 // Initialize Supabase client or mock client
-export const supabase = isDevelopmentMode 
-  ? createMockSupabaseClient() as any
-  : createClient(supabaseUrl, supabaseAnonKey);
+let supabase: any;
 
-// Log development mode status
 if (isDevelopmentMode) {
+  supabase = createMockSupabaseClient();
   console.warn('⚠️ Running in development mode without Supabase. Authentication and database features will be mocked.');
+} else {
+  try {
+    // Validate URL format before creating client
+    new URL(supabaseUrl);
+    supabase = createClient(supabaseUrl, supabaseAnonKey);
+  } catch (error) {
+    console.error('❌ Invalid Supabase URL format:', supabaseUrl);
+    supabase = createMockSupabaseClient();
+    console.warn('⚠️ Falling back to development mode due to invalid Supabase configuration.');
+  }
 }
+
+export { supabase };
+
 
 
 // Types for our database
