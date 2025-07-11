@@ -564,6 +564,7 @@ Mohon konfirmasi bahwa data saya telah diterima. Terima kasih! 🙏`;
         <LandingPage 
           onStartApplication={handleStartApplication}
           onShowAuth={handleShowAuth}
+          onBypassAdmin={handleBypassAdminLogin}
         />
       </div>
     );
@@ -579,6 +580,7 @@ Mohon konfirmasi bahwa data saya telah diterima. Terima kasih! 🙏`;
         <LandingPage 
           onStartApplication={handleStartApplication}
           onShowAuth={handleShowAuth}
+          onBypassAdmin={handleBypassAdminLogin}
         />
         <AuthForm 
           onAuthSuccess={handleAuthSuccess}
