@@ -16,14 +16,16 @@ Preferred communication style: Simple, everyday language.
 - **Styling**: Tailwind CSS with shadcn/ui component library
 - **UI Components**: Radix UI primitives for accessible, customizable components
 - **State Management**: React hooks with TanStack Query for server state management
-- **Authentication**: Supabase Auth (with fallback mock client for development)
+- **Authentication**: Supabase Auth with Express.js backend API integration
+- **Routing**: Wouter for client-side routing
 
 ### Backend Architecture
 - **Framework**: Express.js with TypeScript
 - **Database ORM**: Drizzle ORM for type-safe database operations
-- **Database**: PostgreSQL (configured for Neon Database)
-- **Session Storage**: In-memory storage with PostgreSQL session store option
-- **API Design**: RESTful API with `/api` prefix routing
+- **Database**: PostgreSQL (configured for Neon Database) with Supabase backend
+- **Storage**: In-memory storage with sample data for development and testing
+- **API Design**: RESTful API with `/api` prefix routing for job postings and authentication
+- **Environment**: Fully configured for Replit deployment with hot reload support
 
 ## Key Components
 
@@ -104,9 +106,27 @@ Preferred communication style: Simple, everyday language.
 - **Deployment**: Single server deployment with static file serving
 
 ### Configuration Requirements
-- **DATABASE_URL**: PostgreSQL connection string
-- **VITE_SUPABASE_URL**: Supabase project URL (optional for development)
-- **VITE_SUPABASE_ANON_KEY**: Supabase anonymous key (optional for development)
+- **DATABASE_URL**: PostgreSQL connection string (optional with in-memory fallback)
+- **VITE_SUPABASE_URL**: Supabase project URL (configured)
+- **VITE_SUPABASE_ANON_KEY**: Supabase anonymous key (configured)
+
+## Recent Changes (January 2025)
+
+### Migration from Bolt to Replit
+- ✓ Successfully migrated ATS application from Bolt.new to Replit environment
+- ✓ Configured Express.js backend with RESTful API endpoints
+- ✓ Updated frontend to use TanStack Query for state management
+- ✓ Integrated Supabase authentication with Express backend
+- ✓ Set up in-memory storage with sample job posting data
+- ✓ Configured environment variables for Supabase integration
+- ✓ Verified application functionality across all major components
+
+### Key Migration Changes
+- Replaced direct Supabase client calls with backend API endpoints
+- Implemented comprehensive job posting CRUD operations
+- Updated authentication flow to work with both mock and real Supabase
+- Enhanced error handling and loading states throughout the application
+- Maintained existing UI/UX while improving backend architecture
 
 ### Fallback Strategies
 - **Development Mode**: Mock Supabase client when configuration is missing
