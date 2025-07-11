@@ -3,8 +3,20 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Common placeholder values that indicate Supabase is not configured
+const placeholderValues = [
+  'undefined',
+  'your_supabase_project_url_here',
+  'your_supabase_anon_key_here',
+  'YOUR_SUPABASE_URL',
+  'YOUR_SUPABASE_ANON_KEY'
+];
+
 // Check if we're in development mode without Supabase configured
-const isDevelopmentMode = !supabaseUrl || !supabaseAnonKey || supabaseUrl === 'undefined' || supabaseAnonKey === 'undefined';
+const isDevelopmentMode = !supabaseUrl || 
+                         !supabaseAnonKey || 
+                         placeholderValues.includes(supabaseUrl) || 
+                         placeholderValues.includes(supabaseAnonKey);
 
 // Create a mock client for development mode
 const createMockSupabaseClient = () => {
@@ -36,16 +48,19 @@ let supabase: any;
 
 if (isDevelopmentMode) {
   supabase = createMockSupabaseClient();
-  console.warn('⚠️ Running in development mode without Supabase. Authentication and database features will be mocked.');
+  console.warn('⚠️ Running in development mode without Supabase configuration. Authentication and database features will be mocked.');
+  if (supabaseUrl && placeholderValues.includes(supabaseUrl)) {
+    console.warn('💡 Detected placeholder Supabase URL. Please update your .env file with actual Supabase credentials.');
+  }
 } else {
   try {
     // Validate URL format before creating client
     new URL(supabaseUrl);
     supabase = createClient(supabaseUrl, supabaseAnonKey);
   } catch (error) {
-    console.error('❌ Invalid Supabase URL format:', supabaseUrl);
     supabase = createMockSupabaseClient();
-    console.warn('⚠️ Falling back to development mode due to invalid Supabase configuration.');
+    console.warn('⚠️ Invalid Supabase URL format detected. Falling back to development mode.');
+    console.warn('💡 Please check your .env file and ensure VITE_SUPABASE_URL contains a valid URL.');
   }
 }
 
