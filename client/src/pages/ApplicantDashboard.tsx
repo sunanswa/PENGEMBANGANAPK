@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Search, 
   MapPin, 
@@ -16,7 +16,21 @@ import {
   Heart,
   Send
 } from 'lucide-react';
-import { supabase, JobPosting } from '../lib/supabase';
+import { useQuery } from '@tanstack/react-query';
+import { apiRequest } from '../lib/queryClient';
+
+interface JobPosting {
+  id: string;
+  title: string;
+  description: string;
+  locations: string[];
+  status: 'active' | 'closed' | 'draft';
+  requirements?: string;
+  salary_range?: string;
+  employment_type?: string;
+  created_at: string;
+  updated_at?: string;
+}
 
 interface ApplicantDashboardProps {
   onLogout: () => void;
@@ -24,33 +38,14 @@ interface ApplicantDashboardProps {
 }
 
 const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onLogout, userProfile }) => {
-  const [jobPostings, setJobPostings] = useState<JobPosting[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null);
 
-  useEffect(() => {
-    fetchJobPostings();
-  }, []);
-
-  const fetchJobPostings = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('job_postings')
-        .select('*')
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setJobPostings(data || []);
-    } catch (error) {
-      console.error('Error fetching job postings:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: jobPostings = [], isLoading: loading } = useQuery({
+    queryKey: ['/api/job-postings', { status: 'active' }],
+    queryFn: () => apiRequest('/api/job-postings?status=active')
+  });
 
   const filteredJobs = jobPostings.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

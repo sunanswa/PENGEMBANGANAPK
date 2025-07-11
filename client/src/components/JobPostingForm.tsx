@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, Plus, Trash2, MapPin, FileText, DollarSign, Clock, AlertCircle } from 'lucide-react';
-import { JobPosting } from '../lib/supabase';
+interface JobPosting {
+  id: string;
+  title: string;
+  description: string;
+  locations: string[];
+  status: 'active' | 'closed' | 'draft';
+  requirements?: string;
+  salary_range?: string;
+  employment_type?: string;
+  created_at: string;
+  updated_at?: string;
+}
 
 interface JobPostingFormProps {
   jobPosting?: JobPosting | null;

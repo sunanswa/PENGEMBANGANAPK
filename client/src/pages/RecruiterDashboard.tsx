@@ -35,120 +35,85 @@ import {
   MoreVertical,
   RefreshCw
 } from 'lucide-react';
-import { supabase, JobPosting } from '../lib/supabase';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { apiRequest, queryClient } from '../lib/queryClient';
 import JobPostingForm from '../components/JobPostingForm';
+
+interface JobPosting {
+  id: string;
+  title: string;
+  description: string;
+  locations: string[];
+  status: 'active' | 'closed' | 'draft';
+  requirements?: string;
+  salary_range?: string;
+  employment_type?: string;
+  created_at: string;
+  updated_at?: string;
+}
 
 interface RecruiterDashboardProps {
   onLogout: () => void;
 }
 
 const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => {
-  const [jobPostings, setJobPostings] = useState<JobPosting[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingJob, setEditingJob] = useState<JobPosting | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // Mock data untuk development
-  const mockJobPostings: JobPosting[] = [
-    {
-      id: '1',
-      title: 'Sales Officer Chaneling (SOC)',
-      description: 'Bertanggung jawab untuk melakukan penjualan produk pembiayaan melalui channel dealer motor. Membangun dan memelihara hubungan baik dengan dealer partner.',
-      locations: ['ADIRA TEBET MOTOR', 'ADIRA KELAPA GADING MOTOR', 'ADIRA PONDOK GEDE'],
-      status: 'active',
-      requirements: 'Minimal S1, pengalaman sales 2 tahun, memiliki SIM C',
-      salary_range: 'Rp 5.000.000 - Rp 8.000.000',
-      employment_type: 'full-time',
-      created_at: '2024-01-15T10:00:00Z',
-      updated_at: '2024-01-15T10:00:00Z'
-    },
-    {
-      id: '2',
-      title: 'Credit Marketing Officer',
-      description: 'Melakukan pemasaran produk kredit kepada calon nasabah, melakukan analisis kredit, dan memastikan target penjualan tercapai.',
-      locations: ['SMSF JAKARTA TIMUR', 'SMSF JAKARTA UTARA'],
-      status: 'active',
-      requirements: 'S1 Ekonomi/Manajemen, pengalaman banking 1 tahun',
-      salary_range: 'Rp 6.000.000 - Rp 9.000.000',
-      employment_type: 'full-time',
-      created_at: '2024-01-14T09:00:00Z',
-      updated_at: '2024-01-14T09:00:00Z'
-    },
-    {
-      id: '3',
-      title: 'Telemarketing Specialist',
-      description: 'Melakukan panggilan telepon untuk menawarkan produk dan layanan perusahaan kepada calon pelanggan.',
-      locations: ['Juanda Jakarta Pusat', 'Tangerang City'],
-      status: 'draft',
-      requirements: 'Minimal SMA, pengalaman telemarketing 1 tahun',
-      salary_range: 'Rp 4.000.000 - Rp 6.000.000',
-      employment_type: 'full-time',
-      created_at: '2024-01-13T08:00:00Z',
-      updated_at: '2024-01-13T08:00:00Z'
-    },
-    {
-      id: '4',
-      title: 'Recovery Officer',
-      description: 'Menangani proses collection dan recovery untuk nasabah yang mengalami tunggakan pembayaran.',
-      locations: ['SMSF JAKARTA TIMUR', 'SMSF JAKARTA UTARA'],
-      status: 'closed',
-      requirements: 'S1, pengalaman collection 2 tahun, komunikasi baik',
-      salary_range: 'Rp 5.500.000 - Rp 7.500.000',
-      employment_type: 'full-time',
-      created_at: '2024-01-12T07:00:00Z',
-      updated_at: '2024-01-12T07:00:00Z'
-    }
-  ];
+  const { data: jobPostings = [], isLoading: loading } = useQuery({
+    queryKey: ['/api/job-postings', statusFilter],
+    queryFn: () => apiRequest(`/api/job-postings${statusFilter !== 'all' ? `?status=${statusFilter}` : ''}`)
+  });
 
-  useEffect(() => {
-    // Simulasi loading data
-    setLoading(true);
-    setTimeout(() => {
-      setJobPostings(mockJobPostings);
-      setLoading(false);
-    }, 1000);
-  }, []);
+  const createJobMutation = useMutation({
+    mutationFn: (jobData: Partial<JobPosting>) => apiRequest('/api/job-postings', {
+      method: 'POST',
+      body: JSON.stringify(jobData)
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/job-postings'] });
+      setShowForm(false);
+      setEditingJob(null);
+    }
+  });
+
+  const updateJobMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<JobPosting> }) => 
+      apiRequest(`/api/job-postings/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/job-postings'] });
+      setShowForm(false);
+      setEditingJob(null);
+    }
+  });
+
+  const deleteJobMutation = useMutation({
+    mutationFn: (id: string) => apiRequest(`/api/job-postings/${id}`, {
+      method: 'DELETE'
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/job-postings'] });
+    }
+  });
 
   const handleSubmit = async (data: Partial<JobPosting>) => {
     try {
-      setIsSubmitting(true);
-      
-      // Simulasi API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
       if (editingJob) {
         // Update existing job
-        setJobPostings(prev => prev.map(job => 
-          job.id === editingJob.id 
-            ? { ...job, ...data, updated_at: new Date().toISOString() }
-            : job
-        ));
-        alert('Lowongan berhasil diperbarui!');
+        await updateJobMutation.mutateAsync({ id: editingJob.id, data });
       } else {
         // Create new job
-        const newJob: JobPosting = {
-          id: Date.now().toString(),
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          ...data
-        } as JobPosting;
-        
-        setJobPostings(prev => [newJob, ...prev]);
-        alert('Lowongan baru berhasil ditambahkan!');
+        await createJobMutation.mutateAsync(data);
       }
-
-      setShowForm(false);
-      setEditingJob(null);
     } catch (error) {
-      console.error('Error saving job posting:', error);
-      alert('Gagal menyimpan lowongan. Silakan coba lagi.');
-    } finally {
-      setIsSubmitting(false);
+      console.error('Error submitting job:', error);
     }
   };
 
@@ -156,14 +121,9 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     if (!confirm('Apakah Anda yakin ingin menghapus lowongan ini?')) return;
 
     try {
-      // Simulasi API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setJobPostings(prev => prev.filter(job => job.id !== id));
-      alert('Lowongan berhasil dihapus!');
+      await deleteJobMutation.mutateAsync(id);
     } catch (error) {
       console.error('Error deleting job posting:', error);
-      alert('Gagal menghapus lowongan. Silakan coba lagi.');
     }
   };
 
