@@ -33,6 +33,17 @@ function App() {
     setShowAuth(true);
   };
 
+  const handleBypassAdmin = () => {
+    // Create admin user directly without authentication
+    const adminUser: User = {
+      id: '1',
+      email: 'admin@example.com',
+      full_name: 'Admin User',
+      role: 'admin'
+    };
+    setUser(adminUser);
+  };
+
   const handleAuthSuccess = (role: 'admin' | 'applicant') => {
     // Create a mock user based on role for demo purposes
     const mockUser: User = {
@@ -72,6 +83,7 @@ function App() {
               <LandingPage
                 onStartApplication={handleStartApplication}
                 onShowAuth={handleShowAuth}
+                onBypassAdmin={handleBypassAdmin}
               />
             )}
           </>

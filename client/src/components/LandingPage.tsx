@@ -27,7 +27,6 @@ interface LandingPageProps {
   onStartApplication: () => void;
   onShowAuth: () => void;
   onBypassAdmin?: () => void;
-  onBypassAdmin?: () => void;
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication, onShowAuth, onBypassAdmin }) => {
