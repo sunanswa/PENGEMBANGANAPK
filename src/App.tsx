@@ -208,6 +208,7 @@ type AppState = 'splash' | 'landing' | 'loading' | 'form' | 'submitted' | 'auth'
 
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>('splash');
+  const [isBypassingAuth, setIsBypassingAuth] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [currentStep, setCurrentStep] = useState(0);
@@ -222,6 +223,7 @@ const App: React.FC = () => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       if (session) {
+        setIsBypassingAuth(false); // Reset bypass flag on real session
         await loadUserProfile(session.user.id);
       }
     });
@@ -231,15 +233,16 @@ const App: React.FC = () => {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       if (session) {
+        setIsBypassingAuth(false); // Reset bypass flag on real session
         await loadUserProfile(session.user.id);
-      } else if (appState === 'admin' || appState === 'applicant') {
+      } else if ((appState === 'admin' || appState === 'applicant') && !isBypassingAuth) {
         setAppState('landing');
         setUserProfile(null);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [appState]);
+  }, [appState, isBypassingAuth]);
 
   const loadUserProfile = async (userId: string) => {
     try {
@@ -347,6 +350,7 @@ const App: React.FC = () => {
   };
 
   const handleLogout = async () => {
+    setIsBypassingAuth(false);
     await supabase.auth.signOut();
     setUserProfile(null);
     setAppState('landing');
@@ -354,6 +358,7 @@ const App: React.FC = () => {
 
   // BYPASS FUNCTION untuk development - HAPUS sebelum production!
   const handleBypassAdminLogin = () => {
+    setIsBypassingAuth(true);
     setAppState('admin');
     setSession({ user: { id: 'bypass-admin' } } as any);
     setUserProfile({ 
