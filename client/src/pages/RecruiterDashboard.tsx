@@ -531,6 +531,374 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     </div>
   );
 
+  const renderApplicantsManagement = () => (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Manajemen Pelamar</h2>
+          <p className="text-gray-600">Kelola dan pantau semua pelamar untuk lowongan pekerjaan</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-2xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
+            <Download size={18} />
+            Export Data
+          </button>
+          <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
+            <Mail size={18} />
+            Kirim Email
+          </button>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+              <Users size={24} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">+15%</span>
+          </div>
+          <p className="text-sm text-gray-600 mb-1">Total Pelamar</p>
+          <p className="text-2xl font-bold text-gray-900">324</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+              <CheckCircle size={24} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">+8%</span>
+          </div>
+          <p className="text-sm text-gray-600 mb-1">Diterima</p>
+          <p className="text-2xl font-bold text-gray-900">45</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl flex items-center justify-center">
+              <Clock size={24} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">+12%</span>
+          </div>
+          <p className="text-sm text-gray-600 mb-1">Proses Review</p>
+          <p className="text-2xl font-bold text-gray-900">89</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+              <Calendar size={24} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">+22%</span>
+          </div>
+          <p className="text-sm text-gray-600 mb-1">Interview Dijadwalkan</p>
+          <p className="text-2xl font-bold text-gray-900">23</p>
+        </div>
+      </div>
+
+      {/* Recent Applications */}
+      <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+          <div className="p-2 bg-blue-100 rounded-xl">
+            <Users size={20} className="text-blue-600" />
+          </div>
+          Pelamar Terbaru
+        </h3>
+        <div className="space-y-4">
+          {[
+            { name: 'Sarah Wijaya', position: 'Sales Officer Chaneling', time: '2 jam lalu', status: 'new', email: 'sarah.wijaya@email.com' },
+            { name: 'Ahmad Rizki', position: 'Credit Marketing Officer', time: '4 jam lalu', status: 'review', email: 'ahmad.rizki@email.com' },
+            { name: 'Maya Sari', position: 'Telemarketing Specialist', time: '6 jam lalu', status: 'interview', email: 'maya.sari@email.com' },
+            { name: 'Budi Santoso', position: 'Recovery Officer', time: '1 hari lalu', status: 'accepted', email: 'budi.santoso@email.com' }
+          ].map((applicant, index) => (
+            <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                  <span className="text-white font-semibold">{applicant.name.charAt(0)}</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">{applicant.name}</p>
+                  <p className="text-sm text-gray-600">{applicant.position}</p>
+                  <p className="text-xs text-gray-500">{applicant.email}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  applicant.status === 'new' ? 'bg-blue-100 text-blue-800' :
+                  applicant.status === 'review' ? 'bg-orange-100 text-orange-800' :
+                  applicant.status === 'interview' ? 'bg-purple-100 text-purple-800' :
+                  'bg-green-100 text-green-800'
+                }`}>
+                  {applicant.status === 'new' ? 'Baru' :
+                   applicant.status === 'review' ? 'Review' :
+                   applicant.status === 'interview' ? 'Interview' :
+                   'Diterima'}
+                </span>
+                <span className="text-sm text-gray-500">{applicant.time}</span>
+                <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors">
+                  <Eye size={18} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderAnalytics = () => (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Analytics & Reports</h2>
+          <p className="text-gray-600">Analisis performa rekrutmen dan metrik bisnis</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <select className="px-4 py-2 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>30 Hari Terakhir</option>
+            <option>3 Bulan Terakhir</option>
+            <option>6 Bulan Terakhir</option>
+            <option>1 Tahun Terakhir</option>
+          </select>
+          <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
+            <Download size={18} />
+            Export Report
+          </button>
+        </div>
+      </div>
+
+      {/* Performance Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+              <TrendingUp size={24} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">↑ 25%</span>
+          </div>
+          <p className="text-sm text-gray-600 mb-1">Tingkat Conversion</p>
+          <p className="text-2xl font-bold text-gray-900">18.5%</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+              <Clock size={24} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">↓ 8%</span>
+          </div>
+          <p className="text-sm text-gray-600 mb-1">Waktu Hire Rata-rata</p>
+          <p className="text-2xl font-bold text-gray-900">12 Hari</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+              <Award size={24} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">↑ 12%</span>
+          </div>
+          <p className="text-sm text-gray-600 mb-1">Kualitas Hire</p>
+          <p className="text-2xl font-bold text-gray-900">4.2/5</p>
+        </div>
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+          <h3 className="text-xl font-bold text-gray-900 mb-6">Trend Aplikasi Bulanan</h3>
+          <div className="h-64 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl flex items-center justify-center">
+            <div className="text-center">
+              <BarChart3 size={48} className="text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">Chart akan ditampilkan di sini</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+          <h3 className="text-xl font-bold text-gray-900 mb-6">Distribusi Status Pelamar</h3>
+          <div className="h-64 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl flex items-center justify-center">
+            <div className="text-center">
+              <Target size={48} className="text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">Pie chart akan ditampilkan di sini</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Top Performing Jobs */}
+      <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+          <div className="p-2 bg-orange-100 rounded-xl">
+            <Star size={20} className="text-orange-600" />
+          </div>
+          Top Performing Jobs
+        </h3>
+        <div className="space-y-4">
+          {[
+            { position: 'Sales Officer Chaneling', applications: 89, hired: 12, rate: '13.5%' },
+            { position: 'Credit Marketing Officer', applications: 67, hired: 8, rate: '11.9%' },
+            { position: 'Telemarketing Specialist', applications: 54, hired: 6, rate: '11.1%' },
+            { position: 'Recovery Officer', applications: 43, hired: 4, rate: '9.3%' }
+          ].map((job, index) => (
+            <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+              <div>
+                <p className="font-semibold text-gray-900">{job.position}</p>
+                <p className="text-sm text-gray-600">{job.applications} aplikasi • {job.hired} diterima</p>
+              </div>
+              <div className="text-right">
+                <p className="text-lg font-bold text-green-600">{job.rate}</p>
+                <p className="text-sm text-gray-500">Success Rate</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSettings = () => (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Pengaturan System</h2>
+          <p className="text-gray-600">Kelola preferensi dan konfigurasi sistem</p>
+        </div>
+        <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
+          <Download size={18} />
+          Backup Data
+        </button>
+      </div>
+
+      {/* Settings Categories */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* General Settings */}
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <div className="p-2 bg-blue-100 rounded-xl">
+              <Settings size={20} className="text-blue-600" />
+            </div>
+            Pengaturan Umum
+          </h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+              <div>
+                <p className="font-semibold text-gray-900">Notifikasi Email</p>
+                <p className="text-sm text-gray-600">Terima notifikasi untuk pelamar baru</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" defaultChecked />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+              <div>
+                <p className="font-semibold text-gray-900">Auto-Backup</p>
+                <p className="text-sm text-gray-600">Backup data otomatis setiap hari</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" defaultChecked />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+              <div>
+                <p className="font-semibold text-gray-900">Dark Mode</p>
+                <p className="text-sm text-gray-600">Tema gelap untuk dashboard</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* User Management */}
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <div className="p-2 bg-purple-100 rounded-xl">
+              <Users size={20} className="text-purple-600" />
+            </div>
+            Manajemen User
+          </h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                  <span className="text-white font-semibold">A</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Admin User</p>
+                  <p className="text-sm text-gray-600">admin@swapro.com</p>
+                </div>
+              </div>
+              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">Active</span>
+            </div>
+            <button className="w-full p-4 border-2 border-dashed border-gray-300 rounded-2xl text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-2">
+              <Plus size={20} />
+              Tambah User Baru
+            </button>
+          </div>
+        </div>
+
+        {/* System Info */}
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <div className="p-2 bg-green-100 rounded-xl">
+              <Activity size={20} className="text-green-600" />
+            </div>
+            System Info
+          </h3>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+              <span className="text-gray-600">Version</span>
+              <span className="font-semibold text-gray-900">v2.1.0</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+              <span className="text-gray-600">Database</span>
+              <span className="font-semibold text-green-600">Connected</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+              <span className="text-gray-600">Last Backup</span>
+              <span className="font-semibold text-gray-900">2 hours ago</span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+              <span className="text-gray-600">Uptime</span>
+              <span className="font-semibold text-gray-900">99.9%</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Email Templates */}
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <div className="p-2 bg-orange-100 rounded-xl">
+              <Mail size={20} className="text-orange-600" />
+            </div>
+            Email Templates
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <span className="text-gray-700">Welcome Email</span>
+              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">Edit</button>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <span className="text-gray-700">Interview Invitation</span>
+              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">Edit</button>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <span className="text-gray-700">Rejection Letter</span>
+              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">Edit</button>
+            </div>
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <span className="text-gray-700">Job Offer</span>
+              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">Edit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
@@ -538,29 +906,11 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
       case 'jobs':
         return renderJobsManagement();
       case 'applicants':
-        return (
-          <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 text-center">
-            <Users size={48} className="text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Manajemen Pelamar</h3>
-            <p className="text-gray-600">Fitur ini akan segera tersedia</p>
-          </div>
-        );
+        return renderApplicantsManagement();
       case 'analytics':
-        return (
-          <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 text-center">
-            <TrendingUp size={48} className="text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Analytics & Reports</h3>
-            <p className="text-gray-600">Fitur ini akan segera tersedia</p>
-          </div>
-        );
+        return renderAnalytics();
       case 'settings':
-        return (
-          <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 text-center">
-            <Settings size={48} className="text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Pengaturan</h3>
-            <p className="text-gray-600">Fitur ini akan segera tersedia</p>
-          </div>
-        );
+        return renderSettings();
       default:
         return renderOverview();
     }
