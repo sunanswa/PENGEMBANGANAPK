@@ -23,7 +23,7 @@ Preferred communication style: Simple, everyday language.
 - **Framework**: Express.js with TypeScript
 - **Database ORM**: Drizzle ORM for type-safe database operations
 - **Database**: PostgreSQL (configured for Neon Database) with Supabase backend
-- **Storage**: In-memory storage with sample data for development and testing
+- **Storage**: PostgreSQL database with Drizzle ORM for data persistence
 - **API Design**: RESTful API with `/api` prefix routing for job postings and authentication
 - **Environment**: Fully configured for Replit deployment with hot reload support
 
