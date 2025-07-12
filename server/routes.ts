@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertUserSchema, insertJobPostingSchema, type User } from "@shared/schema";
 import { z } from "zod";
+import * as communication from "./communication";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -156,6 +157,163 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to delete job posting" });
+    }
+  });
+
+  // Communication routes
+  app.get("/api/communication/stats", async (req, res) => {
+    try {
+      const stats = communication.getCommunicationStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get communication stats" });
+    }
+  });
+
+  app.get("/api/communication/templates", async (req, res) => {
+    try {
+      const templates = communication.getTemplates();
+      res.json(templates);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get templates" });
+    }
+  });
+
+  app.post("/api/communication/templates", async (req, res) => {
+    try {
+      const template = communication.createTemplate(req.body);
+      res.json(template);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create template" });
+    }
+  });
+
+  app.get("/api/communication/history", async (req, res) => {
+    try {
+      const history = communication.getMessageHistory();
+      res.json(history);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get message history" });
+    }
+  });
+
+  app.get("/api/communication/automation", async (req, res) => {
+    try {
+      const rules = communication.getAutomationRules();
+      res.json(rules);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get automation rules" });
+    }
+  });
+
+  app.post("/api/communication/send", async (req, res) => {
+    try {
+      const { type, recipients, subject, content, templateId, variables } = req.body;
+      
+      if (!type || !recipients || !content) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      let processedContent = content;
+      let processedSubject = subject;
+
+      // Apply template variables if provided
+      if (variables) {
+        processedContent = communication.replaceTemplateVariables(content, variables);
+        if (subject) {
+          processedSubject = communication.replaceTemplateVariables(subject, variables);
+        }
+      }
+
+      const result = await communication.sendBulkMessage(
+        type,
+        Array.isArray(recipients) ? recipients : [recipients],
+        processedContent,
+        processedSubject,
+        templateId
+      );
+
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to send message" });
+    }
+  });
+
+  app.post("/api/communication/send-email", async (req, res) => {
+    try {
+      const { to, subject, content, variables } = req.body;
+      
+      if (!to || !subject || !content) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      let processedContent = content;
+      let processedSubject = subject;
+
+      if (variables) {
+        processedContent = communication.replaceTemplateVariables(content, variables);
+        processedSubject = communication.replaceTemplateVariables(subject, variables);
+      }
+
+      const success = await communication.sendEmail({
+        to: Array.isArray(to) ? to : [to],
+        subject: processedSubject,
+        content: processedContent
+      });
+
+      res.json({ success });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to send email" });
+    }
+  });
+
+  app.post("/api/communication/send-sms", async (req, res) => {
+    try {
+      const { to, message, variables } = req.body;
+      
+      if (!to || !message) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      let processedMessage = message;
+
+      if (variables) {
+        processedMessage = communication.replaceTemplateVariables(message, variables);
+      }
+
+      const success = await communication.sendSMS({
+        to: Array.isArray(to) ? to : [to],
+        message: processedMessage
+      });
+
+      res.json({ success });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to send SMS" });
+    }
+  });
+
+  app.post("/api/communication/send-whatsapp", async (req, res) => {
+    try {
+      const { to, message, variables } = req.body;
+      
+      if (!to || !message) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      let processedMessage = message;
+
+      if (variables) {
+        processedMessage = communication.replaceTemplateVariables(message, variables);
+      }
+
+      const success = await communication.sendWhatsApp({
+        to: Array.isArray(to) ? to : [to],
+        message: processedMessage
+      });
+
+      res.json({ success });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to send WhatsApp" });
     }
   });
 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import CommunicationHub from '../components/CommunicationHub';
+import MessageComposer from '../components/MessageComposer';
 import { 
   Plus, 
   Edit3, 
@@ -36,7 +38,8 @@ import {
   RefreshCw,
   User,
   Brain,
-  Video
+  Video,
+  MessageCircle
 } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest, queryClient } from '../lib/queryClient';
@@ -70,6 +73,9 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showInterviewScheduler, setShowInterviewScheduler] = useState(false);
   const [showScreeningAssessment, setShowScreeningAssessment] = useState(false);
+  const [showCommunicationHub, setShowCommunicationHub] = useState(false);
+  const [showMessageComposer, setShowMessageComposer] = useState(false);
+  const [messageType, setMessageType] = useState<'email' | 'sms' | 'whatsapp'>('email');
   const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
 
   const { data: jobPostings = [], isLoading: loading } = useQuery({
@@ -235,6 +241,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     { id: 'applicants', label: 'Pelamar', icon: Users },
     { id: 'interviews', label: 'Interview', icon: Video },
     { id: 'screening', label: 'Screening', icon: Brain },
+    { id: 'communication', label: 'Communication', icon: Mail },
     { id: 'analytics', label: 'Analytics', icon: TrendingUp },
     { id: 'settings', label: 'Pengaturan', icon: Settings }
   ];
@@ -1153,6 +1160,157 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     </div>
   );
 
+  const renderCommunication = () => (
+    <div className="space-y-6">
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Communication Hub</h2>
+          <p className="text-gray-600">Kelola komunikasi dengan kandidat melalui email, SMS, dan WhatsApp</p>
+        </div>
+        <div className="flex gap-3">
+          <button 
+            onClick={() => setShowCommunicationHub(true)}
+            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
+          >
+            <Mail size={20} />
+            Buka Communication Hub
+          </button>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div 
+          onClick={() => {
+            setMessageType('email');
+            setShowMessageComposer(true);
+          }}
+          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300"
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <Mail size={24} className="text-blue-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900">Email Blast</h3>
+              <p className="text-sm text-gray-600">Kirim email ke kandidat</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-500">247 terkirim bulan ini</span>
+            <span className="text-blue-600 font-semibold">98% delivery rate</span>
+          </div>
+        </div>
+
+        <div 
+          onClick={() => {
+            setMessageType('sms');
+            setShowMessageComposer(true);
+          }}
+          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-green-300"
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <Phone size={24} className="text-green-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900">SMS Notification</h3>
+              <p className="text-sm text-gray-600">Kirim SMS ke kandidat</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-500">156 terkirim bulan ini</span>
+            <span className="text-green-600 font-semibold">95% delivery rate</span>
+          </div>
+        </div>
+
+        <div 
+          onClick={() => {
+            setMessageType('whatsapp');
+            setShowMessageComposer(true);
+          }}
+          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-purple-300"
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+              <MessageCircle size={24} className="text-purple-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900">WhatsApp Chat</h3>
+              <p className="text-sm text-gray-600">Chat WhatsApp kandidat</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-500">89 terkirim bulan ini</span>
+            <span className="text-purple-600 font-semibold">92% read rate</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Messages */}
+      <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+        <div className="p-6 border-b border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900">Pesan Terbaru</h3>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {[
+            {
+              type: 'email',
+              recipient: 'sarah.wijaya@email.com',
+              subject: 'Interview Invitation - Sales Officer',
+              status: 'sent',
+              sentAt: '10 menit lalu'
+            },
+            {
+              type: 'sms',
+              recipient: '+62812345678',
+              message: 'Reminder: Interview Anda besok jam 10:00 WIB',
+              status: 'delivered',
+              sentAt: '2 jam lalu'
+            },
+            {
+              type: 'whatsapp',
+              recipient: '+62812345679',
+              message: 'Selamat! Aplikasi Anda untuk posisi Credit Marketing diterima',
+              status: 'read',
+              sentAt: '1 hari lalu'
+            }
+          ].map((message, index) => (
+            <div key={index} className="p-6 hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                    message.type === 'email' ? 'bg-blue-100' :
+                    message.type === 'sms' ? 'bg-green-100' : 'bg-purple-100'
+                  }`}>
+                    {message.type === 'email' ? <Mail size={20} className="text-blue-600" /> :
+                     message.type === 'sms' ? <Phone size={20} className="text-green-600" /> :
+                     <MessageCircle size={20} className="text-purple-600" />}
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">{message.subject || message.message}</h4>
+                    <p className="text-sm text-gray-600">{message.recipient}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    message.status === 'sent' ? 'bg-blue-100 text-blue-800' :
+                    message.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                    'bg-purple-100 text-purple-800'
+                  }`}>
+                    {message.status === 'sent' ? 'Terkirim' :
+                     message.status === 'delivered' ? 'Diterima' : 'Dibaca'}
+                  </span>
+                  <p className="text-xs text-gray-500 mt-1">{message.sentAt}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
@@ -1165,6 +1323,8 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         return renderInterviewsManagement();
       case 'screening':
         return renderScreeningManagement();
+      case 'communication':
+        return renderCommunication();
       case 'analytics':
         return renderAnalytics();
       case 'settings':
@@ -1345,6 +1505,26 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           onCancel={() => {
             setShowScreeningAssessment(false);
             setSelectedCandidate(null);
+          }}
+        />
+      )}
+
+      {/* Communication Hub Modal */}
+      {showCommunicationHub && (
+        <CommunicationHub
+          onClose={() => setShowCommunicationHub(false)}
+        />
+      )}
+
+      {/* Message Composer Modal */}
+      {showMessageComposer && (
+        <MessageComposer
+          type={messageType}
+          onClose={() => setShowMessageComposer(false)}
+          onSend={(data) => {
+            console.log('Message sent:', data);
+            setShowMessageComposer(false);
+            // Here you would typically send to the backend
           }}
         />
       )}
