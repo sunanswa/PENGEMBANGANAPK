@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, Plus, Trash2, MapPin, FileText, DollarSign, Clock, AlertCircle, Users } from 'lucide-react';
+import { X, Save, Plus, Trash2, MapPin, FileText, DollarSign, Clock, AlertCircle, User } from 'lucide-react';
 interface JobPosting {
   id: string;
   title: string;
@@ -313,7 +313,7 @@ const JobPostingForm: React.FC<JobPostingFormProps> = ({
               <label className="block text-sm font-bold text-gray-700">
                 <div className="flex items-center gap-2">
                   <div className="p-1 bg-indigo-100 rounded-lg">
-                    <Users size={14} className="text-indigo-600" />
+                    <User size={14} className="text-indigo-600" />
                   </div>
                   Jumlah Dibutuhkan *
                 </div>
