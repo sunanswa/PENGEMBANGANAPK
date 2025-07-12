@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
-import { X, Upload, FileText, Send, User, Mail, Phone, MapPin, GraduationCap, Briefcase } from 'lucide-react';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { MapPin, Building, Clock, DollarSign, Users, FileText, AlertTriangle, Send, X } from "lucide-react";
 
 interface JobPosting {
   id: string;
   title: string;
   description: string;
   locations: string[];
+  positions_needed?: number;
+  requirements?: string;
+  salary_range?: string;
+  employment_type?: string;
+  created_at: string;
 }
 
 interface ApplicationFormProps {
@@ -14,374 +30,351 @@ interface ApplicationFormProps {
   onCancel: () => void;
 }
 
-const ApplicationForm: React.FC<ApplicationFormProps> = ({ job, onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    address: '',
-    education: '',
-    experience: '',
-    skills: '',
-    coverLetter: '',
-    expectedSalary: '',
-    availableDate: '',
-    cv: null as File | null,
-    portfolio: null as File | null
-  });
+const applicationSchema = z.object({
+  cover_letter: z.string().min(100, "Surat lamaran minimal 100 karakter"),
+  motivation: z.string().min(50, "Motivasi minimal 50 karakter"),
+  expected_salary: z.string().optional(),
+  available_start_date: z.string().min(1, "Tanggal mulai kerja wajib diisi"),
+  preferred_location: z.string().min(1, "Lokasi preferensi wajib dipilih"),
+  willing_to_relocate: z.boolean(),
+  terms_agreed: z.boolean().refine((val) => val === true, {
+    message: "Anda harus menyetujui syarat dan ketentuan"
+  }),
+  privacy_agreed: z.boolean().refine((val) => val === true, {
+    message: "Anda harus menyetujui kebijakan privasi"
+  }),
+  additional_notes: z.string().optional(),
+});
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+type ApplicationFormData = z.infer<typeof applicationSchema>;
+
+export default function ApplicationForm({ job, onSubmit, onCancel }: ApplicationFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Nama lengkap harus diisi';
+  const form = useForm<ApplicationFormData>({
+    resolver: zodResolver(applicationSchema),
+    defaultValues: {
+      willing_to_relocate: false,
+      terms_agreed: false,
+      privacy_agreed: false,
+      preferred_location: job.locations[0] || "",
+      available_start_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 30 days from now
     }
+  });
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email harus diisi';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Format email tidak valid';
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Nomor telepon harus diisi';
-    }
-
-    if (!formData.education.trim()) {
-      newErrors.education = 'Pendidikan harus diisi';
-    }
-
-    if (!formData.experience.trim()) {
-      newErrors.experience = 'Pengalaman kerja harus diisi';
-    }
-
-    if (!formData.coverLetter.trim()) {
-      newErrors.coverLetter = 'Cover letter harus diisi';
-    }
-
-    if (!formData.cv) {
-      newErrors.cv = 'CV/Resume harus diupload';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleFileChange = (field: 'cv' | 'portfolio', file: File | null) => {
-    setFormData(prev => ({ ...prev, [field]: file }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
+  const handleSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true);
     
-    try {
-      // Create FormData for file uploads
-      const applicationData = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value !== null) {
-          applicationData.append(key, value);
-        }
-      });
-      applicationData.append('jobId', job.id);
-      applicationData.append('jobTitle', job.title);
-      applicationData.append('appliedAt', new Date().toISOString());
-
-      await onSubmit(applicationData);
-    } catch (error) {
-      console.error('Error submitting application:', error);
-      alert('Terjadi kesalahan saat mengirim aplikasi. Silakan coba lagi.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const applicationData = {
+      job_id: job.id,
+      job_title: job.title,
+      company: "SWAPRO",
+      ...data,
+      applied_date: new Date().toISOString(),
+      status: "pending"
+    };
+    
+    onSubmit(applicationData);
+    setIsSubmitting(false);
   };
-
-  const FileUploadField = ({ 
-    label, 
-    field, 
-    accept, 
-    required = false 
-  }: { 
-    label: string; 
-    field: 'cv' | 'portfolio'; 
-    accept: string; 
-    required?: boolean;
-  }) => (
-    <div className="space-y-2">
-      <label className="block text-sm font-semibold text-gray-700">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 hover:border-blue-400 transition-colors">
-        <input
-          type="file"
-          accept={accept}
-          onChange={(e) => handleFileChange(field, e.target.files?.[0] || null)}
-          className="hidden"
-          id={`upload-${field}`}
-        />
-        <label 
-          htmlFor={`upload-${field}`}
-          className="cursor-pointer flex flex-col items-center justify-center space-y-2"
-        >
-          <Upload className="w-8 h-8 text-gray-400" />
-          <span className="text-sm text-gray-600 text-center">
-            {formData[field] ? formData[field]!.name : `Klik untuk upload ${label.toLowerCase()}`}
-          </span>
-          <span className="text-xs text-gray-400">PDF, DOC, DOCX (Max 5MB)</span>
-        </label>
-      </div>
-      {errors[field] && (
-        <p className="text-red-500 text-sm">{errors[field]}</p>
-      )}
-    </div>
-  );
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-3xl">
+        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 rounded-t-3xl">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Lamar Pekerjaan</h2>
-              <p className="text-gray-600 mt-1">{job.title}</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Lamar Pekerjaan</h2>
+              <p className="text-gray-600 dark:text-gray-400">Lengkapi formulir aplikasi untuk posisi yang Anda pilih</p>
             </div>
-            <button
-              onClick={onCancel}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-            >
-              <X size={24} />
-            </button>
+            <Button variant="ghost" onClick={onCancel} className="p-2">
+              <X className="h-6 w-6" />
+            </Button>
           </div>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Personal Information */}
-          <div className="bg-blue-50 rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <User className="w-5 h-5 text-blue-600" />
-              Informasi Pribadi
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Nama Lengkap <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
-                  placeholder="Masukkan nama lengkap"
-                />
-                {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
+        <div className="p-6 space-y-6">
+          {/* Job Information */}
+          <Card className="border-l-4 border-l-blue-500">
+            <CardHeader>
+              <div className="flex items-start justify-between">
+                <div>
+                  <CardTitle className="text-xl">{job.title}</CardTitle>
+                  <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-1">
+                      <Building className="h-4 w-4" />
+                      SWAPRO
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-4 w-4" />
+                      {job.locations.join(", ")}
+                    </div>
+                    {job.employment_type && (
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        {job.employment_type}
+                      </div>
+                    )}
+                    {job.salary_range && (
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="h-4 w-4" />
+                        {job.salary_range}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {job.positions_needed && job.positions_needed > 1 && (
+                  <Badge variant="secondary" className="flex items-center gap-1">
+                    <Users className="h-3 w-3" />
+                    {job.positions_needed} posisi
+                  </Badge>
+                )}
               </div>
+            </CardHeader>
+          </Card>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
-                  placeholder="nama@email.com"
-                />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+          {/* Important Notice */}
+          <Card className="border-orange-200 bg-orange-50 dark:bg-orange-900/20 dark:border-orange-800">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-orange-800 dark:text-orange-200 mb-1">
+                    Perhatian Penting
+                  </h3>
+                  <ul className="text-sm text-orange-700 dark:text-orange-300 space-y-1">
+                    <li>• Anda hanya dapat melamar ke satu posisi di SWAPRO</li>
+                    <li>• Aplikasi yang sudah dikirim tidak dapat diubah atau dibatalkan</li>
+                    <li>• Pastikan semua informasi yang Anda berikan adalah benar dan akurat</li>
+                    <li>• Proses seleksi akan dimulai setelah Anda mengirim aplikasi ini</li>
+                  </ul>
+                </div>
               </div>
+            </CardContent>
+          </Card>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Nomor Telepon <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
-                  placeholder="+62812-3456-7890"
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+            {/* Cover Letter */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Surat Lamaran
+                </CardTitle>
+                <CardDescription>
+                  Tuliskan surat lamaran yang menjelaskan mengapa Anda tertarik dengan posisi ini
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  {...form.register("cover_letter")}
+                  placeholder="Kepada Tim HR SWAPRO,
+
+Saya tertarik untuk melamar posisi [posisi] yang tersedia di perusahaan Anda. Dengan latar belakang pendidikan dan pengalaman yang saya miliki..."
+                  rows={8}
+                  className="resize-none"
                 />
-                {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-              </div>
+                {form.formState.errors.cover_letter && (
+                  <p className="text-sm text-red-600 mt-2">{form.formState.errors.cover_letter.message}</p>
+                )}
+                <p className="text-xs text-gray-500 mt-2">
+                  Minimal 100 karakter. Saat ini: {form.watch("cover_letter")?.length || 0} karakter
+                </p>
+              </CardContent>
+            </Card>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Alamat
-                </label>
-                <input
-                  type="text"
-                  value={formData.address}
-                  onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
-                  placeholder="Jakarta, Indonesia"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Professional Information */}
-          <div className="bg-green-50 rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-green-600" />
-              Informasi Profesional
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Pendidikan Terakhir <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.education}
-                  onChange={(e) => setFormData(prev => ({ ...prev, education: e.target.value }))}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
-                  placeholder="S1 Teknik Informatika - Universitas Indonesia"
-                />
-                {errors.education && <p className="text-red-500 text-sm mt-1">{errors.education}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Pengalaman Kerja <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  value={formData.experience}
-                  onChange={(e) => setFormData(prev => ({ ...prev, experience: e.target.value }))}
+            {/* Motivation */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Motivasi Melamar</CardTitle>
+                <CardDescription>
+                  Jelaskan motivasi Anda melamar posisi ini dan apa yang membuat Anda cocok
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  {...form.register("motivation")}
+                  placeholder="Saya termotivasi melamar posisi ini karena..."
                   rows={4}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
-                  placeholder="Deskripsikan pengalaman kerja Anda, mulai dari yang terbaru..."
+                  className="resize-none"
                 />
-                {errors.experience && <p className="text-red-500 text-sm mt-1">{errors.experience}</p>}
-              </div>
+                {form.formState.errors.motivation && (
+                  <p className="text-sm text-red-600 mt-2">{form.formState.errors.motivation.message}</p>
+                )}
+                <p className="text-xs text-gray-500 mt-2">
+                  Minimal 50 karakter. Saat ini: {form.watch("motivation")?.length || 0} karakter
+                </p>
+              </CardContent>
+            </Card>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Keahlian & Skills
-                </label>
-                <textarea
-                  value={formData.skills}
-                  onChange={(e) => setFormData(prev => ({ ...prev, skills: e.target.value }))}
+            {/* Job Preferences */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Preferensi Pekerjaan</CardTitle>
+                <CardDescription>
+                  Informasi mengenai preferensi dan ketersediaan Anda
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="expected_salary">Ekspektasi Gaji (Opsional)</Label>
+                    <Input
+                      id="expected_salary"
+                      {...form.register("expected_salary")}
+                      placeholder="Rp 8.000.000 - Rp 12.000.000"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="available_start_date">Tanggal Mulai Kerja *</Label>
+                    <Input
+                      id="available_start_date"
+                      type="date"
+                      {...form.register("available_start_date")}
+                    />
+                    {form.formState.errors.available_start_date && (
+                      <p className="text-sm text-red-600">{form.formState.errors.available_start_date.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="preferred_location">Lokasi Preferensi *</Label>
+                  <select
+                    {...form.register("preferred_location")}
+                    className="w-full p-2 border border-gray-300 rounded-md dark:border-gray-600 dark:bg-gray-700"
+                  >
+                    <option value="">Pilih lokasi preferensi</option>
+                    {job.locations.map(location => (
+                      <option key={location} value={location}>{location}</option>
+                    ))}
+                  </select>
+                  {form.formState.errors.preferred_location && (
+                    <p className="text-sm text-red-600">{form.formState.errors.preferred_location.message}</p>
+                  )}
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="willing_to_relocate"
+                    checked={form.watch("willing_to_relocate")}
+                    onCheckedChange={(checked) => form.setValue("willing_to_relocate", !!checked)}
+                  />
+                  <Label htmlFor="willing_to_relocate" className="text-sm">
+                    Saya bersedia untuk relokasi jika diperlukan
+                  </Label>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Additional Notes */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Catatan Tambahan (Opsional)</CardTitle>
+                <CardDescription>
+                  Informasi tambahan yang ingin Anda sampaikan
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  {...form.register("additional_notes")}
+                  placeholder="Informasi tambahan, pengalaman khusus, atau hal lain yang ingin Anda sampaikan..."
                   rows={3}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
-                  placeholder="Sebutkan keahlian dan skills yang Anda miliki..."
+                  className="resize-none"
                 />
-              </div>
+              </CardContent>
+            </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Ekspektasi Gaji
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.expectedSalary}
-                    onChange={(e) => setFormData(prev => ({ ...prev, expectedSalary: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
-                    placeholder="Rp 5.000.000 - 7.000.000"
+            {/* Terms and Conditions */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Persetujuan</CardTitle>
+                <CardDescription>
+                  Baca dan setujui syarat dan ketentuan sebelum mengirim aplikasi
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="terms_agreed"
+                    checked={form.watch("terms_agreed")}
+                    onCheckedChange={(checked) => form.setValue("terms_agreed", !!checked)}
                   />
+                  <div className="text-sm">
+                    <Label htmlFor="terms_agreed" className="font-medium">
+                      Saya menyetujui syarat dan ketentuan
+                    </Label>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      Saya memahami bahwa aplikasi ini hanya dapat dikirim satu kali dan tidak dapat diubah. 
+                      Saya menjamin bahwa semua informasi yang diberikan adalah benar dan akurat.
+                    </p>
+                  </div>
                 </div>
+                {form.formState.errors.terms_agreed && (
+                  <p className="text-sm text-red-600">{form.formState.errors.terms_agreed.message}</p>
+                )}
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Tanggal Mulai Kerja
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.availableDate}
-                    onChange={(e) => setFormData(prev => ({ ...prev, availableDate: e.target.value }))}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="privacy_agreed"
+                    checked={form.watch("privacy_agreed")}
+                    onCheckedChange={(checked) => form.setValue("privacy_agreed", !!checked)}
                   />
+                  <div className="text-sm">
+                    <Label htmlFor="privacy_agreed" className="font-medium">
+                      Saya menyetujui kebijakan privasi
+                    </Label>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      Saya menyetujui penggunaan data pribadi saya untuk keperluan proses rekrutmen sesuai 
+                      dengan kebijakan privasi SWAPRO.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
+                {form.formState.errors.privacy_agreed && (
+                  <p className="text-sm text-red-600">{form.formState.errors.privacy_agreed.message}</p>
+                )}
+              </CardContent>
+            </Card>
 
-          {/* Cover Letter */}
-          <div className="bg-purple-50 rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-purple-600" />
-              Cover Letter
-            </h3>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Ceritakan mengapa Anda tertarik dengan posisi ini <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                value={formData.coverLetter}
-                onChange={(e) => setFormData(prev => ({ ...prev, coverLetter: e.target.value }))}
-                rows={6}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
-                placeholder="Tuliskan motivasi Anda melamar posisi ini, relevansi pengalaman dengan job requirements, dan kontribusi yang bisa Anda berikan..."
-              />
-              {errors.coverLetter && <p className="text-red-500 text-sm mt-1">{errors.coverLetter}</p>}
-            </div>
-          </div>
+            <Separator />
 
-          {/* File Uploads */}
-          <div className="bg-orange-50 rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Upload className="w-5 h-5 text-orange-600" />
-              Dokumen Pendukung
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FileUploadField
-                label="CV/Resume"
-                field="cv"
-                accept=".pdf,.doc,.docx"
-                required
-              />
-              <FileUploadField
-                label="Portfolio (Opsional)"
-                field="portfolio"
-                accept=".pdf,.doc,.docx"
-              />
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onCancel}
+                className="flex-1"
+                disabled={isSubmitting}
+              >
+                Batal
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Mengirim Aplikasi...
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Send className="h-4 w-4" />
+                    Kirim Aplikasi
+                  </div>
+                )}
+              </Button>
             </div>
-          </div>
-
-          {/* Submit Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={onCancel}
-              className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50 transition-colors"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  Mengirim...
-                </>
-              ) : (
-                <>
-                  <Send size={20} />
-                  Kirim Aplikasi
-                </>
-              )}
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
-};
-
-export default ApplicationForm;
+}

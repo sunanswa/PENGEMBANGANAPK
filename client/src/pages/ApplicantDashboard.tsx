@@ -1,23 +1,16 @@
-import React, { useState } from 'react';
-import { 
-  Search, 
-  MapPin, 
-  Calendar,
-  Briefcase,
-  DollarSign,
-  Clock,
-  Building2,
-  Filter,
-  Eye,
-  ExternalLink,
-  LogOut,
-  User,
-  Settings,
-  Heart,
-  Send
-} from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { apiRequest } from '../lib/queryClient';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Search, MapPin, Clock, Building, LogOut, Filter, Star, User, FileText, AlertCircle, CheckCircle } from "lucide-react";
+import ApplicantProfileForm from "@/components/ApplicantProfileForm";
+import ApplicationStatusCard from "@/components/ApplicationStatusCard";
+import ApplicationForm from "@/components/ApplicationForm";
 
 interface JobPosting {
   id: string;
@@ -34,333 +27,518 @@ interface JobPosting {
   updated_at?: string;
 }
 
+interface ApplicantProfile {
+  id: string;
+  profile_completed: boolean;
+  completion_percentage: number;
+  has_applied: boolean;
+  full_name?: string;
+  phone?: string;
+  cv_url?: string;
+  photo_url?: string;
+}
+
+interface Application {
+  id: string;
+  job_title: string;
+  company: string;
+  status: "pending" | "reviewing" | "interview" | "accepted" | "rejected" | "withdrawn";
+  applied_date: string;
+  last_updated: string;
+  notes?: string;
+}
+
 interface ApplicantDashboardProps {
   onLogout: () => void;
   userProfile: any;
 }
 
-const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onLogout, userProfile }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
-  const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null);
+export default function ApplicantDashboard({ onLogout, userProfile }: ApplicantDashboardProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [employmentFilter, setEmploymentFilter] = useState("");
+  const [activeTab, setActiveTab] = useState("jobs");
+  const [selectedJobForApplication, setSelectedJobForApplication] = useState<JobPosting | null>(null);
+  const [profileData, setProfileData] = useState<ApplicantProfile | null>(null);
 
-  const { data: jobPostings = [], isLoading: loading } = useQuery({
-    queryKey: ['/api/job-postings', { status: 'active' }],
-    queryFn: () => apiRequest('/api/job-postings?status=active')
+  // Mock data - in real app, this would come from API
+  const mockProfile: ApplicantProfile = {
+    id: "1",
+    profile_completed: false,
+    completion_percentage: 45,
+    has_applied: false,
+    full_name: userProfile?.full_name || "John Doe",
+    phone: "081234567890"
+  };
+
+  const mockApplication: Application | null = null; // Set to null if no application exists
+  
+  // Use profileData state if available, otherwise use mockProfile
+  const currentProfile = profileData || mockProfile;
+
+  // Fetch job postings
+  const { data: jobPostings = [], isLoading } = useQuery<JobPosting[]>({
+    queryKey: ['/api/job-postings'],
   });
 
+  // Filter jobs based on search criteria
   const filteredJobs = jobPostings.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          job.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesLocation = !selectedLocation || job.locations.some(loc => 
+      loc.toLowerCase().includes(selectedLocation.toLowerCase())
+    );
+    const matchesEmployment = !employmentFilter || job.employment_type === employmentFilter;
     
-    const matchesLocation = !locationFilter || 
-                           job.locations.some(loc => loc.toLowerCase().includes(locationFilter.toLowerCase()));
-    
-    return matchesSearch && matchesLocation;
+    return matchesSearch && matchesLocation && matchesEmployment && job.status === 'active';
   });
 
-  const allLocations = Array.from(
-    new Set(jobPostings.flatMap(job => job.locations))
-  ).sort();
+  // Get unique locations and employment types for filters
+  const allLocations = [...new Set(jobPostings.flatMap(job => job.locations))];
+  const allEmploymentTypes = [...new Set(jobPostings.map(job => job.employment_type).filter(Boolean))];
 
-  const handleApply = (job: JobPosting) => {
-    // For now, we'll just show an alert. In a real app, this would open an application form
-    alert(`Terima kasih! Lamaran Anda untuk posisi "${job.title}" telah berhasil dikirim. Tim HR akan menghubungi Anda dalam 1-3 hari kerja.`);
+  const handleLogout = () => {
+    onLogout();
   };
 
-  const JobCard: React.FC<{ job: JobPosting }> = ({ job }) => (
-    <div className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-blue-300">
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex-1">
-          <h3 className="text-lg font-bold text-gray-900 mb-2">{job.title}</h3>
-          <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-            <div className="flex items-center gap-1">
-              <Calendar size={14} />
-              {new Date(job.created_at).toLocaleDateString('id-ID')}
-            </div>
-            <div className="flex items-center gap-1">
-              <MapPin size={14} />
-              {job.locations.length} lokasi
-            </div>
-          </div>
-        </div>
-        <button
-          onClick={() => setSelectedJob(job)}
-          className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
-          title="Lihat Detail"
-        >
-          <Eye size={18} />
-        </button>
-      </div>
-      
-      <p className="text-gray-700 mb-4 line-clamp-3">{job.description}</p>
-      
-      <div className="flex flex-wrap gap-2 mb-4">
-        {job.locations.slice(0, 2).map((location, index) => (
-          <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
-            {location}
-          </span>
-        ))}
-        {job.locations.length > 2 && (
-          <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">
-            +{job.locations.length - 2} lainnya
-          </span>
-        )}
-      </div>
+  const handleApply = (jobId: string, jobTitle: string) => {
+    if (!currentProfile.profile_completed) {
+      setActiveTab("profile");
+      return;
+    }
+    
+    if (currentProfile.has_applied) {
+      alert("Anda sudah melamar ke satu posisi. Anda hanya dapat melamar ke satu posisi saja.");
+      return;
+    }
+    
+    // Find the job and open application form
+    const job = filteredJobs.find(j => j.id === jobId);
+    if (job) {
+      setSelectedJobForApplication(job);
+    }
+  };
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4 text-sm text-gray-600">
-          {job.employment_type && (
-            <div className="flex items-center gap-1">
-              <Clock size={14} />
-              {job.employment_type}
-            </div>
-          )}
-          {job.positions_needed && job.positions_needed > 1 && (
-            <div className="flex items-center gap-1 text-blue-600 font-semibold">
-              <User size={14} />
-              Butuh {job.positions_needed} orang
-            </div>
-          )}
-          {job.salary_range && (
-            <div className="flex items-center gap-1 text-green-600 font-semibold">
-              <DollarSign size={14} />
-              {job.salary_range}
-            </div>
-          )}
-        </div>
-        <button
-          onClick={() => handleApply(job)}
-          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 flex items-center gap-2"
-        >
-          <Send size={16} />
-          Lamar
-        </button>
-      </div>
-    </div>
-  );
+  const handleProfileComplete = (profileData: any) => {
+    console.log("Profile completed:", profileData);
+    // Update profile data
+    setProfileData(prev => ({
+      ...mockProfile,
+      profile_completed: true,
+      completion_percentage: 100,
+      ...profileData
+    }));
+    setActiveTab("jobs");
+  };
 
-  const JobDetailModal: React.FC<{ job: JobPosting; onClose: () => void }> = ({ job, onClose }) => (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-3xl">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">{job.title}</h2>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-            >
-              ×
-            </button>
-          </div>
-        </div>
+  const handleApplicationSubmit = (applicationData: any) => {
+    console.log("Application submitted:", applicationData);
+    // Update profile to mark as applied
+    setProfileData(prev => prev ? {
+      ...prev,
+      has_applied: true
+    } : null);
+    
+    // Close application form
+    setSelectedJobForApplication(null);
+    
+    // Switch to application status tab
+    setActiveTab("application");
+    
+    alert("Aplikasi berhasil dikirim! Tim HR akan menghubungi Anda dalam 1-3 hari kerja.");
+  };
 
-        <div className="p-6 space-y-6">
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-1">
-              <Calendar size={14} />
-              Diposting {new Date(job.created_at).toLocaleDateString('id-ID')}
-            </div>
-            <div className="flex items-center gap-1">
-              <Building2 size={14} />
-              SWAPRO
-            </div>
-          </div>
+  const handleApplicationCancel = () => {
+    setSelectedJobForApplication(null);
+  };
 
-          <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Deskripsi Pekerjaan</h3>
-            <p className="text-gray-700 leading-relaxed whitespace-pre-line">{job.description}</p>
-          </div>
-
-          {job.requirements && (
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">Persyaratan</h3>
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">{job.requirements}</p>
-            </div>
-          )}
-
-          <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Lokasi Penempatan</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {job.locations.map((location, index) => (
-                <div key={index} className="p-3 bg-blue-50 rounded-xl border border-blue-100">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MapPin size={16} className="text-blue-600" />
-                    <span className="text-blue-800 font-semibold">{location}</span>
-                  </div>
-                  {job.maps_links && job.maps_links[index] && (
-                    <a
-                      href={job.maps_links[index]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium hover:underline"
-                    >
-                      📍 Lihat di Google Maps
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {job.employment_type && (
-              <div className="p-4 bg-gray-50 rounded-xl">
-                <div className="flex items-center gap-2 mb-2">
-                  <Clock size={16} className="text-gray-600" />
-                  <span className="font-semibold text-gray-900">Tipe Pekerjaan</span>
-                </div>
-                <p className="text-gray-700">{job.employment_type}</p>
-              </div>
-            )}
-            {job.salary_range && (
-              <div className="p-4 bg-green-50 rounded-xl">
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign size={16} className="text-green-600" />
-                  <span className="font-semibold text-gray-900">Range Gaji</span>
-                </div>
-                <p className="text-green-700 font-semibold">{job.salary_range}</p>
-              </div>
-            )}
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
-            <button
-              onClick={onClose}
-              className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50 transition-colors"
-            >
-              Tutup
-            </button>
-            <button
-              onClick={() => handleApply(job)}
-              className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 flex items-center justify-center gap-2"
-            >
-              <Send size={20} />
-              Lamar Posisi Ini
-            </button>
-          </div>
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Memuat lowongan kerja...</p>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-orange-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <img 
-                src="/swapro copy.png" 
-                alt="SWAPRO Logo" 
-                className="h-12"
-              />
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Portal Karir SWAPRO</h1>
-                <p className="text-gray-600">Selamat datang, {userProfile?.full_name || userProfile?.email}</p>
-              </div>
+            <div className="flex items-center space-x-4">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">SWAPRO</h1>
+              <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                Portal Pelamar
+              </Badge>
+              {mockProfile.full_name && (
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Selamat datang, {mockProfile.full_name}
+                </span>
+              )}
             </div>
-            <div className="flex items-center gap-3">
-              <button className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
-                <Settings size={20} className="text-gray-600" />
-              </button>
-              <button
-                onClick={onLogout}
-                className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors font-semibold"
-              >
-                <LogOut size={16} />
-                Logout
-              </button>
-            </div>
+            <Button onClick={handleLogout} variant="outline" size="sm">
+              <LogOut className="h-4 w-4 mr-2" />
+              Keluar
+            </Button>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl p-8 mb-8 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Temukan Karir Impian Anda</h2>
-              <p className="text-blue-100 text-lg">
-                Jelajahi {jobPostings.length} lowongan pekerjaan terbaru di SWAPRO
-              </p>
-            </div>
-            <div className="hidden lg:block">
-              <Briefcase size={64} className="text-white/20" />
-            </div>
-          </div>
-        </div>
+        {/* Profile Completion Alert */}
+        {!mockProfile.profile_completed && (
+          <Alert className="mb-6 border-orange-200 bg-orange-50 dark:bg-orange-900/20 dark:border-orange-800">
+            <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+            <AlertDescription className="text-orange-800 dark:text-orange-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <strong>Profil belum lengkap!</strong> Anda perlu melengkapi profil ({mockProfile.completion_percentage}%) 
+                  sebelum dapat melamar pekerjaan.
+                </div>
+                <Button 
+                  size="sm" 
+                  onClick={() => setActiveTab("profile")}
+                  className="bg-orange-600 hover:bg-orange-700 text-white"
+                >
+                  Lengkapi Sekarang
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
+        )}
 
-        {/* Search and Filter */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 mb-8 shadow-lg border border-white/20">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Cari posisi, deskripsi..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all"
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="jobs" className="flex items-center gap-2">
+              <Search className="h-4 w-4" />
+              Cari Lowongan
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              Profil Saya
+              {!mockProfile.profile_completed && (
+                <Badge variant="destructive" className="text-xs ml-1">!</Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="application" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Status Aplikasi
+            </TabsTrigger>
+            <TabsTrigger value="help" className="flex items-center gap-2">
+              <AlertCircle className="h-4 w-4" />
+              Bantuan
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="jobs" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+              {/* Sidebar - Search & Filters */}
+              <div className="lg:col-span-1">
+                <Card className="sticky top-24">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Filter className="h-5 w-5" />
+                      Filter Pencarian
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* Search */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Cari Pekerjaan</label>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Input
+                          placeholder="Masukkan kata kunci..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Location Filter */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Lokasi</label>
+                      <select
+                        value={selectedLocation}
+                        onChange={(e) => setSelectedLocation(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-md dark:border-gray-600 dark:bg-gray-700"
+                      >
+                        <option value="">Semua Lokasi</option>
+                        {allLocations.map(location => (
+                          <option key={location} value={location}>{location}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Employment Type Filter */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Tipe Pekerjaan</label>
+                      <select
+                        value={employmentFilter}
+                        onChange={(e) => setEmploymentFilter(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-md dark:border-gray-600 dark:bg-gray-700"
+                      >
+                        <option value="">Semua Tipe</option>
+                        {allEmploymentTypes.map(type => (
+                          <option key={type} value={type}>{type}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Clear Filters */}
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => {
+                        setSearchTerm("");
+                        setSelectedLocation("");
+                        setEmploymentFilter("");
+                      }}
+                    >
+                      Reset Filter
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Main Content - Job Listings */}
+              <div className="lg:col-span-3">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                    Lowongan Kerja Tersedia
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    Ditemukan {filteredJobs.length} lowongan kerja yang sesuai dengan kriteria Anda
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  {filteredJobs.length === 0 ? (
+                    <Card>
+                      <CardContent className="p-8 text-center">
+                        <Search className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                          Tidak Ada Lowongan Ditemukan
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-400">
+                          Coba ubah kriteria pencarian atau filter untuk melihat lowongan lainnya.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    filteredJobs.map((job) => (
+                      <Card key={job.id} className="hover:shadow-lg transition-shadow">
+                        <CardHeader>
+                          <div className="flex items-start justify-between">
+                            <div className="space-y-2">
+                              <CardTitle className="text-xl">{job.title}</CardTitle>
+                              <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
+                                <div className="flex items-center">
+                                  <MapPin className="h-4 w-4 mr-1" />
+                                  {job.locations.join(", ")}
+                                </div>
+                                <div className="flex items-center">
+                                  <Clock className="h-4 w-4 mr-1" />
+                                  {new Date(job.created_at).toLocaleDateString('id-ID')}
+                                </div>
+                                {job.employment_type && (
+                                  <div className="flex items-center">
+                                    <Building className="h-4 w-4 mr-1" />
+                                    {job.employment_type}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex flex-col space-y-2">
+                              {job.status === 'urgent' && (
+                                <Badge variant="destructive" className="text-xs">
+                                  <Star className="h-3 w-3 mr-1" />
+                                  Urgent
+                                </Badge>
+                              )}
+                              {job.salary_range && (
+                                <Badge variant="secondary" className="text-xs">
+                                  {job.salary_range}
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <CardDescription className="mb-4 line-clamp-3">
+                            {job.description}
+                          </CardDescription>
+                          
+                          {job.requirements && (
+                            <div className="mb-4">
+                              <h4 className="font-medium text-sm text-gray-900 dark:text-white mb-2">
+                                Persyaratan:
+                              </h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                                {job.requirements}
+                              </p>
+                            </div>
+                          )}
+
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                              {job.positions_needed && (
+                                <span>{job.positions_needed} posisi tersedia</span>
+                              )}
+                            </div>
+                            <div className="flex space-x-2">
+                              <Button variant="outline" size="sm">
+                                Lihat Detail
+                              </Button>
+                              <Button 
+                                size="sm"
+                                onClick={() => handleApply(job.id, job.title)}
+                                className="bg-blue-600 hover:bg-blue-700"
+                                disabled={!currentProfile.profile_completed || currentProfile.has_applied}
+                              >
+                                {!currentProfile.profile_completed 
+                                  ? "Lengkapi Profil Dulu" 
+                                  : currentProfile.has_applied 
+                                    ? "Sudah Melamar" 
+                                    : "Lamar Sekarang"
+                                }
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="profile" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  Status Profil Anda
+                </CardTitle>
+                <CardDescription>
+                  Kelengkapan profil sangat penting untuk meningkatkan peluang diterima kerja
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium">Kelengkapan Profil</span>
+                    <span className="text-sm font-medium">{currentProfile.completion_percentage}%</span>
+                  </div>
+                  <Progress value={currentProfile.completion_percentage} className="h-2" />
+                  
+                  {currentProfile.profile_completed ? (
+                    <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+                      <CheckCircle className="h-4 w-4" />
+                      <span className="text-sm">Profil sudah lengkap! Anda dapat mulai melamar pekerjaan.</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400">
+                      <AlertCircle className="h-4 w-4" />
+                      <span className="text-sm">
+                        Profil belum lengkap. Lengkapi untuk dapat melamar pekerjaan.
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <ApplicantProfileForm 
+              onComplete={handleProfileComplete}
+              existingProfile={currentProfile}
+            />
+          </TabsContent>
+
+          <TabsContent value="application" className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                Status Aplikasi Anda
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                Pantau status aplikasi pekerjaan yang telah Anda kirimkan
+              </p>
+              
+              <ApplicationStatusCard 
+                application={mockApplication}
+                onViewDetails={() => console.log("View details")}
+                onWithdraw={() => console.log("Withdraw application")}
               />
             </div>
-            <div className="relative">
-              <MapPin size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <select
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-                className="pl-10 pr-8 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all appearance-none bg-white min-w-[200px]"
-              >
-                <option value="">Semua Lokasi</option>
-                {allLocations.map((location) => (
-                  <option key={location} value={location}>{location}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
+          </TabsContent>
 
-        {/* Job Listings */}
-        <div className="space-y-6">
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p className="text-gray-600">Memuat lowongan pekerjaan...</p>
-            </div>
-          ) : filteredJobs.length === 0 ? (
-            <div className="text-center py-12">
-              <Briefcase size={48} className="text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {searchTerm || locationFilter ? 'Tidak ada lowongan yang sesuai' : 'Belum ada lowongan tersedia'}
-              </h3>
-              <p className="text-gray-600">
-                {searchTerm || locationFilter 
-                  ? 'Coba ubah kata kunci pencarian atau filter lokasi'
-                  : 'Lowongan baru akan segera ditambahkan'
-                }
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {filteredJobs.map((job) => (
-                <JobCard key={job.id} job={job} />
-              ))}
-            </div>
-          )}
-        </div>
+          <TabsContent value="help" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Panduan Penggunaan Platform</CardTitle>
+                <CardDescription>
+                  Informasi penting tentang proses aplikasi dan ketentuan platform
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">Ketentuan Aplikasi</h3>
+                    <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                      <li>• Setiap pelamar hanya dapat melamar ke satu posisi</li>
+                      <li>• Profil harus lengkap 100% sebelum dapat melamar</li>
+                      <li>• Dokumen CV dan foto profil wajib diunggah</li>
+                      <li>• Data yang diisi harus valid dan dapat dipertanggungjawabkan</li>
+                      <li>• Aplikasi yang sudah disubmit tidak dapat diubah</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">Proses Seleksi</h3>
+                    <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                      <li>• <strong>Pending:</strong> Aplikasi dalam antrian review</li>
+                      <li>• <strong>Reviewing:</strong> Tim HR sedang mengevaluasi aplikasi</li>
+                      <li>• <strong>Interview:</strong> Anda dipanggil untuk tahap interview</li>
+                      <li>• <strong>Accepted:</strong> Selamat! Aplikasi Anda diterima</li>
+                      <li>• <strong>Rejected:</strong> Aplikasi belum berhasil kali ini</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2">Tips Sukses Aplikasi</h3>
+                    <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                      <li>• Lengkapi profil dengan data yang akurat dan terkini</li>
+                      <li>• Upload CV yang rapi dan profesional</li>
+                      <li>• Gunakan foto profil yang sopan dan profesional</li>
+                      <li>• Pilih posisi yang sesuai dengan keahlian dan pengalaman</li>
+                      <li>• Pastikan kontak yang dicantumkan aktif dan mudah dihubungi</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
 
-      {/* Job Detail Modal */}
-      {selectedJob && (
-        <JobDetailModal 
-          job={selectedJob} 
-          onClose={() => setSelectedJob(null)} 
-        />
+      {/* Application Form Modal */}
+      {selectedJobForApplication && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <ApplicationForm
+              job={selectedJobForApplication}
+              onSubmit={handleApplicationSubmit}
+              onCancel={handleApplicationCancel}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
-};
-
-export default ApplicantDashboard;
+}

@@ -10,6 +10,64 @@ export const users = pgTable("users", {
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Enhanced applicant profiles with mandatory fields
+export const applicantProfiles = pgTable("applicant_profiles", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull().unique(),
+  
+  // Personal Information (Mandatory)
+  full_name: text("full_name").notNull(),
+  phone: text("phone").notNull(),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  postal_code: text("postal_code").notNull(),
+  birth_date: timestamp("birth_date").notNull(),
+  gender: text("gender", { enum: ["male", "female"] }).notNull(),
+  nationality: text("nationality").notNull(),
+  id_number: text("id_number").notNull().unique(), // KTP/Passport
+  
+  // Professional Information (Mandatory)
+  current_position: text("current_position"),
+  current_company: text("current_company"),
+  experience_years: integer("experience_years").notNull(),
+  education_level: text("education_level", { 
+    enum: ["high_school", "diploma", "bachelor", "master", "doctorate"] 
+  }).notNull(),
+  major: text("major").notNull(),
+  university: text("university").notNull(),
+  graduation_year: integer("graduation_year").notNull(),
+  
+  // Skills and Preferences
+  skills: text("skills").array().notNull().default([]),
+  languages: text("languages").array().notNull().default([]),
+  expected_salary: text("expected_salary"),
+  work_type_preference: text("work_type_preference", {
+    enum: ["full_time", "part_time", "contract", "internship"]
+  }).notNull(),
+  willing_to_relocate: boolean("willing_to_relocate").notNull().default(false),
+  
+  // Documents (Mandatory)
+  cv_url: text("cv_url").notNull(),
+  photo_url: text("photo_url").notNull(),
+  
+  // Additional Info
+  bio: text("bio"),
+  portfolio_url: text("portfolio_url"),
+  linkedin_url: text("linkedin_url"),
+  
+  // Application Status
+  has_applied: boolean("has_applied").notNull().default(false),
+  applied_job_id: integer("applied_job_id").references(() => jobPostings.id),
+  application_date: timestamp("application_date"),
+  
+  // Profile Completion
+  profile_completed: boolean("profile_completed").notNull().default(false),
+  completion_percentage: integer("completion_percentage").notNull().default(0),
+  
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const jobPostings = pgTable("job_postings", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -25,6 +83,7 @@ export const jobPostings = pgTable("job_postings", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
   full_name: true,
@@ -37,7 +96,29 @@ export const insertJobPostingSchema = createInsertSchema(jobPostings).omit({
   updated_at: true,
 });
 
-// New tables for Interview Management and Screening
+export const insertApplicantProfileSchema = createInsertSchema(applicantProfiles).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+  completion_percentage: true,
+  profile_completed: true,
+});
+
+// Simple applications table for one-job restriction
+export const jobApplications = pgTable("job_applications", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id").references(() => users.id).notNull().unique(), // One application per user
+  job_posting_id: integer("job_posting_id").references(() => jobPostings.id).notNull(),
+  status: text("status", { 
+    enum: ["pending", "reviewing", "interview", "accepted", "rejected", "withdrawn"] 
+  }).notNull().default("pending"),
+  cover_letter: text("cover_letter"),
+  notes: text("notes"),
+  applied_at: timestamp("applied_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Keep existing tables but simplified
 export const candidates = pgTable("candidates", {
   id: serial("id").primaryKey(),
   full_name: text("full_name").notNull(),
@@ -164,11 +245,24 @@ export const insertSlikCheckSchema = createInsertSchema(slik_checks).omit({
   updated_at: true,
 });
 
+// Add job application schema
+export const insertJobApplicationSchema = createInsertSchema(jobApplications).omit({
+  id: true,
+  applied_at: true,
+  updated_at: true,
+});
+
 // Type exports
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertJobPosting = z.infer<typeof insertJobPostingSchema>;
 export type JobPosting = typeof jobPostings.$inferSelect;
+
+// New types for applicant profiles and applications
+export type InsertApplicantProfile = z.infer<typeof insertApplicantProfileSchema>;
+export type ApplicantProfile = typeof applicantProfiles.$inferSelect;
+export type InsertJobApplication = z.infer<typeof insertJobApplicationSchema>;
+export type JobApplication = typeof jobApplications.$inferSelect;
 
 export type InsertCandidate = z.infer<typeof insertCandidateSchema>;
 export type Candidate = typeof candidates.$inferSelect;
