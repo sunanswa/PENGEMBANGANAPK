@@ -10,50 +10,86 @@ export const users = pgTable("users", {
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
-// Enhanced applicant profiles with mandatory fields
+// Comprehensive applicant profiles as required by admin
 export const applicantProfiles = pgTable("applicant_profiles", {
   id: serial("id").primaryKey(),
   user_id: integer("user_id").references(() => users.id).notNull().unique(),
   
-  // Personal Information (Mandatory)
+  // Posisi & Penempatan
+  position_applied: text("position_applied").notNull(),
+  placement_location: text("placement_location").notNull(),
+  
+  // Data Pribadi Lengkap
   full_name: text("full_name").notNull(),
+  nik: text("nik").notNull().unique(), // 16 digit NIK
   phone: text("phone").notNull(),
-  address: text("address").notNull(),
+  birth_place: text("birth_place").notNull(),
+  birth_date: timestamp("birth_date").notNull(),
+  age: integer("age").notNull(),
+  gender: text("gender", { enum: ["Laki-laki", "Perempuan"] }).notNull(),
+  marital_status: text("marital_status", { 
+    enum: ["Belum Menikah", "Menikah", "Cerai Hidup", "Cerai Mati"] 
+  }).notNull(),
+  religion: text("religion", { 
+    enum: ["Islam", "Kristen", "Katolik", "Hindu", "Buddha", "Konghucu", "Lainnya"] 
+  }).notNull(),
+  father_name: text("father_name").notNull(),
+  mother_name: text("mother_name").notNull(),
+  
+  // Alamat Lengkap
+  ktp_address: text("ktp_address").notNull(),
+  domicile_address: text("domicile_address").notNull(),
+  rt_rw: text("rt_rw").notNull(), // format: RT/RW
+  house_number: text("house_number").notNull(),
+  kelurahan: text("kelurahan").notNull(),
+  kecamatan: text("kecamatan").notNull(),
   city: text("city").notNull(),
   postal_code: text("postal_code").notNull(),
-  birth_date: timestamp("birth_date").notNull(),
-  gender: text("gender", { enum: ["male", "female"] }).notNull(),
-  nationality: text("nationality").notNull(),
-  id_number: text("id_number").notNull().unique(), // KTP/Passport
   
-  // Professional Information (Mandatory)
-  current_position: text("current_position"),
-  current_company: text("current_company"),
-  experience_years: integer("experience_years").notNull(),
+  // Pendidikan
   education_level: text("education_level", { 
-    enum: ["high_school", "diploma", "bachelor", "master", "doctorate"] 
+    enum: ["SD", "SMP", "SMA/SMK", "D1", "D2", "D3", "S1", "S2", "S3"] 
   }).notNull(),
+  school_name: text("school_name").notNull(),
   major: text("major").notNull(),
-  university: text("university").notNull(),
+  entry_year: integer("entry_year").notNull(),
   graduation_year: integer("graduation_year").notNull(),
+  gpa: text("gpa"), // IPK dalam format string (misal: "3.45")
   
-  // Skills and Preferences
-  skills: text("skills").array().notNull().default([]),
-  languages: text("languages").array().notNull().default([]),
-  expected_salary: text("expected_salary"),
-  work_type_preference: text("work_type_preference", {
-    enum: ["full_time", "part_time", "contract", "internship"]
+  // Pengalaman Kerja
+  work_experience: text("work_experience").notNull(), // Deskripsi umum
+  leasing_experience: text("leasing_experience").notNull(), // Khusus pengalaman leasing
+  company_name: text("company_name"),
+  job_position: text("job_position"),
+  work_period: text("work_period"), // format: "Jan 2020 - Des 2022"
+  job_description: text("job_description"),
+  
+  // Kepemilikan & Dokumen
+  private_vehicle: text("private_vehicle", { 
+    enum: ["Ada", "Tidak Ada"] 
   }).notNull(),
-  willing_to_relocate: boolean("willing_to_relocate").notNull().default(false),
+  original_ktp: text("original_ktp", { 
+    enum: ["Ada", "Tidak Ada"] 
+  }).notNull(),
+  sim_c: text("sim_c", { 
+    enum: ["Ada", "Tidak Ada"] 
+  }).notNull(),
+  sim_a: text("sim_a", { 
+    enum: ["Ada", "Tidak Ada"] 
+  }).notNull(),
+  skck: text("skck", { 
+    enum: ["Ada", "Tidak Ada"] 
+  }).notNull(),
+  npwp: text("npwp", { 
+    enum: ["Ada", "Tidak Ada"] 
+  }).notNull(),
+  bad_credit_history: text("bad_credit_history", { 
+    enum: ["Ada", "Tidak Ada"] 
+  }).notNull(),
   
-  // Documents (Mandatory)
+  // Motivasi & CV
+  application_reason: text("application_reason").notNull(),
   cv_url: text("cv_url").notNull(),
-  photo_url: text("photo_url").notNull(),
-  
-  // Additional Info
-  bio: text("bio"),
-  portfolio_url: text("portfolio_url"),
-  linkedin_url: text("linkedin_url"),
   
   // Application Status
   has_applied: boolean("has_applied").notNull().default(false),
@@ -102,6 +138,7 @@ export const insertApplicantProfileSchema = createInsertSchema(applicantProfiles
   updated_at: true,
   completion_percentage: true,
   profile_completed: true,
+  age: true, // akan dihitung otomatis dari tanggal lahir
 });
 
 // Simple applications table for one-job restriction

@@ -10,7 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Search, MapPin, Clock, Building, LogOut, Filter, Star, User, FileText, AlertCircle, CheckCircle } from "lucide-react";
 import ApplicantProfileForm from "@/components/ApplicantProfileForm";
 import ApplicationStatusCard from "@/components/ApplicationStatusCard";
-import ApplicationForm from "@/components/ApplicationForm";
+import ComprehensiveApplicationForm from "@/components/ComprehensiveApplicationForm";
 
 interface JobPosting {
   id: string;
@@ -527,17 +527,14 @@ export default function ApplicantDashboard({ onLogout, userProfile }: ApplicantD
         </Tabs>
       </div>
 
-      {/* Application Form Modal */}
+      {/* Comprehensive Application Form Modal */}
       {selectedJobForApplication && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <ApplicationForm
-              job={selectedJobForApplication}
-              onSubmit={handleApplicationSubmit}
-              onCancel={handleApplicationCancel}
-            />
-          </div>
-        </div>
+        <ComprehensiveApplicationForm
+          jobId={parseInt(selectedJobForApplication.id)}
+          jobTitle={selectedJobForApplication.title}
+          onSubmit={handleApplicationSubmit}
+          onClose={handleApplicationCancel}
+        />
       )}
     </div>
   );

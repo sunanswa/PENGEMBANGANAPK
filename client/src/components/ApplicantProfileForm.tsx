@@ -15,43 +15,66 @@ import { User, Upload, Phone, MapPin, GraduationCap, Briefcase, Languages, FileT
 import { useToast } from "@/hooks/use-toast";
 
 const profileSchema = z.object({
-  // Personal Information
-  full_name: z.string().min(3, "Nama lengkap minimal 3 karakter"),
-  phone: z.string().min(10, "Nomor telepon tidak valid"),
-  address: z.string().min(10, "Alamat terlalu singkat"),
-  city: z.string().min(2, "Nama kota tidak valid"),
-  postal_code: z.string().min(5, "Kode pos tidak valid"),
-  birth_date: z.string().min(1, "Tanggal lahir wajib diisi"),
-  gender: z.enum(["male", "female"], { required_error: "Jenis kelamin wajib dipilih" }),
-  nationality: z.string().min(2, "Kewarganegaraan wajib diisi"),
-  id_number: z.string().min(16, "Nomor KTP/Passport tidak valid"),
+  // Posisi & Penempatan
+  position_applied: z.string().min(1, "Posisi yang dilamar wajib diisi"),
+  placement_location: z.string().min(1, "Penempatan wajib diisi"),
   
-  // Professional Information
-  experience_years: z.number().min(0, "Pengalaman tidak boleh negatif"),
-  education_level: z.enum(["high_school", "diploma", "bachelor", "master", "doctorate"], {
+  // Data Pribadi Lengkap
+  full_name: z.string().min(3, "Nama lengkap minimal 3 karakter"),
+  nik: z.string().length(16, "NIK harus 16 digit").regex(/^\d{16}$/, "NIK harus berupa angka"),
+  phone: z.string().min(10, "Nomor HP tidak valid"),
+  birth_place: z.string().min(2, "Tempat lahir wajib diisi"),
+  birth_date: z.string().min(1, "Tanggal lahir wajib diisi"),
+  gender: z.enum(["Laki-laki", "Perempuan"], { required_error: "Jenis kelamin wajib dipilih" }),
+  marital_status: z.enum(["Belum Menikah", "Menikah", "Cerai Hidup", "Cerai Mati"], {
+    required_error: "Status perkawinan wajib dipilih"
+  }),
+  religion: z.enum(["Islam", "Kristen", "Katolik", "Hindu", "Buddha", "Konghucu", "Lainnya"], {
+    required_error: "Agama wajib dipilih"
+  }),
+  father_name: z.string().min(2, "Nama ayah wajib diisi"),
+  mother_name: z.string().min(2, "Nama ibu wajib diisi"),
+  
+  // Alamat Lengkap
+  ktp_address: z.string().min(10, "Alamat KTP wajib diisi"),
+  domicile_address: z.string().min(10, "Alamat domisili wajib diisi"),
+  rt_rw: z.string().min(1, "RT/RW wajib diisi"),
+  house_number: z.string().min(1, "Nomor rumah wajib diisi"),
+  kelurahan: z.string().min(2, "Kelurahan wajib diisi"),
+  kecamatan: z.string().min(2, "Kecamatan wajib diisi"),
+  city: z.string().min(2, "Kota wajib diisi"),
+  postal_code: z.string().min(5, "Kode pos tidak valid"),
+  
+  // Pendidikan
+  education_level: z.enum(["SD", "SMP", "SMA/SMK", "D1", "D2", "D3", "S1", "S2", "S3"], {
     required_error: "Tingkat pendidikan wajib dipilih"
   }),
-  major: z.string().min(2, "Jurusan/bidang studi wajib diisi"),
-  university: z.string().min(2, "Nama institusi pendidikan wajib diisi"),
-  graduation_year: z.number().min(1950).max(new Date().getFullYear() + 10, "Tahun kelulusan tidak valid"),
+  school_name: z.string().min(2, "Nama sekolah wajib diisi"),
+  major: z.string().min(2, "Jurusan wajib diisi"),
+  entry_year: z.number().min(1950).max(new Date().getFullYear(), "Tahun masuk tidak valid"),
+  graduation_year: z.number().min(1950).max(new Date().getFullYear() + 10, "Tahun lulus tidak valid"),
+  gpa: z.string().optional(),
   
-  // Work Preferences
-  work_type_preference: z.enum(["full_time", "part_time", "contract", "internship"], {
-    required_error: "Preferensi tipe pekerjaan wajib dipilih"
-  }),
-  willing_to_relocate: z.boolean(),
+  // Pengalaman Kerja
+  work_experience: z.string().min(10, "Pengalaman kerja wajib diisi"),
+  leasing_experience: z.string().min(5, "Pengalaman leasing wajib diisi"),
+  company_name: z.string().optional(),
+  job_position: z.string().optional(),
+  work_period: z.string().optional(),
+  job_description: z.string().optional(),
   
-  // Documents (URLs akan diisi setelah upload)
+  // Kepemilikan & Dokumen
+  private_vehicle: z.enum(["Ada", "Tidak Ada"], { required_error: "Status kendaraan pribadi wajib dipilih" }),
+  original_ktp: z.enum(["Ada", "Tidak Ada"], { required_error: "Status KTP asli wajib dipilih" }),
+  sim_c: z.enum(["Ada", "Tidak Ada"], { required_error: "Status SIM C wajib dipilih" }),
+  sim_a: z.enum(["Ada", "Tidak Ada"], { required_error: "Status SIM A wajib dipilih" }),
+  skck: z.enum(["Ada", "Tidak Ada"], { required_error: "Status SKCK wajib dipilih" }),
+  npwp: z.enum(["Ada", "Tidak Ada"], { required_error: "Status NPWP wajib dipilih" }),
+  bad_credit_history: z.enum(["Ada", "Tidak Ada"], { required_error: "Status riwayat buruk kredit wajib dipilih" }),
+  
+  // Motivasi & CV
+  application_reason: z.string().min(20, "Alasan melamar minimal 20 karakter"),
   cv_url: z.string().min(1, "CV wajib diunggah"),
-  photo_url: z.string().min(1, "Foto profil wajib diunggah"),
-  
-  // Optional fields
-  current_position: z.string().optional(),
-  current_company: z.string().optional(),
-  expected_salary: z.string().optional(),
-  bio: z.string().optional(),
-  portfolio_url: z.string().optional(),
-  linkedin_url: z.string().optional(),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -62,18 +85,42 @@ interface ApplicantProfileFormProps {
 }
 
 const educationLevels = {
-  high_school: "SMA/SMK",
-  diploma: "Diploma (D3)",
-  bachelor: "Sarjana (S1)",
-  master: "Magister (S2)",
-  doctorate: "Doktor (S3)"
+  "SD": "SD",
+  "SMP": "SMP", 
+  "SMA/SMK": "SMA/SMK",
+  "D1": "D1",
+  "D2": "D2",
+  "D3": "D3",
+  "S1": "S1",
+  "S2": "S2",
+  "S3": "S3"
 };
 
-const workTypes = {
-  full_time: "Full Time",
-  part_time: "Part Time", 
-  contract: "Kontrak",
-  internship: "Magang"
+const genderOptions = {
+  "Laki-laki": "Laki-laki",
+  "Perempuan": "Perempuan"
+};
+
+const maritalOptions = {
+  "Belum Menikah": "Belum Menikah",
+  "Menikah": "Menikah",
+  "Cerai Hidup": "Cerai Hidup", 
+  "Cerai Mati": "Cerai Mati"
+};
+
+const religionOptions = {
+  "Islam": "Islam",
+  "Kristen": "Kristen",
+  "Katolik": "Katolik",
+  "Hindu": "Hindu",
+  "Buddha": "Buddha",
+  "Konghucu": "Konghucu",
+  "Lainnya": "Lainnya"
+};
+
+const yesNoOptions = {
+  "Ada": "Ada",
+  "Tidak Ada": "Tidak Ada"
 };
 
 export default function ApplicantProfileForm({ onComplete, existingProfile }: ApplicantProfileFormProps) {
