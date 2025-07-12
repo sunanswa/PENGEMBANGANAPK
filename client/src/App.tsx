@@ -114,6 +114,12 @@ function App() {
           </>
         ) : (
           <Switch>
+            <Route path="/admin/:rest*">
+              <RecruiterDashboard onLogout={handleLogout} />
+            </Route>
+            <Route path="/applicant/:rest*">
+              <ApplicantDashboard onLogout={handleLogout} userProfile={user} />
+            </Route>
             <Route path="/">
               {user.role === 'admin' ? (
                 <RecruiterDashboard onLogout={handleLogout} />

@@ -21,14 +21,18 @@ interface JobPosting {
 }
 
 export default function JobListings() {
+  console.log("JobListings component rendered"); // Debug log
+  
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null);
   const [showNotifications, setShowNotifications] = useState(false);
 
-  const { data: jobs = [], isLoading } = useQuery<JobPosting[]>({
+  const { data: jobs = [], isLoading, error } = useQuery<JobPosting[]>({
     queryKey: ["/api/job-postings"],
   });
+
+  console.log("Jobs data:", jobs, "Loading:", isLoading, "Error:", error); // Debug log
 
   const filteredJobs = jobs.filter(job =>
     job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
