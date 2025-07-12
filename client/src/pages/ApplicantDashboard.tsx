@@ -118,7 +118,7 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onLogout, userP
           )}
           {job.positions_needed && job.positions_needed > 1 && (
             <div className="flex items-center gap-1 text-blue-600 font-semibold">
-              <Users size={14} />
+              <User size={14} />
               Butuh {job.positions_needed} orang
             </div>
           )}
