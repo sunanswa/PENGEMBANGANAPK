@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CommunicationHub from '../components/CommunicationHub';
+import AdvancedAnalytics from '../components/AdvancedAnalytics';
 import MessageComposer from '../components/MessageComposer';
 import { 
   Plus, 
@@ -74,6 +75,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   const [showInterviewScheduler, setShowInterviewScheduler] = useState(false);
   const [showScreeningAssessment, setShowScreeningAssessment] = useState(false);
   const [showCommunicationHub, setShowCommunicationHub] = useState(false);
+  const [showAdvancedAnalytics, setShowAdvancedAnalytics] = useState(false);
   const [showMessageComposer, setShowMessageComposer] = useState(false);
   const [messageType, setMessageType] = useState<'email' | 'sms' | 'whatsapp'>('email');
   const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
@@ -242,7 +244,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     { id: 'interviews', label: 'Interview', icon: Video },
     { id: 'screening', label: 'Screening', icon: Brain },
     { id: 'communication', label: 'Communication', icon: Mail },
-    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+    { id: 'analytics', label: 'Advanced Analytics', icon: Activity },
     { id: 'settings', label: 'Pengaturan', icon: Settings }
   ];
 
@@ -697,6 +699,13 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           <p className="text-gray-600">Analisis performa rekrutmen dan metrik bisnis</p>
         </div>
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowAdvancedAnalytics(true)}
+            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-xl hover:from-purple-700 hover:to-blue-700 transition-colors flex items-center gap-2"
+          >
+            <Activity size={18} />
+            Advanced Analytics
+          </button>
           <select className="px-4 py-2 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option>30 Hari Terakhir</option>
             <option>3 Bulan Terakhir</option>
@@ -1422,7 +1431,10 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                   {activeTab === 'overview' && 'Dashboard dan statistik sistem rekrutmen SWAPRO'}
                   {activeTab === 'jobs' && 'Kelola dan pantau lowongan pekerjaan dengan mudah'}
                   {activeTab === 'applicants' && 'Data pelamar dan proses rekrutmen terkini'}
-                  {activeTab === 'analytics' && 'Analisis performa dan metrik bisnis'}
+                  {activeTab === 'interviews' && 'Kelola jadwal dan proses interview kandidat'}
+                  {activeTab === 'screening' && 'Assessment dan screening otomatis kandidat'}
+                  {activeTab === 'communication' && 'Hub komunikasi email, SMS, dan WhatsApp'}
+                  {activeTab === 'analytics' && 'Analisis mendalam dengan AI dan prediksi sukses kandidat'}
                   {activeTab === 'settings' && 'Pengaturan sistem dan preferensi admin'}
                 </p>
               </div>
@@ -1514,6 +1526,11 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         <CommunicationHub
           onClose={() => setShowCommunicationHub(false)}
         />
+      )}
+
+      {/* Advanced Analytics Modal */}
+      {showAdvancedAnalytics && (
+        <AdvancedAnalytics onClose={() => setShowAdvancedAnalytics(false)} />
       )}
 
       {/* Message Composer Modal */}

@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { insertUserSchema, insertJobPostingSchema, type User } from "@shared/schema";
 import { z } from "zod";
 import * as communication from "./communication";
+import * as analytics from "./analytics";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -314,6 +315,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success });
     } catch (error) {
       res.status(500).json({ error: "Failed to send WhatsApp" });
+    }
+  });
+
+  // Analytics routes
+  app.get("/api/analytics/overview", async (req, res) => {
+    try {
+      const dateRange = req.query.range as string || '30d';
+      const data = analytics.getAnalyticsOverview(dateRange);
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get analytics overview" });
+    }
+  });
+
+  app.get("/api/analytics/funnel", async (req, res) => {
+    try {
+      const dateRange = req.query.range as string || '30d';
+      const data = analytics.getFunnelData(dateRange);
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get funnel data" });
+    }
+  });
+
+  app.get("/api/analytics/time-to-hire", async (req, res) => {
+    try {
+      const dateRange = req.query.range as string || '30d';
+      const data = analytics.getTimeToHireData(dateRange);
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get time-to-hire data" });
+    }
+  });
+
+  app.get("/api/analytics/channels", async (req, res) => {
+    try {
+      const dateRange = req.query.range as string || '30d';
+      const data = analytics.getChannelData(dateRange);
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get channel data" });
+    }
+  });
+
+  app.get("/api/analytics/ai-predictions", async (req, res) => {
+    try {
+      const data = await analytics.getAIPredictions();
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get AI predictions" });
+    }
+  });
+
+  app.post("/api/analytics/predict-candidate", async (req, res) => {
+    try {
+      const { candidateData } = req.body;
+      const probability = await analytics.generateCandidateSuccessPrediction(candidateData);
+      res.json({ successProbability: probability });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to generate candidate prediction" });
+    }
+  });
+
+  app.get("/api/analytics/insights", async (req, res) => {
+    try {
+      const dateRange = req.query.range as string || '30d';
+      const data = analytics.getRecruitmentInsights(dateRange);
+      res.json(data);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get recruitment insights" });
+    }
+  });
+
+  app.post("/api/analytics/generate-report", async (req, res) => {
+    try {
+      const { type, dateRange } = req.body;
+      
+      // In a real implementation, this would generate and email a comprehensive report
+      const reportData = {
+        overview: analytics.getAnalyticsOverview(dateRange),
+        funnel: analytics.getFunnelData(dateRange),
+        timeToHire: analytics.getTimeToHireData(dateRange),
+        channels: analytics.getChannelData(dateRange),
+        insights: analytics.getRecruitmentInsights(dateRange)
+      };
+
+      // Mock report generation
+      setTimeout(() => {
+        console.log(`Generated ${type} report for ${dateRange} period`);
+      }, 1000);
+
+      res.json({ 
+        success: true, 
+        message: 'Report generation started. You will receive it via email shortly.',
+        reportId: `RPT-${Date.now()}`
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to generate report" });
     }
   });
 
