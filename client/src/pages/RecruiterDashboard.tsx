@@ -40,7 +40,8 @@ import {
   User,
   Brain,
   Video,
-  MessageCircle
+  MessageCircle,
+  UserPlus
 } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest, queryClient } from '../lib/queryClient';
@@ -191,7 +192,68 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     }
   };
 
+  // Data pelamar harian
+  const dailyApplicants = [
+    {
+      id: 1,
+      name: 'Sarah Wijayanti',
+      email: 'sarah.wijayanti@email.com',
+      phone: '+62812-3456-7890',
+      position: 'Sales Officer Chaneling',
+      appliedAt: '10:30 WIB',
+      status: 'new',
+      experience: '3 tahun',
+      education: 'S1 Manajemen',
+      location: 'Jakarta Selatan'
+    },
+    {
+      id: 2,
+      name: 'Ahmad Rizki Pratama',
+      email: 'ahmad.rizki@email.com',
+      phone: '+62813-4567-8901',
+      position: 'Credit Marketing Officer',
+      appliedAt: '11:45 WIB',
+      status: 'new',
+      experience: '2 tahun',
+      education: 'S1 Ekonomi',
+      location: 'Jakarta Pusat'
+    },
+    {
+      id: 3,
+      name: 'Indira Sari Dewi',
+      email: 'indira.sari@email.com',
+      phone: '+62814-5678-9012',
+      position: 'Telemarketing Specialist',
+      appliedAt: '14:20 WIB',
+      status: 'new',
+      experience: '1 tahun',
+      education: 'D3 Komunikasi',
+      location: 'Tangerang'
+    },
+    {
+      id: 4,
+      name: 'Bayu Setiawan',
+      email: 'bayu.setiawan@email.com',
+      phone: '+62815-6789-0123',
+      position: 'Recovery Officer',
+      appliedAt: '15:55 WIB',
+      status: 'new',
+      experience: '4 tahun',
+      education: 'S1 Hukum',
+      location: 'Bekasi'
+    }
+  ];
+
   const stats = [
+    {
+      title: 'Pelamar Hari Ini',
+      value: dailyApplicants.length,
+      change: '+67%',
+      icon: UserPlus,
+      color: 'from-emerald-500 to-green-600',
+      bgColor: 'bg-emerald-50',
+      textColor: 'text-emerald-600'
+    },
     {
       title: 'Total Lowongan',
       value: jobPostings.length,
@@ -200,15 +262,6 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
       color: 'from-blue-500 to-blue-600',
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-600'
-    },
-    {
-      title: 'Lowongan Aktif',
-      value: jobPostings.filter(job => job.status === 'active').length,
-      change: '+8%',
-      icon: CheckCircle,
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50',
-      textColor: 'text-green-600'
     },
     {
       title: 'Total Pelamar',
@@ -341,8 +394,62 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           </div>
         </div>
 
-        {/* Recent Activity */}
+        {/* Pelamar Hari Ini */}
         <div className="lg:col-span-2">
+          <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <div className="p-2 bg-blue-100 rounded-xl">
+                  <Users size={20} className="text-blue-600" />
+                </div>
+                Pelamar Hari Ini
+                <span className="bg-blue-100 text-blue-800 text-sm font-bold px-3 py-1 rounded-full">
+                  {dailyApplicants.length}
+                </span>
+              </h3>
+              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors">
+                Lihat Semua
+                <ChevronRight size={16} />
+              </button>
+            </div>
+            <div className="space-y-4">
+              {dailyApplicants.map((applicant) => (
+                <div key={applicant.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl flex items-center justify-center text-white font-bold">
+                    {applicant.name.split(' ').map(n => n[0]).join('')}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="font-semibold text-gray-900">{applicant.name}</p>
+                      <span className="text-xs text-gray-500 font-medium">{applicant.appliedAt}</span>
+                    </div>
+                    <p className="text-sm text-blue-600 font-medium mb-1">{applicant.position}</p>
+                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                      <span>📧 {applicant.email}</span>
+                      <span>📱 {applicant.phone}</span>
+                      <span>🎓 {applicant.education}</span>
+                      <span>💼 {applicant.experience}</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-xs text-gray-500">📍 {applicant.location}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
+                          Baru
+                        </span>
+                        <button className="text-blue-600 hover:text-blue-700 text-xs font-semibold">
+                          Review →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="lg:col-span-1">
           <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -351,22 +458,18 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                 </div>
                 Aktivitas Terbaru
               </h3>
-              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors">
-                Lihat Semua
-                <ChevronRight size={16} />
-              </button>
             </div>
             <div className="space-y-4">
               {recentActivities.map((activity, index) => (
-                <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
-                  <div className={`w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm`}>
-                    <activity.icon size={16} className={activity.color} />
+                <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
+                  <div className={`w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm`}>
+                    <activity.icon size={14} className={activity.color} />
                   </div>
                   <div className="flex-1">
-                    <p className="font-semibold text-gray-900">{activity.action}</p>
-                    <p className="text-sm text-gray-600">{activity.item}</p>
+                    <p className="font-semibold text-gray-900 text-sm">{activity.action}</p>
+                    <p className="text-xs text-gray-600">{activity.item}</p>
+                    <span className="text-xs text-gray-500">{activity.time}</span>
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">{activity.time}</span>
                 </div>
               ))}
             </div>
