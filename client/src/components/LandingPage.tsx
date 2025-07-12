@@ -27,9 +27,10 @@ interface LandingPageProps {
   onStartApplication: () => void;
   onShowAuth: () => void;
   onBypassAdmin?: () => void;
+  onBypassApplicant?: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication, onShowAuth, onBypassAdmin }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication, onShowAuth, onBypassAdmin, onBypassApplicant }) => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -446,13 +447,28 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication, onShowAut
             <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
           </button>
 
-          <div className="mt-6">
+          <div className="mt-6 space-y-3">
             <button
               onClick={onShowAuth}
-              className="text-blue-100 hover:text-white font-semibold underline transition-colors"
+              className="block text-blue-100 hover:text-white font-semibold underline transition-colors mx-auto"
             >
               Sudah punya akun? Login di sini
             </button>
+            
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <button
+                onClick={onBypassAdmin}
+                className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm hover:bg-gray-900 transition-colors"
+              >
+                Demo Admin Dashboard
+              </button>
+              <button
+                onClick={onBypassApplicant}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition-colors"
+              >
+                Demo Halaman Pelamar
+              </button>
+            </div>
           </div>
 
           <p className="text-blue-100 text-sm sm:text-base mt-6 sm:mt-8">

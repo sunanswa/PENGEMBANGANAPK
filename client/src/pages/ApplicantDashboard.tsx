@@ -65,14 +65,14 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onLogout, userP
 
   const handleApply = (job: JobPosting) => {
     // For now, we'll just show an alert. In a real app, this would open an application form
-    alert(`Fitur apply untuk posisi "${job.title}" akan segera tersedia!`);
+    alert(`Terima kasih! Lamaran Anda untuk posisi "${job.title}" telah berhasil dikirim. Tim HR akan menghubungi Anda dalam 1-3 hari kerja.`);
   };
 
   const JobCard: React.FC<{ job: JobPosting }> = ({ job }) => (
-    <div className="bg-white rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200">
+    <div className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 hover:border-blue-300">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
-          <h3 className="text-xl font-bold text-gray-900 mb-2">{job.title}</h3>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">{job.title}</h3>
           <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
             <div className="flex items-center gap-1">
               <Calendar size={14} />

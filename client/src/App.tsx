@@ -39,6 +39,18 @@ function App() {
     setShowFeatureActivator(true);
   };
 
+  const handleBypassApplicant = () => {
+    // Create applicant user directly without authentication
+    const applicantUser: User = {
+      id: '2',
+      email: 'demo@pelamar.com',
+      full_name: 'Demo Pelamar',
+      role: 'applicant'
+    };
+    setUser(applicantUser);
+    console.log('🔓 Applicant access granted - Demo mode');
+  };
+
   const handleFeatureActivationComplete = () => {
     // Create admin user directly without authentication with full privileges
     const adminUser: User = {
@@ -96,6 +108,7 @@ function App() {
                 onStartApplication={handleStartApplication}
                 onShowAuth={handleShowAuth}
                 onBypassAdmin={handleBypassAdmin}
+                onBypassApplicant={handleBypassApplicant}
               />
             )}
           </>
