@@ -1019,7 +1019,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         </div>
 
         {/* Clean Applicant List */}
-        <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
+        <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
               <Users size={18} className="text-blue-600" />
@@ -1152,52 +1152,47 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30">
       <div className="flex h-screen">
-        {/* Enhanced Modern Sidebar */}
-        <div className={`${sidebarCollapsed ? 'w-20' : 'w-80'} bg-white/95 backdrop-blur-lg shadow-2xl border-r border-gray-100/50 transition-all duration-500 relative flex flex-col`}>
-          {/* Enhanced Logo Header */}
-          <div className="p-6 border-b border-gray-100/50 bg-gradient-to-r from-blue-600/5 to-purple-600/5">
+        {/* Modern Clean Sidebar */}
+        <div className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white shadow-lg border-r border-gray-200 transition-all duration-300 relative flex flex-col`}>
+          {/* Clean Logo Header */}
+          <div className="p-4 border-b border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl flex items-center justify-center shadow-xl">
-                <Building2 size={32} className="text-white" />
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                <Building2 size={20} className="text-white" />
               </div>
               {!sidebarCollapsed && (
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    SWAPRO
-                  </h1>
-                  <p className="text-sm text-gray-500 font-medium">Admin Dashboard</p>
+                  <h1 className="text-lg font-bold text-gray-900">SWAPRO</h1>
+                  <p className="text-xs text-gray-500">Admin Dashboard</p>
                 </div>
               )}
             </div>
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="absolute -right-3 top-6 w-6 h-6 bg-white rounded-full shadow-md border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
+            >
+              {sidebarCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+            </button>
           </div>
 
-          {/* Enhanced Navigation Menu */}
-          <div className="flex-1 p-4 space-y-2">
+          {/* Clean Navigation Menu */}
+          <div className="flex-1 p-3 space-y-1">
             {sidebarItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group relative overflow-hidden ${
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                   activeTab === item.id
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl transform scale-105'
-                    : 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 hover:text-gray-900 hover:scale-102'
+                    ? 'bg-blue-500 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                 }`}
                 title={sidebarCollapsed ? item.label : ''}
               >
-                {activeTab === item.id && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-10"></div>
-                )}
-                <div className={`p-2 rounded-xl transition-all z-10 ${
-                  activeTab === item.id 
-                    ? 'bg-white/20 shadow-lg' 
-                    : 'bg-gray-100 group-hover:bg-white group-hover:shadow-md'
-                }`}>
-                  <item.icon size={20} />
-                </div>
+                <item.icon size={18} />
                 {!sidebarCollapsed && (
-                  <span className="font-semibold text-sm z-10">{item.label}</span>
+                  <span className="font-medium text-sm">{item.label}</span>
                 )}
               </button>
             ))}
@@ -1205,16 +1200,14 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
           {/* Admin Profile Footer */}
           {!sidebarCollapsed && (
-            <div className="p-4 border-t border-gray-100">
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
-                    <User size={20} className="text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">Admin User</p>
-                    <p className="text-gray-600 text-xs">admin@swapro.com</p>
-                  </div>
+            <div className="p-3 border-t border-gray-100">
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <User size={16} className="text-white" />
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900 text-sm">Admin User</p>
+                  <p className="text-gray-500 text-xs">admin@swapro.com</p>
                 </div>
               </div>
             </div>
@@ -1231,17 +1224,17 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Enhanced Modern Header */}
-          <div className="bg-white/95 backdrop-blur-lg shadow-lg border-b border-gray-100/50 px-8 py-6">
+          {/* Clean Modern Header */}
+          <div className="bg-white shadow-sm border-b border-gray-100 px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="w-6 h-6 bg-blue-500 rounded-lg flex items-center justify-center">
                     {(() => {
                       const activeItem = sidebarItems.find(item => item.id === activeTab);
                       if (activeItem) {
                         const IconComponent = activeItem.icon;
-                        return <IconComponent size={20} className="text-white" />;
+                        return <IconComponent size={14} className="text-white" />;
                       }
                       return null;
                     })()}
@@ -1281,9 +1274,9 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             </div>
           </div>
 
-          {/* Enhanced Content Area */}
-          <div className="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-white/30 via-transparent to-blue-50/20">
-            <div className="max-w-7xl mx-auto space-y-6">
+          {/* Clean Content Area */}
+          <div className="flex-1 p-6 overflow-y-auto bg-gray-50">
+            <div className="max-w-6xl mx-auto space-y-4">
               {renderContent()}
             </div>
           </div>
