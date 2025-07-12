@@ -25,7 +25,8 @@ interface JobPosting {
   description: string;
   locations: string[];
   maps_links?: string[];
-  status: 'active' | 'closed' | 'draft';
+  positions_needed?: number;
+  status: 'active' | 'closed' | 'draft' | 'urgent';
   requirements?: string;
   salary_range?: string;
   employment_type?: string;
@@ -113,6 +114,12 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onLogout, userP
             <div className="flex items-center gap-1">
               <Clock size={14} />
               {job.employment_type}
+            </div>
+          )}
+          {job.positions_needed && job.positions_needed > 1 && (
+            <div className="flex items-center gap-1 text-blue-600 font-semibold">
+              <Users size={14} />
+              Butuh {job.positions_needed} orang
             </div>
           )}
           {job.salary_range && (

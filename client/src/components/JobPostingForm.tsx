@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, Plus, Trash2, MapPin, FileText, DollarSign, Clock, AlertCircle } from 'lucide-react';
+import { X, Save, Plus, Trash2, MapPin, FileText, DollarSign, Clock, AlertCircle, Users } from 'lucide-react';
 interface JobPosting {
   id: string;
   title: string;
   description: string;
   locations: string[];
   maps_links?: string[];
-  status: 'active' | 'closed' | 'draft';
+  positions_needed?: number;
+  status: 'active' | 'closed' | 'draft' | 'urgent';
   requirements?: string;
   salary_range?: string;
   employment_type?: string;
@@ -32,6 +33,7 @@ const JobPostingForm: React.FC<JobPostingFormProps> = ({
     description: '',
     locations: [''],
     maps_links: [''],
+    positions_needed: 1,
     status: 'active' as const,
     requirements: '',
     salary_range: '',
@@ -46,6 +48,7 @@ const JobPostingForm: React.FC<JobPostingFormProps> = ({
         description: jobPosting.description || '',
         locations: jobPosting.locations?.length ? jobPosting.locations : [''],
         maps_links: jobPosting.maps_links?.length ? jobPosting.maps_links : [''],
+        positions_needed: jobPosting.positions_needed || 1,
         status: jobPosting.status || 'active',
         requirements: jobPosting.requirements || '',
         salary_range: jobPosting.salary_range || '',
@@ -304,6 +307,73 @@ const JobPostingForm: React.FC<JobPostingFormProps> = ({
           </div>
 
           {/* Additional Fields */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Positions Needed */}
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-gray-700">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-indigo-100 rounded-lg">
+                    <Users size={14} className="text-indigo-600" />
+                  </div>
+                  Jumlah Dibutuhkan *
+                </div>
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="100"
+                value={formData.positions_needed}
+                onChange={(e) => setFormData(prev => ({ ...prev, positions_needed: parseInt(e.target.value) || 1 }))}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
+                placeholder="1"
+              />
+            </div>
+
+            {/* Status */}
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-gray-700">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-yellow-100 rounded-lg">
+                    <Clock size={14} className="text-yellow-600" />
+                  </div>
+                  Status Lowongan *
+                </div>
+              </label>
+              <select
+                value={formData.status}
+                onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as any }))}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400 bg-white"
+              >
+                <option value="draft">Draft</option>
+                <option value="active">Aktif</option>
+                <option value="urgent">Urgent</option>
+                <option value="closed">Ditutup</option>
+              </select>
+            </div>
+
+            {/* Employment Type */}
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-gray-700">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-teal-100 rounded-lg">
+                    <Clock size={14} className="text-teal-600" />
+                  </div>
+                  Tipe Pekerjaan
+                </div>
+              </label>
+              <select
+                value={formData.employment_type}
+                onChange={(e) => setFormData(prev => ({ ...prev, employment_type: e.target.value }))}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400 bg-white"
+              >
+                <option value="full-time">Full-time</option>
+                <option value="part-time">Part-time</option>
+                <option value="contract">Kontrak</option>
+                <option value="internship">Magang</option>
+              </select>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Requirements */}
             <div className="space-y-2">

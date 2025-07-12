@@ -55,7 +55,8 @@ interface JobPosting {
   description: string;
   locations: string[];
   maps_links?: string[];
-  status: 'active' | 'closed' | 'draft';
+  positions_needed?: number;
+  status: 'active' | 'closed' | 'draft' | 'urgent';
   requirements?: string;
   salary_range?: string;
   employment_type?: string;
@@ -174,6 +175,13 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             Aktif
           </span>
         );
+      case 'urgent':
+        return (
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 animate-pulse">
+            <AlertCircle size={12} />
+            🚨 URGENT
+          </span>
+        );
       case 'draft':
         return (
           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
@@ -183,7 +191,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         );
       case 'closed':
         return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
             <AlertCircle size={12} />
             Ditutup
           </span>
@@ -523,6 +531,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
               >
                 <option value="all">Semua Status</option>
                 <option value="active">Aktif</option>
+                <option value="urgent">🚨 Urgent</option>
                 <option value="draft">Draft</option>
                 <option value="closed">Ditutup</option>
               </select>
@@ -591,6 +600,12 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                             <Users size={14} />
                             {Math.floor(Math.random() * 50) + 10} pelamar
                           </div>
+                          {job.positions_needed && (
+                            <div className="flex items-center gap-1">
+                              <Users size={14} />
+                              Butuh {job.positions_needed} orang
+                            </div>
+                          )}
                         </div>
                       </div>
                       {getStatusBadge(job.status)}
