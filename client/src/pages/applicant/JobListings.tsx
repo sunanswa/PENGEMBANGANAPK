@@ -187,7 +187,7 @@ export default function JobListings() {
 
                   {/* Description Preview */}
                   <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">
-                    {job.description}
+                    {job.description.substring(0, 150)}...
                   </p>
 
                   {/* Action Button */}

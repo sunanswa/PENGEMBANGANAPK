@@ -1,4 +1,5 @@
-import { Switch, Route, useLocation } from "wouter";
+import { useState } from "react";
+import { useLocation } from "wouter";
 import BottomNavigation from "@/components/BottomNavigation";
 import JobListings from "@/pages/applicant/JobListings";
 import Applications from "@/pages/applicant/Applications";
@@ -12,25 +13,30 @@ interface ApplicantDashboardProps {
 
 export default function ApplicantDashboard({ onLogout, userProfile }: ApplicantDashboardProps) {
   const [location] = useLocation();
+  const [activeTab, setActiveTab] = useState("menu");
   
   // Mock notification count - replace with actual API call
   const notificationCount = 3;
+
+  // Determine which component to render based on current route or active tab
+  const renderContent = () => {
+    if (location.includes("/applications")) {
+      return <Applications />;
+    } else if (location.includes("/profile")) {
+      return <Profile />;
+    } else if (location.includes("/chat")) {
+      return <Chat />;
+    } else {
+      // Default to job listings (menu)
+      return <JobListings />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Main Content */}
       <main className="min-h-screen">
-        <Switch>
-          <Route path="/applicant" component={JobListings} />
-          <Route path="/applicant/applications" component={Applications} />
-          <Route path="/applicant/profile" component={Profile} />
-          <Route path="/applicant/chat" component={Chat} />
-          
-          {/* Default route - redirect to job listings */}
-          <Route>
-            <JobListings />
-          </Route>
-        </Switch>
+        {renderContent()}
       </main>
 
       {/* Bottom Navigation */}
