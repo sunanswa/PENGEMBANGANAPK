@@ -450,30 +450,74 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
   const renderOverview = () => (
     <div className="space-y-6">
-      {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 rounded-3xl p-8 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
+      {/* Enhanced Welcome Section */}
+      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/95 to-purple-600/95"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full transform translate-x-32 -translate-y-32"></div>
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full transform -translate-x-16 translate-y-16"></div>
+        
         <div className="relative z-10">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Selamat Datang, Admin! 👋</h2>
-              <p className="text-blue-100 text-lg mb-4">
-                Dashboard SWAPRO - Kelola rekrutmen dengan mudah dan efisien
-              </p>
-              <div className="flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <Activity size={16} />
-                  <span>System Online</span>
+            <div className="flex-1">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                  <Building2 size={32} className="text-white" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Clock size={16} />
-                  <span>Last updated: {new Date().toLocaleTimeString('id-ID')}</span>
+                <div>
+                  <h2 className="text-4xl font-bold mb-1">Selamat Datang, Admin! 👋</h2>
+                  <p className="text-blue-100 text-lg">
+                    Dashboard SWAPRO - Kelola rekrutmen dengan mudah dan efisien
+                  </p>
                 </div>
               </div>
+              
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6 max-w-xl">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-green-400 rounded-xl flex items-center justify-center">
+                      <Activity size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="text-green-200 text-sm font-medium">System Status</p>
+                      <p className="text-white font-semibold">Online & Ready</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-orange-400 rounded-xl flex items-center justify-center">
+                      <Clock size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="text-orange-200 text-sm font-medium">Last Update</p>
+                      <p className="text-white font-semibold">{new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex gap-4">
+                <button 
+                  onClick={handleAddNew}
+                  className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-2xl font-semibold hover:bg-white/30 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-2"
+                >
+                  <Plus size={20} />
+                  Tambah Lowongan
+                </button>
+                <button 
+                  onClick={() => setShowAdvancedAnalytics(true)}
+                  className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-2xl font-semibold hover:bg-white/20 transition-all duration-300 hover:scale-105 flex items-center gap-2"
+                >
+                  <BarChart3 size={20} />
+                  Lihat Analytics
+                </button>
+              </div>
             </div>
-            <div className="hidden lg:block">
-              <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
-                <Building2 size={64} className="text-white/80" />
+            
+            <div className="hidden xl:block">
+              <div className="w-40 h-40 bg-gradient-to-br from-white/10 to-white/5 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/20">
+                <div className="w-28 h-28 bg-gradient-to-br from-white/20 to-white/10 rounded-full flex items-center justify-center">
+                  <Building2 size={64} className="text-white/90" />
+                </div>
               </div>
             </div>
           </div>
@@ -1768,15 +1812,15 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       <div className="flex h-screen">
-        {/* Modern Sidebar */}
-        <div className={`${sidebarCollapsed ? 'w-20' : 'w-72'} bg-white/95 backdrop-blur-sm shadow-2xl border-r border-gray-100 transition-all duration-300 relative flex flex-col`}>
-          {/* Logo Header */}
-          <div className="p-6 border-b border-gray-100">
+        {/* Enhanced Modern Sidebar */}
+        <div className={`${sidebarCollapsed ? 'w-20' : 'w-80'} bg-white/95 backdrop-blur-lg shadow-2xl border-r border-gray-100/50 transition-all duration-500 relative flex flex-col`}>
+          {/* Enhanced Logo Header */}
+          <div className="p-6 border-b border-gray-100/50 bg-gradient-to-r from-blue-600/5 to-purple-600/5">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <Building2 size={28} className="text-white" />
+              <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl flex items-center justify-center shadow-xl">
+                <Building2 size={32} className="text-white" />
               </div>
               {!sidebarCollapsed && (
                 <div>
@@ -1789,28 +1833,31 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             </div>
           </div>
 
-          {/* Navigation Menu */}
-          <div className="flex-1 p-4 space-y-1">
+          {/* Enhanced Navigation Menu */}
+          <div className="flex-1 p-4 space-y-2">
             {sidebarItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group ${
+                className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group relative overflow-hidden ${
                   activeTab === item.id
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl scale-105'
-                    : 'text-gray-600 hover:bg-gray-100/80 hover:text-gray-900 hover:scale-102'
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-xl transform scale-105'
+                    : 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 hover:text-gray-900 hover:scale-102'
                 }`}
                 title={sidebarCollapsed ? item.label : ''}
               >
-                <div className={`p-2 rounded-xl transition-all ${
+                {activeTab === item.id && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-10"></div>
+                )}
+                <div className={`p-2 rounded-xl transition-all z-10 ${
                   activeTab === item.id 
-                    ? 'bg-white/20' 
-                    : 'bg-gray-100 group-hover:bg-white group-hover:shadow-sm'
+                    ? 'bg-white/20 shadow-lg' 
+                    : 'bg-gray-100 group-hover:bg-white group-hover:shadow-md'
                 }`}>
                   <item.icon size={20} />
                 </div>
                 {!sidebarCollapsed && (
-                  <span className="font-semibold text-sm">{item.label}</span>
+                  <span className="font-semibold text-sm z-10">{item.label}</span>
                 )}
               </button>
             ))}
@@ -1844,14 +1891,26 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Modern Header */}
-          <div className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-100 px-8 py-6">
+          {/* Enhanced Modern Header */}
+          <div className="bg-white/95 backdrop-blur-lg shadow-lg border-b border-gray-100/50 px-8 py-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-1">
-                  {sidebarItems.find(item => item.id === activeTab)?.label}
-                </h2>
-                <p className="text-gray-600 text-sm">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                    {(() => {
+                      const activeItem = sidebarItems.find(item => item.id === activeTab);
+                      if (activeItem) {
+                        const IconComponent = activeItem.icon;
+                        return <IconComponent size={20} className="text-white" />;
+                      }
+                      return null;
+                    })()}
+                  </div>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    {sidebarItems.find(item => item.id === activeTab)?.label}
+                  </h2>
+                </div>
+                <p className="text-gray-600 text-sm pl-11">
                   {activeTab === 'overview' && 'Dashboard dan statistik sistem rekrutmen SWAPRO'}
                   {activeTab === 'jobs' && 'Kelola dan pantau lowongan pekerjaan dengan mudah'}
                   {activeTab === 'applicants' && 'Data pelamar dan proses rekrutmen terkini'}
@@ -1882,9 +1941,9 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             </div>
           </div>
 
-          {/* Content Area with Better Spacing */}
-          <div className="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-transparent to-blue-50/30">
-            <div className="max-w-7xl mx-auto">
+          {/* Enhanced Content Area */}
+          <div className="flex-1 p-8 overflow-y-auto bg-gradient-to-br from-white/30 via-transparent to-blue-50/20">
+            <div className="max-w-7xl mx-auto space-y-6">
               {renderContent()}
             </div>
           </div>
@@ -1893,8 +1952,8 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
       {/* Enhanced Modal for Job Form */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-lg z-50 flex items-center justify-center p-4">
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-100 max-w-4xl w-full max-h-[90vh] overflow-hidden">
             <JobPostingForm
               jobPosting={editingJob}
               onSubmit={handleSubmit}
