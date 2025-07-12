@@ -34,6 +34,7 @@ import {
   Zap,
   Star,
   ChevronRight,
+  ChevronLeft,
   ChevronDown,
   MoreVertical,
   RefreshCw,
