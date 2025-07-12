@@ -1,8 +1,8 @@
 import { 
-  users, jobPostings, candidates, applications, interviews, screening_assessments,
-  type User, type JobPosting, type Candidate, type Application, type Interview, type ScreeningAssessment,
+  users, jobPostings, candidates, applications, interviews, screening_assessments, status_updates, slik_checks,
+  type User, type JobPosting, type Candidate, type Application, type Interview, type ScreeningAssessment, type StatusUpdate, type SlikCheck,
   type InsertUser, type InsertJobPosting, type InsertCandidate, type InsertApplication, 
-  type InsertInterview, type InsertScreeningAssessment 
+  type InsertInterview, type InsertScreeningAssessment, type InsertStatusUpdate, type InsertSlikCheck
 } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
@@ -45,6 +45,17 @@ export interface IStorage {
   getScreeningAssessment(id: number): Promise<ScreeningAssessment | undefined>;
   createScreeningAssessment(assessment: InsertScreeningAssessment): Promise<ScreeningAssessment>;
   updateScreeningAssessment(id: number, assessment: Partial<InsertScreeningAssessment>): Promise<ScreeningAssessment | undefined>;
+  
+  // Status Updates
+  getStatusUpdates(): Promise<StatusUpdate[]>;
+  getStatusUpdatesByCandidate(candidateId: number): Promise<StatusUpdate[]>;
+  createStatusUpdate(statusUpdate: InsertStatusUpdate): Promise<StatusUpdate>;
+  
+  // SLIK Checks
+  getSlikChecks(): Promise<SlikCheck[]>;
+  getSlikChecksByCandidate(candidateId: number): Promise<SlikCheck[]>;
+  createSlikCheck(slikCheck: InsertSlikCheck): Promise<SlikCheck>;
+  updateSlikCheck(id: number, slikCheck: Partial<InsertSlikCheck>): Promise<SlikCheck | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -213,6 +224,53 @@ export class DatabaseStorage implements IStorage {
       .where(eq(screening_assessments.id, id))
       .returning();
     return assessment || undefined;
+  }
+
+  // Status Updates methods
+  async getStatusUpdates(): Promise<StatusUpdate[]> {
+    return await db.select().from(status_updates).orderBy(status_updates.created_at);
+  }
+
+  async getStatusUpdatesByCandidate(candidateId: number): Promise<StatusUpdate[]> {
+    return await db.select().from(status_updates)
+      .where(eq(status_updates.candidate_id, candidateId))
+      .orderBy(status_updates.created_at);
+  }
+
+  async createStatusUpdate(insertStatusUpdate: InsertStatusUpdate): Promise<StatusUpdate> {
+    const [statusUpdate] = await db
+      .insert(status_updates)
+      .values(insertStatusUpdate)
+      .returning();
+    return statusUpdate;
+  }
+
+  // SLIK Checks methods
+  async getSlikChecks(): Promise<SlikCheck[]> {
+    return await db.select().from(slik_checks).orderBy(slik_checks.created_at);
+  }
+
+  async getSlikChecksByCandidate(candidateId: number): Promise<SlikCheck[]> {
+    return await db.select().from(slik_checks)
+      .where(eq(slik_checks.candidate_id, candidateId))
+      .orderBy(slik_checks.created_at);
+  }
+
+  async createSlikCheck(insertSlikCheck: InsertSlikCheck): Promise<SlikCheck> {
+    const [slikCheck] = await db
+      .insert(slik_checks)
+      .values({ ...insertSlikCheck, updated_at: new Date() })
+      .returning();
+    return slikCheck;
+  }
+
+  async updateSlikCheck(id: number, updates: Partial<InsertSlikCheck>): Promise<SlikCheck | undefined> {
+    const [slikCheck] = await db
+      .update(slik_checks)
+      .set({ ...updates, updated_at: new Date() })
+      .where(eq(slik_checks.id, id))
+      .returning();
+    return slikCheck || undefined;
   }
 }
 

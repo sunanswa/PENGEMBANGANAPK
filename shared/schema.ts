@@ -105,6 +105,31 @@ export const screening_assessments = pgTable("screening_assessments", {
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const status_updates = pgTable("status_updates", {
+  id: serial("id").primaryKey(),
+  candidate_id: integer("candidate_id").references(() => candidates.id).notNull(),
+  old_status: text("old_status").notNull(),
+  new_status: text("new_status").notNull(),
+  notes: text("notes"),
+  updated_by: text("updated_by").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const slik_checks = pgTable("slik_checks", {
+  id: serial("id").primaryKey(),
+  candidate_id: integer("candidate_id").references(() => candidates.id).notNull(),
+  check_type: text("check_type").$type<"manual" | "automatic">().notNull().default("manual"),
+  status: text("status").$type<"pending" | "approved" | "rejected" | "requires_review">().notNull().default("pending"),
+  score: integer("score"),
+  risk_level: text("risk_level").$type<"low" | "medium" | "high" | "very_high">(),
+  findings: text("findings").array(),
+  details: text("details"),
+  checked_by: text("checked_by").notNull(),
+  notes: text("notes"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertCandidateSchema = createInsertSchema(candidates).omit({
   id: true,
@@ -128,6 +153,17 @@ export const insertScreeningAssessmentSchema = createInsertSchema(screening_asse
   created_at: true,
 });
 
+export const insertStatusUpdateSchema = createInsertSchema(status_updates).omit({
+  id: true,
+  created_at: true,
+});
+
+export const insertSlikCheckSchema = createInsertSchema(slik_checks).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
 // Type exports
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -142,3 +178,7 @@ export type InsertInterview = z.infer<typeof insertInterviewSchema>;
 export type Interview = typeof interviews.$inferSelect;
 export type InsertScreeningAssessment = z.infer<typeof insertScreeningAssessmentSchema>;
 export type ScreeningAssessment = typeof screening_assessments.$inferSelect;
+export type InsertStatusUpdate = z.infer<typeof insertStatusUpdateSchema>;
+export type StatusUpdate = typeof status_updates.$inferSelect;
+export type InsertSlikCheck = z.infer<typeof insertSlikCheckSchema>;
+export type SlikCheck = typeof slik_checks.$inferSelect;

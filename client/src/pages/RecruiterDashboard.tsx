@@ -224,10 +224,74 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     setShowApplicantProfile(true);
   };
 
-  const handleUpdateApplicantStatus = (status: string) => {
-    console.log('Updating applicant status to:', status);
-    // Implement status update
-    alert(`Status pelamar diupdate ke: ${status}`);
+  const handleUpdateApplicantStatus = async (status: string, notes?: string, slikData?: any) => {
+    try {
+      if (!selectedApplicant) return;
+      
+      console.log('Updating applicant status to:', status);
+      console.log('Notes:', notes);
+      console.log('SLIK Data:', slikData);
+      
+      // Create status update record
+      const statusUpdateResponse = await fetch(`/api/candidates/${selectedApplicant.id}/status-update`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status,
+          notes,
+          old_status: selectedApplicant.status,
+          updated_by: 'Admin' // In real app, get from current user context
+        }),
+      });
+
+      if (!statusUpdateResponse.ok) {
+        throw new Error('Failed to update candidate status');
+      }
+
+      // If SLIK data is provided, create SLIK check record
+      if (slikData) {
+        const slikCheckResponse = await fetch(`/api/candidates/${selectedApplicant.id}/slik-check`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            check_type: 'manual',
+            status: slikData.status,
+            score: slikData.score,
+            risk_level: slikData.riskLevel,
+            findings: slikData.findings,
+            details: slikData.details,
+            checked_by: 'Admin', // In real app, get from current user context
+            notes: slikData.notes || `SLIK check untuk status update ke ${status}`
+          }),
+        });
+
+        if (!slikCheckResponse.ok) {
+          console.error('Failed to create SLIK check record');
+        }
+      }
+
+      let message = `Status pelamar berhasil diupdate ke: ${status}`;
+      if (notes) {
+        message += `\nKeterangan: ${notes}`;
+      }
+      if (slikData) {
+        message += `\nSLIK Check - Status: ${slikData.status}, Skor: ${slikData.score}, Risk Level: ${slikData.riskLevel}`;
+      }
+      
+      alert(message);
+      
+      // Close profile modal and refresh data if needed
+      setShowApplicantProfile(false);
+      setSelectedApplicant(null);
+
+    } catch (error) {
+      console.error('Error updating applicant status:', error);
+      alert('Terjadi kesalahan saat mengupdate status pelamar');
+    }
   };
 
   const filteredJobs = jobPostings.filter(job => {

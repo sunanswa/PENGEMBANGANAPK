@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertUserSchema, insertJobPostingSchema, type User } from "@shared/schema";
+import { insertUserSchema, insertJobPostingSchema, insertStatusUpdateSchema, insertSlikCheckSchema, type User } from "@shared/schema";
 import { z } from "zod";
 import * as communication from "./communication";
 import * as analytics from "./analytics";
@@ -413,6 +413,158 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       res.status(500).json({ error: "Failed to generate report" });
+    }
+  });
+
+  // Status Update routes
+  app.post("/api/candidates/:id/status-update", async (req, res) => {
+    try {
+      const candidateId = parseInt(req.params.id);
+      const { status, notes, old_status, updated_by } = req.body;
+      
+      if (!candidateId || !status || !old_status || !updated_by) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const statusUpdateData = insertStatusUpdateSchema.parse({
+        candidate_id: candidateId,
+        old_status,
+        new_status: status,
+        notes,
+        updated_by
+      });
+
+      const statusUpdate = await storage.createStatusUpdate(statusUpdateData);
+      
+      // Also update the candidate's current status
+      await storage.updateCandidate(candidateId, { status });
+
+      res.json({ 
+        success: true, 
+        statusUpdate: {
+          ...statusUpdate,
+          id: statusUpdate.id.toString(),
+          created_at: statusUpdate.created_at.toISOString()
+        }
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid status update data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to create status update" });
+    }
+  });
+
+  app.get("/api/candidates/:id/status-history", async (req, res) => {
+    try {
+      const candidateId = parseInt(req.params.id);
+      if (!candidateId) {
+        return res.status(400).json({ error: "Invalid candidate ID" });
+      }
+
+      const statusUpdates = await storage.getStatusUpdatesByCandidate(candidateId);
+      
+      const formattedUpdates = statusUpdates.map(update => ({
+        ...update,
+        id: update.id.toString(),
+        created_at: update.created_at.toISOString()
+      }));
+
+      res.json(formattedUpdates);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch status history" });
+    }
+  });
+
+  // SLIK Check routes
+  app.post("/api/candidates/:id/slik-check", async (req, res) => {
+    try {
+      const candidateId = parseInt(req.params.id);
+      const { check_type, status, score, risk_level, findings, details, checked_by, notes } = req.body;
+      
+      if (!candidateId || !checked_by) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const slikCheckData = insertSlikCheckSchema.parse({
+        candidate_id: candidateId,
+        check_type: check_type || 'manual',
+        status: status || 'pending',
+        score,
+        risk_level,
+        findings,
+        details,
+        checked_by,
+        notes
+      });
+
+      const slikCheck = await storage.createSlikCheck(slikCheckData);
+
+      res.json({ 
+        success: true, 
+        slikCheck: {
+          ...slikCheck,
+          id: slikCheck.id.toString(),
+          created_at: slikCheck.created_at.toISOString(),
+          updated_at: slikCheck.updated_at.toISOString()
+        }
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid SLIK check data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to create SLIK check" });
+    }
+  });
+
+  app.get("/api/candidates/:id/slik-checks", async (req, res) => {
+    try {
+      const candidateId = parseInt(req.params.id);
+      if (!candidateId) {
+        return res.status(400).json({ error: "Invalid candidate ID" });
+      }
+
+      const slikChecks = await storage.getSlikChecksByCandidate(candidateId);
+      
+      const formattedChecks = slikChecks.map(check => ({
+        ...check,
+        id: check.id.toString(),
+        created_at: check.created_at.toISOString(),
+        updated_at: check.updated_at.toISOString()
+      }));
+
+      res.json(formattedChecks);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch SLIK checks" });
+    }
+  });
+
+  app.put("/api/slik-checks/:id", async (req, res) => {
+    try {
+      const checkId = parseInt(req.params.id);
+      const updates = req.body;
+      
+      if (!checkId) {
+        return res.status(400).json({ error: "Invalid SLIK check ID" });
+      }
+
+      const updatedCheck = await storage.updateSlikCheck(checkId, updates);
+      
+      if (!updatedCheck) {
+        return res.status(404).json({ error: "SLIK check not found" });
+      }
+
+      res.json({
+        success: true,
+        slikCheck: {
+          ...updatedCheck,
+          id: updatedCheck.id.toString(),
+          created_at: updatedCheck.created_at.toISOString(),
+          updated_at: updatedCheck.updated_at.toISOString()
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update SLIK check" });
     }
   });
 

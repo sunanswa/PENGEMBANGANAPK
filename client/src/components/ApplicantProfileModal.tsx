@@ -17,13 +17,15 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  Award
+  Award,
+  Settings
 } from 'lucide-react';
+import StatusUpdateModal from './StatusUpdateModal';
 
 interface ApplicantProfileModalProps {
   applicant: any;
   onClose: () => void;
-  onUpdateStatus: (status: string) => void;
+  onUpdateStatus: (status: string, notes?: string, slikData?: any) => void;
   onScheduleInterview: () => void;
   onSendMessage: () => void;
 }
@@ -38,6 +40,7 @@ const ApplicantProfileModal: React.FC<ApplicantProfileModalProps> = ({
   const [activeTab, setActiveTab] = useState('overview');
   const [rating, setRating] = useState(applicant.rating || 0);
   const [notes, setNotes] = useState(applicant.notes || '');
+  const [showStatusUpdate, setShowStatusUpdate] = useState(false);
 
   const mockApplicantData = {
     id: applicant.id || 1,
@@ -422,32 +425,63 @@ const ApplicantProfileModal: React.FC<ApplicantProfileModalProps> = ({
         <div className="border-t border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <select 
-                value={mockApplicantData.status}
-                onChange={(e) => onUpdateStatus(e.target.value)}
-                className="px-4 py-2 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              <button
+                onClick={() => setShowStatusUpdate(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-600 transition-all duration-300"
               >
-                <option value="new">Baru</option>
-                <option value="review">Review</option>
-                <option value="interview">Interview</option>
-                <option value="accepted">Diterima</option>
-                <option value="rejected">Ditolak</option>
-              </select>
+                <Settings size={16} />
+                Update Status
+              </button>
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                mockApplicantData.status === 'new' ? 'bg-blue-100 text-blue-800' :
+                mockApplicantData.status === 'reviewing' ? 'bg-yellow-100 text-yellow-800' :
+                mockApplicantData.status === 'interview' ? 'bg-purple-100 text-purple-800' :
+                mockApplicantData.status === 'hired' ? 'bg-green-100 text-green-800' :
+                'bg-red-100 text-red-800'
+              }`}>
+                {mockApplicantData.status === 'new' ? 'Pelamar Baru' :
+                 mockApplicantData.status === 'reviewing' ? 'Sedang Direview' :
+                 mockApplicantData.status === 'interview' ? 'Interview' :
+                 mockApplicantData.status === 'hired' ? 'Diterima' :
+                 'Ditolak'}
+              </span>
             </div>
             <div className="flex items-center gap-3">
+              <button
+                onClick={onScheduleInterview}
+                className="px-4 py-2 border-2 border-purple-300 text-purple-600 rounded-xl font-medium hover:bg-purple-50 transition-colors"
+              >
+                Schedule Interview
+              </button>
+              <button
+                onClick={onSendMessage}
+                className="px-4 py-2 border-2 border-blue-300 text-blue-600 rounded-xl font-medium hover:bg-blue-50 transition-colors"
+              >
+                Send Message
+              </button>
               <button
                 onClick={onClose}
                 className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
               >
                 Tutup
               </button>
-              <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-600 transition-all duration-300">
-                Simpan Perubahan
-              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Status Update Modal */}
+      {showStatusUpdate && (
+        <StatusUpdateModal
+          applicant={mockApplicantData}
+          currentStatus={mockApplicantData.status}
+          onClose={() => setShowStatusUpdate(false)}
+          onUpdateStatus={(status, notes, slikData) => {
+            onUpdateStatus(status, notes, slikData);
+            setShowStatusUpdate(false);
+          }}
+        />
+      )}
     </div>
   );
 };
