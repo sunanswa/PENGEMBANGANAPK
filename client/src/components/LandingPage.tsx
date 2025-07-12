@@ -218,14 +218,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStartApplication, onShowAut
         
         {/* BYPASS BUTTON - HAPUS sebelum production! */}
         {onBypassAdmin && (
-          <div className="fixed bottom-6 right-6 z-50">
+          <div className="fixed bottom-6 right-6 z-50 space-y-3">
             <button
               onClick={onBypassAdmin}
-              className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-3 rounded-2xl font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
-              title="Bypass ke Admin Dashboard (Development Only)"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-4 rounded-2xl font-bold text-sm shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 flex items-center gap-3 w-full"
+              title="Aktivasi Semua Fitur SWAPRO (Full System)"
             >
-              <Shield size={20} />
-              <span className="hidden sm:inline">Admin Bypass</span>
+              <Zap size={20} />
+              <div className="text-left">
+                <div className="font-bold">Aktivasi Full System</div>
+                <div className="text-xs opacity-90">Semua Fitur SWAPRO</div>
+              </div>
             </button>
           </div>
         )}

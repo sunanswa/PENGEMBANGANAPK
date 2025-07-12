@@ -7,6 +7,7 @@ import ApplicantDashboard from './pages/ApplicantDashboard';
 import RecruiterDashboard from './pages/RecruiterDashboard';
 import LoadingScreen from './components/LoadingScreen';
 import SplashScreen from './components/SplashScreen';
+import FeatureActivator from './components/FeatureActivator';
 import { queryClient } from './lib/queryClient';
 
 interface User {
@@ -20,6 +21,7 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [showSplash, setShowSplash] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
+  const [showFeatureActivator, setShowFeatureActivator] = useState(false);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
@@ -34,14 +36,20 @@ function App() {
   };
 
   const handleBypassAdmin = () => {
-    // Create admin user directly without authentication
+    setShowFeatureActivator(true);
+  };
+
+  const handleFeatureActivationComplete = () => {
+    // Create admin user directly without authentication with full privileges
     const adminUser: User = {
       id: '1',
-      email: 'admin@example.com',
-      full_name: 'Admin User',
+      email: 'admin@swapro.com',
+      full_name: 'SWAPRO Administrator',
       role: 'admin'
     };
     setUser(adminUser);
+    setShowFeatureActivator(false);
+    console.log('🔓 Admin access granted - All features activated');
   };
 
   const handleAuthSuccess = (role: 'admin' | 'applicant') => {
@@ -67,6 +75,10 @@ function App() {
 
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />;
+  }
+
+  if (showFeatureActivator) {
+    return <FeatureActivator onComplete={handleFeatureActivationComplete} />;
   }
 
   return (
