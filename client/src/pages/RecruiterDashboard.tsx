@@ -48,6 +48,9 @@ import { apiRequest, queryClient } from '../lib/queryClient';
 import JobPostingForm from '../components/JobPostingForm';
 import InterviewScheduler from '../components/InterviewScheduler';
 import ScreeningAssessment from '../components/ScreeningAssessment';
+import ApplicantProfileModal from '../components/ApplicantProfileModal';
+import ApplicantFilter, { FilterState } from '../components/ApplicantFilter';
+import BulkActions from '../components/BulkActions';
 
 interface JobPosting {
   id: string;
@@ -82,6 +85,22 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   const [showMessageComposer, setShowMessageComposer] = useState(false);
   const [messageType, setMessageType] = useState<'email' | 'sms' | 'whatsapp'>('email');
   const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
+  
+  // New state for enhanced applicant management
+  const [showApplicantProfile, setShowApplicantProfile] = useState(false);
+  const [selectedApplicant, setSelectedApplicant] = useState<any>(null);
+  const [applicantFilters, setApplicantFilters] = useState<FilterState>({
+    search: '',
+    status: [],
+    position: [],
+    dateRange: { from: '', to: '' },
+    experienceLevel: [],
+    source: [],
+    salaryRange: { min: 0, max: 20000000 },
+    location: []
+  });
+  const [selectedApplicants, setSelectedApplicants] = useState<string[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
 
   const { data: jobPostings = [], isLoading: loading } = useQuery({
     queryKey: ['/api/job-postings', statusFilter],
@@ -154,6 +173,61 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   const handleAddNew = () => {
     setEditingJob(null);
     setShowForm(true);
+  };
+
+  // Enhanced applicant management handlers
+  const handleApplicantSelect = (applicantId: string) => {
+    setSelectedApplicants(prev => 
+      prev.includes(applicantId) 
+        ? prev.filter(id => id !== applicantId)
+        : [...prev, applicantId]
+    );
+  };
+
+  const handleSelectAll = (applicants: any[]) => {
+    const allIds = applicants.map(a => a.id.toString());
+    setSelectedApplicants(prev => 
+      prev.length === allIds.length ? [] : allIds
+    );
+  };
+
+  const handleBulkAction = (action: string, data?: any) => {
+    switch (action) {
+      case 'bulk-email':
+        console.log('Sending bulk email:', data);
+        // Implement bulk email functionality
+        alert(`Email akan dikirim ke ${data.applicantIds.length} pelamar`);
+        setSelectedApplicants([]);
+        break;
+      case 'bulk-status-update':
+        console.log('Updating bulk status:', data);
+        // Implement bulk status update
+        alert(`Status ${data.applicantIds.length} pelamar diupdate ke: ${data.status}`);
+        setSelectedApplicants([]);
+        break;
+      case 'bulk-export':
+        console.log('Exporting applicant data');
+        // Implement export functionality
+        alert(`Mengexport data ${selectedApplicants.length} pelamar`);
+        setSelectedApplicants([]);
+        break;
+      case 'bulk-schedule-interview':
+        console.log('Bulk scheduling interviews');
+        alert(`Menjadwalkan interview untuk ${selectedApplicants.length} pelamar`);
+        setSelectedApplicants([]);
+        break;
+    }
+  };
+
+  const handleApplicantProfileView = (applicant: any) => {
+    setSelectedApplicant(applicant);
+    setShowApplicantProfile(true);
+  };
+
+  const handleUpdateApplicantStatus = (status: string) => {
+    console.log('Updating applicant status to:', status);
+    // Implement status update
+    alert(`Status pelamar diupdate ke: ${status}`);
   };
 
   const filteredJobs = jobPostings.filter(job => {
@@ -668,146 +742,313 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     </div>
   );
 
-  const renderApplicantsManagement = () => (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Manajemen Pelamar</h2>
-          <p className="text-gray-600">Kelola dan pantau semua pelamar untuk lowongan pekerjaan</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-2xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
-            <Download size={18} />
-            Export Data
-          </button>
-          <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
-            <Mail size={18} />
-            Kirim Email
-          </button>
-        </div>
-      </div>
+  const renderApplicantsManagement = () => {
+    // Mock applicant data with enhanced filtering
+    const mockApplicants = [
+      { 
+        id: 1, 
+        name: 'Sarah Wijaya', 
+        position: 'Sales Officer Chaneling', 
+        time: '2 jam lalu', 
+        status: 'new', 
+        email: 'sarah.wijaya@email.com',
+        appliedDate: '2025-01-10',
+        source: 'website',
+        experienceLevel: '3-5-years',
+        location: 'Jakarta Selatan',
+        expectedSalary: 7000000
+      },
+      { 
+        id: 2, 
+        name: 'Ahmad Rizki', 
+        position: 'Credit Marketing Officer', 
+        time: '4 jam lalu', 
+        status: 'review', 
+        email: 'ahmad.rizki@email.com',
+        appliedDate: '2025-01-09',
+        source: 'linkedin',
+        experienceLevel: '1-2-years',
+        location: 'Jakarta Pusat',
+        expectedSalary: 5500000
+      },
+      { 
+        id: 3, 
+        name: 'Maya Sari', 
+        position: 'Telemarketing Specialist', 
+        time: '6 jam lalu', 
+        status: 'interview', 
+        email: 'maya.sari@email.com',
+        appliedDate: '2025-01-08',
+        source: 'referral',
+        experienceLevel: 'fresh-graduate',
+        location: 'Tangerang',
+        expectedSalary: 4500000
+      },
+      { 
+        id: 4, 
+        name: 'Budi Santoso', 
+        position: 'Recovery Officer', 
+        time: '1 hari lalu', 
+        status: 'accepted', 
+        email: 'budi.santoso@email.com',
+        appliedDate: '2025-01-07',
+        source: 'jobstreet',
+        experienceLevel: '5-plus-years',
+        location: 'Bekasi',
+        expectedSalary: 8500000
+      },
+      { 
+        id: 5, 
+        name: 'Lisa Anggraini', 
+        position: 'Sales Officer Chaneling', 
+        time: '1 hari lalu', 
+        status: 'rejected', 
+        email: 'lisa.anggraini@email.com',
+        appliedDate: '2025-01-06',
+        source: 'social-media',
+        experienceLevel: '1-2-years',
+        location: 'Jakarta Barat',
+        expectedSalary: 6000000
+      }
+    ];
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-              <Users size={24} className="text-white" />
-            </div>
-            <span className="text-sm font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">+15%</span>
-          </div>
-          <p className="text-sm text-gray-600 mb-1">Total Pelamar</p>
-          <p className="text-2xl font-bold text-gray-900">324</p>
-        </div>
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-              <CheckCircle size={24} className="text-white" />
-            </div>
-            <span className="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">+8%</span>
-          </div>
-          <p className="text-sm text-gray-600 mb-1">Diterima</p>
-          <p className="text-2xl font-bold text-gray-900">45</p>
-        </div>
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl flex items-center justify-center">
-              <Clock size={24} className="text-white" />
-            </div>
-            <span className="text-sm font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">+12%</span>
-          </div>
-          <p className="text-sm text-gray-600 mb-1">Proses Review</p>
-          <p className="text-2xl font-bold text-gray-900">89</p>
-        </div>
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-              <Calendar size={24} className="text-white" />
-            </div>
-            <span className="text-sm font-bold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">+22%</span>
-          </div>
-          <p className="text-sm text-gray-600 mb-1">Interview Dijadwalkan</p>
-          <p className="text-2xl font-bold text-gray-900">23</p>
-        </div>
-      </div>
+    // Filter applicants based on current filters
+    const filteredApplicants = mockApplicants.filter(applicant => {
+      const searchMatch = !applicantFilters.search || 
+        applicant.name.toLowerCase().includes(applicantFilters.search.toLowerCase()) ||
+        applicant.email.toLowerCase().includes(applicantFilters.search.toLowerCase()) ||
+        applicant.position.toLowerCase().includes(applicantFilters.search.toLowerCase());
+      
+      const statusMatch = applicantFilters.status.length === 0 || 
+        applicantFilters.status.includes(applicant.status);
+      
+      const positionMatch = applicantFilters.position.length === 0 || 
+        applicantFilters.position.includes(applicant.position);
+      
+      const experienceMatch = applicantFilters.experienceLevel.length === 0 || 
+        applicantFilters.experienceLevel.includes(applicant.experienceLevel);
+      
+      const sourceMatch = applicantFilters.source.length === 0 || 
+        applicantFilters.source.includes(applicant.source);
+      
+      const locationMatch = applicantFilters.location.length === 0 || 
+        applicantFilters.location.includes(applicant.location);
+      
+      const salaryMatch = applicant.expectedSalary >= applicantFilters.salaryRange.min && 
+        applicant.expectedSalary <= applicantFilters.salaryRange.max;
+      
+      const dateMatch = (!applicantFilters.dateRange.from || applicant.appliedDate >= applicantFilters.dateRange.from) &&
+        (!applicantFilters.dateRange.to || applicant.appliedDate <= applicantFilters.dateRange.to);
+      
+      return searchMatch && statusMatch && positionMatch && experienceMatch && 
+             sourceMatch && locationMatch && salaryMatch && dateMatch;
+    });
 
-      {/* Recent Applications */}
-      <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <div className="p-2 bg-blue-100 rounded-xl">
-            <Users size={20} className="text-blue-600" />
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Manajemen Pelamar</h2>
+            <p className="text-gray-600">Kelola dan pantau semua pelamar untuk lowongan pekerjaan</p>
           </div>
-          Pelamar Terbaru
-        </h3>
-        <div className="space-y-4">
-          {[
-            { name: 'Sarah Wijaya', position: 'Sales Officer Chaneling', time: '2 jam lalu', status: 'new', email: 'sarah.wijaya@email.com' },
-            { name: 'Ahmad Rizki', position: 'Credit Marketing Officer', time: '4 jam lalu', status: 'review', email: 'ahmad.rizki@email.com' },
-            { name: 'Maya Sari', position: 'Telemarketing Specialist', time: '6 jam lalu', status: 'interview', email: 'maya.sari@email.com' },
-            { name: 'Budi Santoso', position: 'Recovery Officer', time: '1 hari lalu', status: 'accepted', email: 'budi.santoso@email.com' }
-          ].map((applicant, index) => (
-            <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold">{applicant.name.charAt(0)}</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">{applicant.name}</p>
-                  <p className="text-sm text-gray-600">{applicant.position}</p>
-                  <p className="text-xs text-gray-500">{applicant.email}</p>
-                </div>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => handleBulkAction('bulk-export')}
+              className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-2xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
+              <Download size={18} />
+              Export Data
+            </button>
+            <button 
+              onClick={() => setShowMessageComposer(true)}
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
+              <Mail size={18} />
+              Kirim Email
+            </button>
+          </div>
+        </div>
+
+        {/* Advanced Filter Component */}
+        <ApplicantFilter
+          onFilterChange={setApplicantFilters}
+          jobPostings={jobPostings}
+        />
+
+        {/* Bulk Actions Component */}
+        {selectedApplicants.length > 0 && (
+          <BulkActions
+            selectedApplicants={selectedApplicants}
+            totalSelected={selectedApplicants.length}
+            onAction={handleBulkAction}
+            onClearSelection={() => setSelectedApplicants([])}
+          />
+        )}
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                <Users size={24} className="text-white" />
               </div>
-              <div className="flex items-center gap-4">
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                  applicant.status === 'new' ? 'bg-blue-100 text-blue-800' :
-                  applicant.status === 'review' ? 'bg-orange-100 text-orange-800' :
-                  applicant.status === 'interview' ? 'bg-purple-100 text-purple-800' :
-                  'bg-green-100 text-green-800'
-                }`}>
-                  {applicant.status === 'new' ? 'Baru' :
-                   applicant.status === 'review' ? 'Review' :
-                   applicant.status === 'interview' ? 'Interview' :
-                   'Diterima'}
-                </span>
-                <span className="text-sm text-gray-500">{applicant.time}</span>
-                {/* Action buttons for Interview Management */}
-                <div className="flex items-center gap-2">
-                  {applicant.status === 'new' && (
+              <span className="text-sm font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">+15%</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-1">Total Pelamar</p>
+            <p className="text-2xl font-bold text-gray-900">{filteredApplicants.length}</p>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                <CheckCircle size={24} className="text-white" />
+              </div>
+              <span className="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">+8%</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-1">Diterima</p>
+            <p className="text-2xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'accepted').length}</p>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl flex items-center justify-center">
+                <Clock size={24} className="text-white" />
+              </div>
+              <span className="text-sm font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">+12%</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-1">Proses Review</p>
+            <p className="text-2xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'review').length}</p>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                <Calendar size={24} className="text-white" />
+              </div>
+              <span className="text-sm font-bold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">+22%</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-1">Interview Dijadwalkan</p>
+            <p className="text-2xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'interview').length}</p>
+          </div>
+        </div>
+
+        {/* Enhanced Applicant List */}
+        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+              <div className="p-2 bg-blue-100 rounded-xl">
+                <Users size={20} className="text-blue-600" />
+              </div>
+              Daftar Pelamar ({filteredApplicants.length})
+            </h3>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={selectedApplicants.length === filteredApplicants.length && filteredApplicants.length > 0}
+                onChange={() => handleSelectAll(filteredApplicants)}
+                className="rounded border-gray-300"
+              />
+              <label className="text-sm text-gray-600">Pilih Semua</label>
+            </div>
+          </div>
+          
+          <div className="space-y-4">
+            {filteredApplicants.map((applicant) => (
+              <div key={applicant.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
+                <div className="flex items-center gap-4">
+                  <input
+                    type="checkbox"
+                    checked={selectedApplicants.includes(applicant.id.toString())}
+                    onChange={() => handleApplicantSelect(applicant.id.toString())}
+                    className="rounded border-gray-300"
+                  />
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold">{applicant.name.charAt(0)}</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">{applicant.name}</p>
+                    <p className="text-sm text-gray-600">{applicant.position}</p>
+                    <p className="text-xs text-gray-500">{applicant.email}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs text-gray-400">📍 {applicant.location}</span>
+                      <span className="text-xs text-gray-400">💰 Rp {applicant.expectedSalary.toLocaleString('id-ID')}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    applicant.status === 'new' ? 'bg-blue-100 text-blue-800' :
+                    applicant.status === 'review' ? 'bg-orange-100 text-orange-800' :
+                    applicant.status === 'interview' ? 'bg-purple-100 text-purple-800' :
+                    applicant.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>
+                    {applicant.status === 'new' ? 'Baru' :
+                     applicant.status === 'review' ? 'Review' :
+                     applicant.status === 'interview' ? 'Interview' :
+                     applicant.status === 'accepted' ? 'Diterima' :
+                     'Ditolak'}
+                  </span>
+                  <span className="text-sm text-gray-500">{applicant.time}</span>
+                  
+                  {/* Enhanced Action buttons */}
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => handleApplicantProfileView(applicant)}
+                      className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
+                      title="Lihat Profil"
+                    >
+                      <Eye size={16} />
+                    </button>
+                    {applicant.status === 'new' && (
+                      <button 
+                        onClick={() => {
+                          setSelectedCandidate(applicant);
+                          setShowScreeningAssessment(true);
+                        }}
+                        className="p-2 text-purple-600 hover:bg-purple-50 rounded-xl transition-colors"
+                        title="Start Screening"
+                      >
+                        <Brain size={16} />
+                      </button>
+                    )}
+                    {(applicant.status === 'review' || applicant.status === 'new') && (
+                      <button 
+                        onClick={() => {
+                          setSelectedCandidate(applicant);
+                          setShowInterviewScheduler(true);
+                        }}
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-xl transition-colors"
+                        title="Schedule Interview"
+                      >
+                        <Video size={16} />
+                      </button>
+                    )}
                     <button 
                       onClick={() => {
                         setSelectedCandidate(applicant);
-                        setShowScreeningAssessment(true);
+                        setShowMessageComposer(true);
                       }}
-                      className="p-2 text-purple-600 hover:bg-purple-50 rounded-xl transition-colors"
-                      title="Start Screening"
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                      title="Send Message"
                     >
-                      <Brain size={16} />
+                      <MessageCircle size={16} />
                     </button>
-                  )}
-                  {(applicant.status === 'review' || applicant.status === 'new') && (
-                    <button 
-                      onClick={() => {
-                        setSelectedCandidate(applicant);
-                        setShowInterviewScheduler(true);
-                      }}
-                      className="p-2 text-green-600 hover:bg-green-50 rounded-xl transition-colors"
-                      title="Schedule Interview"
-                    >
-                      <Calendar size={16} />
+                    <button className="p-2 text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
+                      <MoreVertical size={16} />
                     </button>
-                  )}
-                  <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors">
-                    <Eye size={16} />
-                  </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+            
+            {filteredApplicants.length === 0 && (
+              <div className="text-center py-8">
+                <Users size={48} className="mx-auto text-gray-400 mb-4" />
+                <p className="text-gray-500">Tidak ada pelamar yang sesuai dengan filter</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderAnalytics = () => (
     <div className="space-y-6">
@@ -1661,6 +1902,26 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             console.log('Message sent:', data);
             setShowMessageComposer(false);
             // Here you would typically send to the backend
+          }}
+        />
+      )}
+
+      {/* Applicant Profile Modal */}
+      {showApplicantProfile && selectedApplicant && (
+        <ApplicantProfileModal
+          applicant={selectedApplicant}
+          onClose={() => {
+            setShowApplicantProfile(false);
+            setSelectedApplicant(null);
+          }}
+          onUpdateStatus={handleUpdateApplicantStatus}
+          onScheduleInterview={() => {
+            setShowApplicantProfile(false);
+            setShowInterviewScheduler(true);
+          }}
+          onSendMessage={() => {
+            setShowApplicantProfile(false);
+            setShowMessageComposer(true);
           }}
         />
       )}
