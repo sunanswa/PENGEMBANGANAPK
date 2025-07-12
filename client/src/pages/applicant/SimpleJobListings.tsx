@@ -6,6 +6,7 @@ export default function SimpleJobListings() {
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [totalSteps, setTotalSteps] = useState(4);
   const [applicationData, setApplicationData] = useState({
     // Data Pribadi
     fullName: "",
@@ -39,6 +40,13 @@ export default function SimpleJobListings() {
     
     // Pengalaman
     hasWorkExperience: "",
+    
+    // Detail Pengalaman (jika Ya)
+    hasLeasingExperience: "",
+    companyName: "",
+    jobPosition: "",
+    workPeriod: "",
+    jobDescription: "",
     
     // Dokumen
     hasVehicle: "",
@@ -101,7 +109,7 @@ export default function SimpleJobListings() {
   };
 
   const handleNextStep = () => {
-    if (currentStep < 4) {
+    if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -119,8 +127,30 @@ export default function SimpleJobListings() {
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setApplicationData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: string, value: string | File | null) => {
+    setApplicationData(prev => {
+      const newData = {
+        ...prev,
+        [field]: value
+      };
+      
+      // Update total steps based on work experience
+      if (field === "hasWorkExperience") {
+        if (value === "ya") {
+          setTotalSteps(5); // Add experience detail step
+        } else {
+          setTotalSteps(4); // Remove experience detail step
+          // Clear experience detail fields
+          newData.hasLeasingExperience = "";
+          newData.companyName = "";
+          newData.jobPosition = "";
+          newData.workPeriod = "";
+          newData.jobDescription = "";
+        }
+      }
+      
+      return newData;
+    });
   };
 
   const handleSubmitApplication = () => {
@@ -154,6 +184,11 @@ export default function SimpleJobListings() {
       graduationYear: "",
       gpa: "",
       hasWorkExperience: "",
+      hasLeasingExperience: "",
+      companyName: "",
+      jobPosition: "",
+      workPeriod: "",
+      jobDescription: "",
       hasVehicle: "",
       hasOriginalKTP: "",
       hasSIMC: "",
@@ -601,6 +636,401 @@ export default function SimpleJobListings() {
         );
       
       case 4:
+        // Show experience detail step or skip to documents
+        if (totalSteps === 5 && applicationData.hasWorkExperience === "ya") {
+          return (
+            <div className="space-y-4">
+              <div className="border-l-4 border-red-500 pl-4 mb-6">
+                <h3 className="text-lg font-semibold text-red-700 dark:text-red-300">Pengalaman</h3>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  🏢 Apakah Anda memiliki pengalaman kerja?
+                </label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasWorkExperience"
+                      value="ya"
+                      checked={applicationData.hasWorkExperience === "ya"}
+                      onChange={(e) => handleInputChange("hasWorkExperience", e.target.value)}
+                      className="mr-2 text-green-500"
+                    />
+                    Ya
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasWorkExperience"
+                      value="tidak"
+                      checked={applicationData.hasWorkExperience === "tidak"}
+                      onChange={(e) => handleInputChange("hasWorkExperience", e.target.value)}
+                      className="mr-2"
+                    />
+                    Tidak
+                  </label>
+                </div>
+              </div>
+              
+              {applicationData.hasWorkExperience === "ya" && (
+                <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-6 space-y-4">
+                  <div className="flex items-center mb-4">
+                    <h4 className="text-lg font-semibold text-blue-700 dark:text-blue-300">🏢 Detail Pengalaman Kerja</h4>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                      🏢 Apakah Anda memiliki pengalaman di bidang leasing?
+                    </label>
+                    <div className="flex space-x-4">
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="hasLeasingExperience"
+                          value="ya"
+                          checked={applicationData.hasLeasingExperience === "ya"}
+                          onChange={(e) => handleInputChange("hasLeasingExperience", e.target.value)}
+                          className="mr-2"
+                        />
+                        Ya
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="hasLeasingExperience"
+                          value="tidak"
+                          checked={applicationData.hasLeasingExperience === "tidak"}
+                          onChange={(e) => handleInputChange("hasLeasingExperience", e.target.value)}
+                          className="mr-2"
+                        />
+                        Tidak
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                        🏢 Nama Perusahaan
+                      </label>
+                      <input
+                        type="text"
+                        value={applicationData.companyName}
+                        onChange={(e) => handleInputChange("companyName", e.target.value)}
+                        placeholder="Masukkan nama perusahaan"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                        👤 Posisi/Jabatan
+                      </label>
+                      <input
+                        type="text"
+                        value={applicationData.jobPosition}
+                        onChange={(e) => handleInputChange("jobPosition", e.target.value)}
+                        placeholder="Masukkan posisi/jabatan"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                      📅 Periode Kerja
+                    </label>
+                    <input
+                      type="text"
+                      value={applicationData.workPeriod}
+                      onChange={(e) => handleInputChange("workPeriod", e.target.value)}
+                      placeholder="Jan 2020 - Des 2023"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                      📄 Deskripsi Tugas
+                    </label>
+                    <textarea
+                      value={applicationData.jobDescription}
+                      onChange={(e) => handleInputChange("jobDescription", e.target.value)}
+                      placeholder="Masukkan deskripsi tugas"
+                      rows={4}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+        // If no work experience (totalSteps = 4), show documents
+        if (totalSteps === 4) {
+          return (
+            <div className="space-y-4">
+              <div className="border-l-4 border-teal-500 pl-4 mb-6">
+                <h3 className="text-lg font-semibold text-teal-700 dark:text-teal-300">Dokumen</h3>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    🚗 Apakah Anda memiliki kendaraan pribadi?
+                  </label>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasVehicle"
+                        value="ya"
+                        checked={applicationData.hasVehicle === "ya"}
+                        onChange={(e) => handleInputChange("hasVehicle", e.target.value)}
+                        className="mr-2"
+                      />
+                      Ya
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasVehicle"
+                        value="tidak"
+                        checked={applicationData.hasVehicle === "tidak"}
+                        onChange={(e) => handleInputChange("hasVehicle", e.target.value)}
+                        className="mr-2"
+                      />
+                      Tidak
+                    </label>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    👤 Apakah Anda memiliki KTP Asli?
+                  </label>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasOriginalKTP"
+                        value="ya"
+                        checked={applicationData.hasOriginalKTP === "ya"}
+                        onChange={(e) => handleInputChange("hasOriginalKTP", e.target.value)}
+                        className="mr-2"
+                      />
+                      Ya
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasOriginalKTP"
+                        value="tidak"
+                        checked={applicationData.hasOriginalKTP === "tidak"}
+                        onChange={(e) => handleInputChange("hasOriginalKTP", e.target.value)}
+                        className="mr-2"
+                      />
+                      Tidak
+                    </label>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📄 Apakah Anda memiliki SIM C?
+                  </label>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasSIMC"
+                        value="ya"
+                        checked={applicationData.hasSIMC === "ya"}
+                        onChange={(e) => handleInputChange("hasSIMC", e.target.value)}
+                        className="mr-2"
+                      />
+                      Ya
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasSIMC"
+                        value="tidak"
+                        checked={applicationData.hasSIMC === "tidak"}
+                        onChange={(e) => handleInputChange("hasSIMC", e.target.value)}
+                        className="mr-2"
+                      />
+                      Tidak
+                    </label>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📄 Apakah Anda memiliki SIM A?
+                  </label>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasSIMA"
+                        value="ya"
+                        checked={applicationData.hasSIMA === "ya"}
+                        onChange={(e) => handleInputChange("hasSIMA", e.target.value)}
+                        className="mr-2"
+                      />
+                      Ya
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasSIMA"
+                        value="tidak"
+                        checked={applicationData.hasSIMA === "tidak"}
+                        onChange={(e) => handleInputChange("hasSIMA", e.target.value)}
+                        className="mr-2"
+                      />
+                      Tidak
+                    </label>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📄 Apakah Anda memiliki SKCK?
+                  </label>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasSKCK"
+                        value="ya"
+                        checked={applicationData.hasSKCK === "ya"}
+                        onChange={(e) => handleInputChange("hasSKCK", e.target.value)}
+                        className="mr-2"
+                      />
+                      Ya
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasSKCK"
+                        value="tidak"
+                        checked={applicationData.hasSKCK === "tidak"}
+                        onChange={(e) => handleInputChange("hasSKCK", e.target.value)}
+                        className="mr-2"
+                      />
+                      Tidak
+                    </label>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📄 Apakah Anda memiliki NPWP?
+                  </label>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasNPWP"
+                        value="ya"
+                        checked={applicationData.hasNPWP === "ya"}
+                        onChange={(e) => handleInputChange("hasNPWP", e.target.value)}
+                        className="mr-2"
+                      />
+                      Ya
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasNPWP"
+                        value="tidak"
+                        checked={applicationData.hasNPWP === "tidak"}
+                        onChange={(e) => handleInputChange("hasNPWP", e.target.value)}
+                        className="mr-2"
+                      />
+                      Tidak
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📄 Apakah Anda memiliki riwayat buruk kredit?
+                </label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasCreditHistory"
+                      value="ya"
+                      checked={applicationData.hasCreditHistory === "ya"}
+                      onChange={(e) => handleInputChange("hasCreditHistory", e.target.value)}
+                      className="mr-2"
+                    />
+                    Ya
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasCreditHistory"
+                      value="tidak"
+                      checked={applicationData.hasCreditHistory === "tidak"}
+                      onChange={(e) => handleInputChange("hasCreditHistory", e.target.value)}
+                      className="mr-2"
+                    />
+                    Tidak
+                  </label>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📄 Upload CV/Resume *
+                </label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    id="cv-upload"
+                  />
+                  <label htmlFor="cv-upload" className="cursor-pointer text-blue-600 hover:text-blue-700">
+                    Klik untuk upload CV
+                  </label>
+                  <p className="text-sm text-gray-500 mt-1">PDF, DOC, atau DOCX (Max 5MB)</p>
+                  {applicationData.cv && (
+                    <p className="text-green-600 mt-2">✓ {applicationData.cv.name}</p>
+                  )}
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📄 Alasan Melamar *
+                </label>
+                <textarea
+                  value={applicationData.motivation}
+                  onChange={(e) => handleInputChange("motivation", e.target.value)}
+                  placeholder="Jelaskan mengapa Anda tertarik dengan posisi ini dan perusahaan kami..."
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+                <div className="text-right text-xs text-gray-500 mt-1">0/500</div>
+              </div>
+            </div>
+          );
+        }
+        return null;
+      
+      case 5:
         return (
           <div className="space-y-4">
             <div className="border-l-4 border-teal-500 pl-4 mb-6">
@@ -964,7 +1394,7 @@ export default function SimpleJobListings() {
             {/* Progress Steps */}
             <div className="p-6 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
-                {[1, 2, 3, 4].map((step) => (
+                {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step) => (
                   <div key={step} className="flex items-center">
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
@@ -975,7 +1405,7 @@ export default function SimpleJobListings() {
                     >
                       {step}
                     </div>
-                    {step < 4 && (
+                    {step < totalSteps && (
                       <div
                         className={`w-12 h-1 mx-2 ${
                           step < currentStep ? "bg-blue-600" : "bg-gray-200 dark:bg-gray-700"
@@ -989,6 +1419,7 @@ export default function SimpleJobListings() {
                 <span>Data Pribadi</span>
                 <span>Alamat</span>
                 <span>Pendidikan</span>
+                {totalSteps === 5 && <span>Pengalaman</span>}
                 <span>Dokumen</span>
               </div>
             </div>
@@ -1016,14 +1447,15 @@ export default function SimpleJobListings() {
                   Batal
                 </button>
                 
-                {currentStep < 4 ? (
+                {currentStep < totalSteps ? (
                   <button
                     onClick={handleNextStep}
                     disabled={
                       (currentStep === 1 && (!applicationData.fullName || !applicationData.nik || !applicationData.phone || !applicationData.birthPlace || !applicationData.birthDate || !applicationData.gender || !applicationData.maritalStatus || !applicationData.religion || !applicationData.fatherName || !applicationData.motherName)) ||
                       (currentStep === 2 && (!applicationData.ktpAddress || !applicationData.currentAddress || !applicationData.subDistrict || !applicationData.district || !applicationData.city)) ||
                       (currentStep === 3 && (!applicationData.educationLevel || !applicationData.schoolName)) ||
-                      (currentStep === 4 && (!applicationData.cv || !applicationData.motivation))
+                      (currentStep === 4 && totalSteps === 5 && applicationData.hasWorkExperience === "ya" && (!applicationData.companyName || !applicationData.jobPosition)) ||
+                      (currentStep === totalSteps && (!applicationData.cv || !applicationData.motivation))
                     }
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
