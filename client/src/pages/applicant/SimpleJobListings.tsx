@@ -127,12 +127,33 @@ export default function SimpleJobListings() {
     }
   };
 
+  // Function to calculate age from birth date
+  const calculateAge = (birthDate: string) => {
+    if (!birthDate) return "";
+    
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    
+    return age.toString();
+  };
+
   const handleInputChange = (field: string, value: string | File | null) => {
     setApplicationData(prev => {
       const newData = {
         ...prev,
         [field]: value
       };
+      
+      // Auto-calculate age when birth date changes
+      if (field === "birthDate" && typeof value === "string") {
+        newData.age = calculateAge(value);
+      }
       
       // Update total steps based on work experience
       if (field === "hasWorkExperience") {
@@ -290,9 +311,9 @@ export default function SimpleJobListings() {
                 <input
                   type="text"
                   value={applicationData.age}
-                  onChange={(e) => handleInputChange("age", e.target.value)}
-                  placeholder="Otomatis terisi"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  placeholder="Otomatis terisi dari tanggal lahir"
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-600 dark:border-gray-600 dark:text-white cursor-not-allowed"
                 />
               </div>
               
@@ -600,7 +621,7 @@ export default function SimpleJobListings() {
             </div>
             
             <div className="border-l-4 border-red-500 pl-4 mt-8">
-              <h3 className="text-lg font-semibold text-red-700 dark:text-red-300 mb-4">Pengalaman</h3>
+              <h3 className="text-lg font-semibold text-red-700 dark:text-red-300 mb-4">Pengalaman Kerja</h3>
             </div>
             
             <div>
@@ -636,135 +657,107 @@ export default function SimpleJobListings() {
         );
       
       case 4:
-        // Show experience detail step or skip to documents
+        // Show experience detail step only if user has work experience
         if (totalSteps === 5 && applicationData.hasWorkExperience === "ya") {
           return (
             <div className="space-y-4">
               <div className="border-l-4 border-red-500 pl-4 mb-6">
-                <h3 className="text-lg font-semibold text-red-700 dark:text-red-300">Pengalaman</h3>
+                <h3 className="text-lg font-semibold text-red-700 dark:text-red-300">Detail Pengalaman Kerja</h3>
               </div>
               
-              <div>
-                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
-                  🏢 Apakah Anda memiliki pengalaman kerja?
-                </label>
-                <div className="flex space-x-4">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="hasWorkExperience"
-                      value="ya"
-                      checked={applicationData.hasWorkExperience === "ya"}
-                      onChange={(e) => handleInputChange("hasWorkExperience", e.target.value)}
-                      className="mr-2 text-green-500"
-                    />
-                    Ya
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="hasWorkExperience"
-                      value="tidak"
-                      checked={applicationData.hasWorkExperience === "tidak"}
-                      onChange={(e) => handleInputChange("hasWorkExperience", e.target.value)}
-                      className="mr-2"
-                    />
-                    Tidak
-                  </label>
+              <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-6 space-y-4">
+                <div className="flex items-center mb-4">
+                  <h4 className="text-lg font-semibold text-blue-700 dark:text-blue-300">🏢 Informasi Pengalaman Kerja</h4>
                 </div>
-              </div>
-              
-              {applicationData.hasWorkExperience === "ya" && (
-                <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-6 space-y-4">
-                  <div className="flex items-center mb-4">
-                    <h4 className="text-lg font-semibold text-blue-700 dark:text-blue-300">🏢 Detail Pengalaman Kerja</h4>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
-                      🏢 Apakah Anda memiliki pengalaman di bidang leasing?
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    🏢 Apakah Anda memiliki pengalaman di bidang leasing?
+                  </label>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="hasLeasingExperience"
+                        value="ya"
+                        checked={applicationData.hasLeasingExperience === "ya"}
+                        onChange={(e) => handleInputChange("hasLeasingExperience", e.target.value)}
+                        className="mr-2"
+                      />
+                      Ya
                     </label>
-                    <div className="flex space-x-4">
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          name="hasLeasingExperience"
-                          value="ya"
-                          checked={applicationData.hasLeasingExperience === "ya"}
-                          onChange={(e) => handleInputChange("hasLeasingExperience", e.target.value)}
-                          className="mr-2"
-                        />
-                        Ya
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          name="hasLeasingExperience"
-                          value="tidak"
-                          checked={applicationData.hasLeasingExperience === "tidak"}
-                          onChange={(e) => handleInputChange("hasLeasingExperience", e.target.value)}
-                          className="mr-2"
-                        />
-                        Tidak
-                      </label>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
-                        🏢 Nama Perusahaan
-                      </label>
+                    <label className="flex items-center">
                       <input
-                        type="text"
-                        value={applicationData.companyName}
-                        onChange={(e) => handleInputChange("companyName", e.target.value)}
-                        placeholder="Masukkan nama perusahaan"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        type="radio"
+                        name="hasLeasingExperience"
+                        value="tidak"
+                        checked={applicationData.hasLeasingExperience === "tidak"}
+                        onChange={(e) => handleInputChange("hasLeasingExperience", e.target.value)}
+                        className="mr-2"
                       />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
-                        👤 Posisi/Jabatan
-                      </label>
-                      <input
-                        type="text"
-                        value={applicationData.jobPosition}
-                        onChange={(e) => handleInputChange("jobPosition", e.target.value)}
-                        placeholder="Masukkan posisi/jabatan"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                      />
-                    </div>
+                      Tidak
+                    </label>
                   </div>
-                  
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
-                      📅 Periode Kerja
+                      🏢 Nama Perusahaan *
                     </label>
                     <input
                       type="text"
-                      value={applicationData.workPeriod}
-                      onChange={(e) => handleInputChange("workPeriod", e.target.value)}
-                      placeholder="Jan 2020 - Des 2023"
+                      value={applicationData.companyName}
+                      onChange={(e) => handleInputChange("companyName", e.target.value)}
+                      placeholder="Masukkan nama perusahaan"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      required
                     />
                   </div>
                   
                   <div>
                     <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
-                      📄 Deskripsi Tugas
+                      👤 Posisi/Jabatan *
                     </label>
-                    <textarea
-                      value={applicationData.jobDescription}
-                      onChange={(e) => handleInputChange("jobDescription", e.target.value)}
-                      placeholder="Masukkan deskripsi tugas"
-                      rows={4}
+                    <input
+                      type="text"
+                      value={applicationData.jobPosition}
+                      onChange={(e) => handleInputChange("jobPosition", e.target.value)}
+                      placeholder="Masukkan posisi/jabatan"
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      required
                     />
                   </div>
                 </div>
-              )}
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📅 Periode Kerja *
+                  </label>
+                  <input
+                    type="text"
+                    value={applicationData.workPeriod}
+                    onChange={(e) => handleInputChange("workPeriod", e.target.value)}
+                    placeholder="Contoh: Jan 2020 - Des 2023"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📄 Deskripsi Tugas *
+                  </label>
+                  <textarea
+                    value={applicationData.jobDescription}
+                    onChange={(e) => handleInputChange("jobDescription", e.target.value)}
+                    placeholder="Jelaskan tugas dan tanggung jawab Anda di posisi tersebut..."
+                    rows={4}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    required
+                  />
+                </div>
+              </div>
             </div>
           );
         }
@@ -1419,7 +1412,7 @@ export default function SimpleJobListings() {
                 <span>Data Pribadi</span>
                 <span>Alamat</span>
                 <span>Pendidikan</span>
-                {totalSteps === 5 && <span>Pengalaman</span>}
+                {totalSteps === 5 && <span>Detail Pengalaman</span>}
                 <span>Dokumen</span>
               </div>
             </div>
@@ -1454,7 +1447,7 @@ export default function SimpleJobListings() {
                       (currentStep === 1 && (!applicationData.fullName || !applicationData.nik || !applicationData.phone || !applicationData.birthPlace || !applicationData.birthDate || !applicationData.gender || !applicationData.maritalStatus || !applicationData.religion || !applicationData.fatherName || !applicationData.motherName)) ||
                       (currentStep === 2 && (!applicationData.ktpAddress || !applicationData.currentAddress || !applicationData.subDistrict || !applicationData.district || !applicationData.city)) ||
                       (currentStep === 3 && (!applicationData.educationLevel || !applicationData.schoolName)) ||
-                      (currentStep === 4 && totalSteps === 5 && applicationData.hasWorkExperience === "ya" && (!applicationData.companyName || !applicationData.jobPosition)) ||
+                      (currentStep === 4 && totalSteps === 5 && applicationData.hasWorkExperience === "ya" && (!applicationData.companyName || !applicationData.jobPosition || !applicationData.workPeriod || !applicationData.jobDescription)) ||
                       (currentStep === totalSteps && (!applicationData.cv || !applicationData.motivation))
                     }
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
