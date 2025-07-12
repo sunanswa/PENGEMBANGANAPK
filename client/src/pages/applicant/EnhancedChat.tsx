@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useChatSync } from '@/hooks/useSync';
 import { 
   Send, 
   Paperclip, 
@@ -73,6 +74,9 @@ export default function EnhancedChat() {
   const [showContactInfo, setShowContactInfo] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Use chat sync for selected application
+  const { messages: syncedMessages, addMessage } = useChatSync(selectedContact?.id || '');
 
   const contacts: ChatContact[] = [
     {

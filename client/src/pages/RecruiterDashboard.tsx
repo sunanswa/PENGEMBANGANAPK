@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSync } from '@/hooks/useSync';
 import CommunicationHub from '../components/CommunicationHub';
 import AdvancedAnalytics from '../components/AdvancedAnalytics';
 import MessageComposer from '../components/MessageComposer';
@@ -73,6 +74,22 @@ interface RecruiterDashboardProps {
 }
 
 const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => {
+  // Use sync for admin role
+  const { 
+    stats, 
+    jobs: syncedJobs, 
+    applications: syncedApplications, 
+    candidates: syncedCandidates,
+    interviews: syncedInterviews,
+    notifications: syncedNotifications,
+    addJob,
+    updateJob,
+    deleteJob,
+    updateApplication,
+    addInterview,
+    updateInterview
+  } = useSync('admin', 'admin1');
+  
   const [showForm, setShowForm] = useState(false);
   const [editingJob, setEditingJob] = useState<JobPosting | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -103,10 +120,18 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   const [selectedApplicants, setSelectedApplicants] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
-  const { data: jobPostings = [], isLoading: loading } = useQuery({
-    queryKey: ['/api/job-postings', statusFilter],
-    queryFn: () => apiRequest(`/api/job-postings${statusFilter !== 'all' ? `?status=${statusFilter}` : ''}`)
-  });
+  // Use synced data instead of API query
+  const jobPostings = syncedJobs.map(job => ({
+    id: job.id,
+    title: job.title,
+    description: job.description,
+    locations: [job.location],
+    status: job.status,
+    created_at: job.postedDate,
+    positions_needed: job.applicants
+  })).filter(job => statusFilter === 'all' || job.status === statusFilter);
+  
+  const loading = false;
 
   const createJobMutation = useMutation({
     mutationFn: (jobData: Partial<JobPosting>) => apiRequest('/api/job-postings', {
@@ -392,10 +417,10 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     }
   ];
 
-  const stats = [
+  const dashboardStats = [
     {
       title: 'Pelamar Hari Ini',
-      value: dailyApplicants.length,
+      value: stats?.totalApplications || 0,
       change: '+67%',
       icon: UserPlus,
       color: 'from-emerald-500 to-green-600',
@@ -404,7 +429,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     },
     {
       title: 'Total Lowongan',
-      value: jobPostings.length,
+      value: stats?.totalJobs || 0,
       change: '+12%',
       icon: Briefcase,
       color: 'from-blue-500 to-blue-600',
@@ -413,7 +438,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     },
     {
       title: 'Total Pelamar',
-      value: 156,
+      value: stats?.totalCandidates || 0,
       change: '+24%',
       icon: Users,
       color: 'from-purple-500 to-purple-600',
@@ -422,7 +447,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     },
     {
       title: 'Hired Bulan Ini',
-      value: 23,
+      value: syncedApplications.filter(app => app.status === 'accepted').length,
       change: '+15%',
       icon: Award,
       color: 'from-orange-500 to-orange-600',
@@ -527,7 +552,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
       {/* Stats Grid - Clean Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat, index) => (
+        {dashboardStats.map((stat, index) => (
           <div key={index} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
               <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center`}>

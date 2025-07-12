@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import EnhancedJobListings from './EnhancedJobListings';
+import { useSync } from '@/hooks/useSync';
 import { 
   Briefcase, 
   Clock, 
@@ -47,105 +48,58 @@ interface Job {
 }
 
 export default function EnhancedDashboard() {
+  const { stats, jobs, applications, interviews, notifications } = useSync('applicant', 'candidate1');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [savedJobs, setSavedJobs] = useState<number[]>([1, 3]);
   const [showFilters, setShowFilters] = useState(false);
   
-  // Mock data for stats
+  // Use synced stats data
   const jobStats: JobStats = {
-    totalApplications: 12,
-    pending: 8,
-    interviews: 3,
-    accepted: 1,
-    rejected: 0
+    totalApplications: stats?.myApplications || 0,
+    pending: stats?.pendingApplications || 0,
+    interviews: stats?.interviews || 0,
+    accepted: stats?.acceptedApplications || 0,
+    rejected: stats?.rejectedApplications || 0
   };
 
-  const profileCompletion = 85;
+  const profileCompletion = stats?.profileViews || 85;
   
-  const recentJobs: Job[] = [
-    {
-      id: 1,
-      title: "Senior Software Developer",
-      company: "PT Tech Solutions",
-      location: "Jakarta",
-      salary: "Rp 15.000.000 - Rp 20.000.000",
-      type: "Full-time",
-      postedDate: "2 hari lalu",
-      applicants: 45,
-      match: 92,
-      saved: true,
-      urgent: true
-    },
-    {
-      id: 2,
-      title: "Marketing Manager",
-      company: "PT Digital Marketing",
-      location: "Bandung",
-      salary: "Rp 12.000.000 - Rp 16.000.000",
-      type: "Full-time",
-      postedDate: "1 hari lalu",
-      applicants: 32,
-      match: 78,
-      saved: false,
-      urgent: false
-    },
-    {
-      id: 3,
-      title: "Data Analyst",
-      company: "PT Analytics Corp",
-      location: "Surabaya",
-      salary: "Rp 10.000.000 - Rp 14.000.000",
-      type: "Contract",
-      postedDate: "3 hari lalu",
-      applicants: 28,
-      match: 85,
-      saved: true,
-      urgent: false
-    }
-  ];
+  // Use synced jobs data
+  const recentJobs = jobs.slice(0, 3).map(job => ({
+    id: parseInt(job.id),
+    title: job.title,
+    company: job.company,
+    location: job.location,
+    salary: job.salary,
+    type: job.type,
+    postedDate: job.postedDate,
+    applicants: job.applicants,
+    match: job.match || 85,
+    saved: job.saved || false,
+    urgent: job.urgent
+  }));
 
-  const upcomingInterviews = [
-    {
-      id: 1,
-      company: "PT Tech Solutions",
-      position: "Software Developer",
-      date: "15 Juli 2025",
-      time: "10:00 WIB",
-      type: "Video Call"
-    },
-    {
-      id: 2,
-      company: "PT Digital Corp",
-      position: "Marketing Specialist",
-      date: "18 Juli 2025",
-      time: "14:00 WIB",
-      type: "On-site"
-    }
-  ];
+  // Use synced interviews data
+  const upcomingInterviews = interviews
+    .filter(interview => interview.status === 'scheduled')
+    .slice(0, 2)
+    .map(interview => ({
+      id: parseInt(interview.id),
+      company: interview.company,
+      position: interview.jobTitle,
+      date: interview.date,
+      time: interview.time,
+      type: interview.type === 'video' ? 'Video Call' : interview.type === 'onsite' ? 'On-site' : 'Phone Call'
+    }));
 
-  const notifications = [
-    {
-      id: 1,
-      title: "Aplikasi Anda telah dilihat",
-      message: "PT Tech Solutions melihat profil Anda",
-      time: "2 jam lalu",
-      type: "view"
-    },
-    {
-      id: 2,
-      title: "Interview dijadwalkan",
-      message: "Interview untuk posisi Software Developer",
-      time: "1 hari lalu",
-      type: "interview"
-    },
-    {
-      id: 3,
-      title: "Pekerjaan baru sesuai kriteria",
-      message: "5 pekerjaan baru di Jakarta",
-      time: "2 hari lalu",
-      type: "job"
-    }
-  ];
+  // Use synced notifications data
+  const recentNotifications = notifications.slice(0, 3).map(notification => ({
+    id: parseInt(notification.id),
+    title: notification.title,
+    message: notification.message,
+    time: notification.timestamp,
+    type: notification.type
+  }));
 
   const toggleSaveJob = (jobId: number) => {
     setSavedJobs(prev => 
@@ -263,7 +217,7 @@ export default function EnhancedDashboard() {
           <Bell className="h-5 w-5 text-blue-600" />
         </div>
         <div className="space-y-3">
-          {notifications.map((notification) => (
+          {recentNotifications.map((notification) => (
             <div key={notification.id} className="flex items-start space-x-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
               <div className={`p-2 rounded-lg ${
                 notification.type === 'view' ? 'bg-green-100 dark:bg-green-900' :

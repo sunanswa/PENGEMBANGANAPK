@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSync } from '@/hooks/useSync';
 import { 
   Clock, 
   CheckCircle, 
@@ -54,13 +55,33 @@ interface TimelineEvent {
 }
 
 export default function EnhancedApplications() {
+  const { applications: syncedApplications, updateApplication } = useSync('applicant', 'candidate1');
   const [activeTab, setActiveTab] = useState('all');
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('date');
 
-  const applications: Application[] = [
+  // Convert synced applications to local format
+  const applications: Application[] = (syncedApplications || []).map(app => ({
+    id: app.id,
+    jobTitle: app.jobTitle,
+    company: app.company,
+    companyLogo: app.companyLogo,
+    location: app.location,
+    salary: app.salary,
+    appliedDate: app.appliedDate,
+    status: app.status,
+    interviewDate: app.interviewDate,
+    interviewType: app.interviewType,
+    feedback: app.feedback,
+    recruiterName: app.recruiterName,
+    lastUpdate: app.lastUpdate,
+    urgency: app.urgency
+  }));
+
+  // Fallback mock data if no synced applications
+  const fallbackApplications: Application[] = applications.length === 0 ? [
     {
       id: '1',
       jobTitle: 'Senior Software Developer',
@@ -75,58 +96,8 @@ export default function EnhancedApplications() {
       recruiterName: 'Sarah Johnson',
       lastUpdate: '2025-07-12',
       urgency: 'high'
-    },
-    {
-      id: '2',
-      jobTitle: 'Frontend Developer',
-      company: 'PT Digital Innovation',
-      companyLogo: '💻',
-      location: 'Bandung',
-      salary: 'Rp 10.000.000 - Rp 15.000.000',
-      appliedDate: '2025-07-08',
-      status: 'viewed',
-      lastUpdate: '2025-07-11',
-      urgency: 'medium'
-    },
-    {
-      id: '3',
-      jobTitle: 'Full Stack Developer',
-      company: 'PT Startup Unicorn',
-      companyLogo: '🦄',
-      location: 'Remote',
-      salary: 'Rp 12.000.000 - Rp 18.000.000',
-      appliedDate: '2025-07-05',
-      status: 'accepted',
-      feedback: 'Congratulations! We are pleased to offer you the position.',
-      lastUpdate: '2025-07-12',
-      urgency: 'high'
-    },
-    {
-      id: '4',
-      jobTitle: 'Backend Developer',
-      company: 'PT Enterprise Corp',
-      companyLogo: '🏭',
-      location: 'Surabaya',
-      salary: 'Rp 9.000.000 - Rp 13.000.000',
-      appliedDate: '2025-07-03',
-      status: 'rejected',
-      feedback: 'Thank you for your interest. We decided to move forward with another candidate.',
-      lastUpdate: '2025-07-09',
-      urgency: 'low'
-    },
-    {
-      id: '5',
-      jobTitle: 'DevOps Engineer',
-      company: 'PT Cloud Services',
-      companyLogo: '☁️',
-      location: 'Jakarta',
-      salary: 'Rp 14.000.000 - Rp 19.000.000',
-      appliedDate: '2025-07-01',
-      status: 'submitted',
-      lastUpdate: '2025-07-01',
-      urgency: 'medium'
     }
-  ];
+  ] : applications;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -209,7 +180,7 @@ export default function EnhancedApplications() {
     return events;
   };
 
-  const filteredApplications = applications
+  const filteredApplications = fallbackApplications
     .filter(app => {
       if (activeTab === 'all') return true;
       if (activeTab === 'pending') return ['submitted', 'viewed', 'interview'].includes(app.status);
@@ -228,10 +199,10 @@ export default function EnhancedApplications() {
     });
 
   const stats = {
-    total: applications.length,
-    pending: applications.filter(app => ['submitted', 'viewed', 'interview'].includes(app.status)).length,
-    accepted: applications.filter(app => app.status === 'accepted').length,
-    rejected: applications.filter(app => app.status === 'rejected').length
+    total: fallbackApplications.length,
+    pending: fallbackApplications.filter(app => ['submitted', 'viewed', 'interview'].includes(app.status)).length,
+    accepted: fallbackApplications.filter(app => app.status === 'accepted').length,
+    rejected: fallbackApplications.filter(app => app.status === 'rejected').length
   };
 
   const renderApplicationCard = (application: Application) => (

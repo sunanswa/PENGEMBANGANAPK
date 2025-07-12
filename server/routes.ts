@@ -1,12 +1,16 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { registerSyncRoutes } from "./routes/sync";
 import { insertUserSchema, insertJobPostingSchema, insertStatusUpdateSchema, insertSlikCheckSchema, type User } from "@shared/schema";
 import { z } from "zod";
 import * as communication from "./communication";
 import * as analytics from "./analytics";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Register sync routes for cross-role data consistency
+  registerSyncRoutes(app);
+  
   // Authentication routes
   app.post("/api/auth/login", async (req, res) => {
     try {
