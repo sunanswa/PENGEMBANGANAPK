@@ -515,14 +515,15 @@ export default function ApplicantProfileForm({ onComplete, existingProfile }: Ap
             <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="work_type_preference">Preferensi Tipe Pekerjaan *</Label>
-                <Select onValueChange={(value) => form.setValue("work_type_preference", value as keyof typeof workTypes)}>
+                <Select onValueChange={(value) => form.setValue("work_type_preference", value as any)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Pilih tipe pekerjaan" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(workTypes).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>{label}</SelectItem>
-                    ))}
+                    <SelectItem value="full_time">Full Time</SelectItem>
+                    <SelectItem value="part_time">Part Time</SelectItem>
+                    <SelectItem value="contract">Kontrak</SelectItem>
+                    <SelectItem value="internship">Magang</SelectItem>
                   </SelectContent>
                 </Select>
                 {form.formState.errors.work_type_preference && (
