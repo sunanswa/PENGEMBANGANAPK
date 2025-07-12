@@ -524,146 +524,130 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         </div>
       </div>
 
-      {/* Stats Grid - Enhanced */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stats Grid - Clean Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, index) => (
-          <div key={index} className={`bg-white rounded-3xl p-6 border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1`}>
+          <div key={index} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
-              <div className={`w-14 h-14 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center shadow-lg`}>
-                <stat.icon size={26} className="text-white" />
+              <div className={`w-12 h-12 bg-gradient-to-r ${stat.color} rounded-xl flex items-center justify-center`}>
+                <stat.icon size={24} className="text-white" />
               </div>
-              <span className={`text-sm font-bold ${stat.textColor} bg-gradient-to-r ${stat.color} bg-opacity-10 px-3 py-1 rounded-full`}>
+              <span className={`text-xs font-semibold ${stat.textColor} bg-gradient-to-r ${stat.color} bg-opacity-10 px-2 py-1 rounded-full`}>
                 {stat.change}
               </span>
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-500 mb-2">{stat.title}</p>
-              <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+              <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
+              <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Quick Actions & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Quick Actions */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Zap size={20} className="text-orange-500" />
+          <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Zap size={18} className="text-orange-500" />
               Quick Actions
             </h3>
             <div className="space-y-3">
               <button
                 onClick={handleAddNew}
-                className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="w-full flex items-center gap-3 p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300"
               >
-                <div className="p-1 bg-white/20 rounded-lg">
-                  <Plus size={20} />
-                </div>
-                <span className="font-semibold">Tambah Lowongan Baru</span>
+                <Plus size={18} />
+                <span className="font-medium text-sm">Tambah Lowongan</span>
               </button>
-              <button className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 rounded-2xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300 border border-green-200">
-                <div className="p-1 bg-green-200 rounded-lg">
-                  <Download size={20} />
-                </div>
-                <span className="font-semibold">Export Data</span>
+              <button className="w-full flex items-center gap-3 p-3 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-all duration-300">
+                <Download size={18} />
+                <span className="font-medium text-sm">Export Data</span>
               </button>
-              <button className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-orange-50 to-amber-50 text-orange-700 rounded-2xl hover:from-orange-100 hover:to-amber-100 transition-all duration-300 border border-orange-200">
-                <div className="p-1 bg-orange-200 rounded-lg">
-                  <Upload size={20} />
-                </div>
-                <span className="font-semibold">Import Data</span>
-              </button>
-              <button className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 rounded-2xl hover:from-purple-100 hover:to-pink-100 transition-all duration-300 border border-purple-200">
-                <div className="p-1 bg-purple-200 rounded-lg">
-                  <Mail size={20} />
-                </div>
-                <span className="font-semibold">Kirim Notifikasi</span>
+              <button className="w-full flex items-center gap-3 p-3 bg-orange-50 text-orange-700 rounded-xl hover:bg-orange-100 transition-all duration-300">
+                <Upload size={18} />
+                <span className="font-medium text-sm">Import Data</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* Pelamar Hari Ini */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <div className="p-2 bg-blue-100 rounded-xl">
-                  <Users size={20} className="text-blue-600" />
-                </div>
+        <div className="lg:col-span-3">
+          <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <Users size={18} className="text-blue-600" />
                 Pelamar Hari Ini
-                <span className="bg-blue-100 text-blue-800 text-sm font-bold px-3 py-1 rounded-full">
+                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
                   {dailyApplicants.length}
                 </span>
               </h3>
-              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors">
+              <button className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors">
                 Lihat Semua
-                <ChevronRight size={16} />
+                <ChevronRight size={14} />
               </button>
             </div>
-            <div className="space-y-4">
-              {dailyApplicants.map((applicant) => (
-                <div key={applicant.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl flex items-center justify-center text-white font-bold">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {dailyApplicants.slice(0, 4).map((applicant) => (
+                <div key={applicant.id} className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
                     {applicant.name.split(' ').map(n => n[0]).join('')}
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="font-semibold text-gray-900">{applicant.name}</p>
-                      <span className="text-xs text-gray-500 font-medium">{applicant.appliedAt}</span>
+                      <p className="font-semibold text-gray-900 text-sm truncate">{applicant.name}</p>
+                      <span className="text-xs text-gray-500">{applicant.appliedAt}</span>
                     </div>
-                    <p className="text-sm text-blue-600 font-medium mb-1">{applicant.position}</p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span>📧 {applicant.email}</span>
-                      <span>📱 {applicant.phone}</span>
-                      <span>🎓 {applicant.education}</span>
-                      <span>💼 {applicant.experience}</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-2">
+                    <p className="text-sm text-blue-600 font-medium mb-2">{applicant.position}</p>
+                    <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-500">📍 {applicant.location}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
-                          Baru
-                        </span>
-                        <button className="text-blue-600 hover:text-blue-700 text-xs font-semibold">
-                          Review →
-                        </button>
-                      </div>
+                      <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
+                        Baru
+                      </span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+            {dailyApplicants.length > 4 && (
+              <div className="mt-4 text-center">
+                <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+                  +{dailyApplicants.length - 4} pelamar lainnya
+                </button>
+              </div>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* Recent Activity */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <div className="p-2 bg-green-100 rounded-xl">
-                  <Activity size={20} className="text-green-600" />
+      
+      {/* Recent Activity Section */}
+      <div className="mt-6">
+        <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <Activity size={18} className="text-green-600" />
+              Aktivitas Terbaru
+            </h3>
+            <button className="text-gray-600 hover:text-gray-700 text-sm font-medium">
+              Lihat Semua
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {recentActivities.map((activity, index) => (
+              <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                <div className={`w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm`}>
+                  <activity.icon size={14} className={activity.color} />
                 </div>
-                Aktivitas Terbaru
-              </h3>
-            </div>
-            <div className="space-y-4">
-              {recentActivities.map((activity, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
-                  <div className={`w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm`}>
-                    <activity.icon size={14} className={activity.color} />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-gray-900 text-sm">{activity.action}</p>
-                    <p className="text-xs text-gray-600">{activity.item}</p>
-                    <span className="text-xs text-gray-500">{activity.time}</span>
-                  </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 text-sm truncate">{activity.action}</p>
+                  <p className="text-xs text-gray-600 truncate">{activity.item}</p>
+                  <span className="text-xs text-gray-500">{activity.time}</span>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -672,44 +656,44 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
   const renderJobsManagement = () => (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+      {/* Clean Header */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Kelola Lowongan Pekerjaan</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">Kelola Lowongan Pekerjaan</h2>
           <p className="text-gray-600">Tambah, edit, dan kelola semua lowongan pekerjaan SWAPRO</p>
         </div>
         <button
           onClick={handleAddNew}
-          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
+          className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
         >
           <Plus size={20} />
           Tambah Lowongan
         </button>
       </div>
 
-      {/* Controls */}
-      <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
+      {/* Search and Filter Controls */}
+      <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
-              <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Cari lowongan..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
               />
             </div>
 
             {/* Filter */}
             <div className="relative">
-              <Filter size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Filter size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="pl-10 pr-8 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400 transition-all appearance-none bg-white"
+                className="pl-10 pr-8 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all appearance-none bg-white"
               >
                 <option value="all">Semua Status</option>
                 <option value="active">Aktif</option>
@@ -721,18 +705,18 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           </div>
 
           <div className="flex items-center gap-2">
-            <button className="p-3 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors" title="Refresh">
-              <RefreshCw size={18} />
+            <button className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Refresh">
+              <RefreshCw size={16} />
             </button>
-            <button className="p-3 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors" title="Export">
-              <Download size={18} />
+            <button className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Export">
+              <Download size={16} />
             </button>
           </div>
         </div>
       </div>
 
       {/* Job Listings */}
-      <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
         {loading ? (
           <div className="p-12 text-center">
             <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
@@ -761,15 +745,18 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             )}
           </div>
         ) : (
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-gray-100">
             {filteredJobs.map((job) => (
-              <div key={job.id} className="p-6 hover:bg-gray-50/50 transition-colors">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div key={job.id} className="p-4 hover:bg-gray-50 transition-colors">
+                <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">{job.title}</h3>
-                        <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg font-bold text-gray-900">{job.title}</h3>
+                          {getStatusBadge(job.status)}
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
                           <div className="flex items-center gap-1">
                             <Calendar size={14} />
                             {new Date(job.created_at).toLocaleDateString('id-ID')}
@@ -790,55 +777,50 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                           )}
                         </div>
                       </div>
-                      {getStatusBadge(job.status)}
                     </div>
                     
-                    <p className="text-gray-700 mb-3 line-clamp-2">{job.description}</p>
+                    <p className="text-gray-600 mb-3 text-sm line-clamp-2">{job.description}</p>
                     
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {job.locations.slice(0, 3).map((location, index) => (
-                        <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">
-                          {location}
-                        </span>
-                      ))}
-                      {job.locations.length > 3 && (
-                        <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">
-                          +{job.locations.length - 3} lainnya
-                        </span>
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap gap-2">
+                        {job.locations.slice(0, 2).map((location, index) => (
+                          <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs font-medium">
+                            {location}
+                          </span>
+                        ))}
+                        {job.locations.length > 2 && (
+                          <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium">
+                            +{job.locations.length - 2}
+                          </span>
+                        )}
+                      </div>
+
+                      {job.salary_range && (
+                        <p className="text-sm text-green-600 font-semibold">{job.salary_range}</p>
                       )}
                     </div>
-
-                    {job.salary_range && (
-                      <p className="text-sm text-green-600 font-semibold">{job.salary_range}</p>
-                    )}
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
                     <button
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                       title="Lihat Detail"
                     >
-                      <Eye size={18} />
+                      <Eye size={16} />
                     </button>
                     <button
                       onClick={() => handleEdit(job)}
-                      className="p-2 text-orange-600 hover:bg-orange-50 rounded-xl transition-colors"
+                      className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                       title="Edit"
                     >
-                      <Edit3 size={18} />
+                      <Edit3 size={16} />
                     </button>
                     <button
                       onClick={() => handleDelete(job.id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title="Hapus"
                     >
-                      <Trash2 size={18} />
-                    </button>
-                    <button
-                      className="p-2 text-gray-600 hover:bg-gray-50 rounded-xl transition-colors"
-                      title="More Options"
-                    >
-                      <MoreVertical size={18} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </div>
@@ -954,24 +936,24 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
     return (
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        {/* Clean Header */}
+        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Manajemen Pelamar</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-1">Manajemen Pelamar</h2>
             <p className="text-gray-600">Kelola dan pantau semua pelamar untuk lowongan pekerjaan</p>
           </div>
           <div className="flex items-center gap-3">
             <button 
               onClick={() => handleBulkAction('bulk-export')}
-              className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-2xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
-              <Download size={18} />
-              Export Data
+              className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2.5 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 flex items-center gap-2">
+              <Download size={16} />
+              Export
             </button>
             <button 
               onClick={() => setShowMessageComposer(true)}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
-              <Mail size={18} />
-              Kirim Email
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2.5 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 flex items-center gap-2">
+              <Mail size={16} />
+              Email
             </button>
           </div>
         </div>
@@ -993,56 +975,54 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         )}
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                <Users size={24} className="text-white" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                <Users size={20} className="text-white" />
               </div>
-              <span className="text-sm font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">+15%</span>
+              <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">+15%</span>
             </div>
             <p className="text-sm text-gray-600 mb-1">Total Pelamar</p>
-            <p className="text-2xl font-bold text-gray-900">{filteredApplicants.length}</p>
+            <p className="text-xl font-bold text-gray-900">{filteredApplicants.length}</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                <CheckCircle size={24} className="text-white" />
+          <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                <CheckCircle size={20} className="text-white" />
               </div>
-              <span className="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">+8%</span>
+              <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">+8%</span>
             </div>
             <p className="text-sm text-gray-600 mb-1">Diterima</p>
-            <p className="text-2xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'accepted').length}</p>
+            <p className="text-xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'accepted').length}</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl flex items-center justify-center">
-                <Clock size={24} className="text-white" />
+          <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-amber-500 rounded-lg flex items-center justify-center">
+                <Clock size={20} className="text-white" />
               </div>
-              <span className="text-sm font-bold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">+12%</span>
+              <span className="text-xs font-semibold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">+12%</span>
             </div>
             <p className="text-sm text-gray-600 mb-1">Proses Review</p>
-            <p className="text-2xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'review').length}</p>
+            <p className="text-xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'review').length}</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                <Calendar size={24} className="text-white" />
+          <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <Calendar size={20} className="text-white" />
               </div>
-              <span className="text-sm font-bold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">+22%</span>
+              <span className="text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">+22%</span>
             </div>
             <p className="text-sm text-gray-600 mb-1">Interview Dijadwalkan</p>
-            <p className="text-2xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'interview').length}</p>
+            <p className="text-xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'interview').length}</p>
           </div>
         </div>
 
-        {/* Enhanced Applicant List */}
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <div className="p-2 bg-blue-100 rounded-xl">
-                <Users size={20} className="text-blue-600" />
-              </div>
+        {/* Clean Applicant List */}
+        <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <Users size={18} className="text-blue-600" />
               Daftar Pelamar ({filteredApplicants.length})
             </h3>
             <div className="flex items-center gap-2">
@@ -1056,738 +1036,98 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             </div>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-3">
             {filteredApplicants.map((applicant) => (
-              <div key={applicant.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors">
-                <div className="flex items-center gap-4">
+              <div key={applicant.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
                     checked={selectedApplicants.includes(applicant.id.toString())}
                     onChange={() => handleApplicantSelect(applicant.id.toString())}
                     className="rounded border-gray-300"
                   />
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold">{applicant.name.charAt(0)}</span>
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-semibold text-sm">{applicant.name.charAt(0)}</span>
                   </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">{applicant.name}</p>
-                    <p className="text-sm text-gray-600">{applicant.position}</p>
-                    <p className="text-xs text-gray-500">{applicant.email}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-gray-400">📍 {applicant.location}</span>
-                      <span className="text-xs text-gray-400">💰 Rp {applicant.expectedSalary.toLocaleString('id-ID')}</span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-1">
+                      <p className="font-semibold text-gray-900 text-sm">{applicant.name}</p>
+                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                        applicant.status === 'new' ? 'bg-green-100 text-green-800' :
+                        applicant.status === 'review' ? 'bg-yellow-100 text-yellow-800' :
+                        applicant.status === 'interview' ? 'bg-blue-100 text-blue-800' :
+                        applicant.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {applicant.status === 'new' ? 'Baru' :
+                         applicant.status === 'review' ? 'Review' :
+                         applicant.status === 'interview' ? 'Interview' :
+                         applicant.status === 'accepted' ? 'Diterima' :
+                         'Ditolak'}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-1">{applicant.position}</p>
+                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                      <span>📧 {applicant.email}</span>
+                      <span>📍 {applicant.location}</span>
+                      <span>💰 Rp {applicant.expectedSalary.toLocaleString('id-ID')}</span>
+                      <span className="text-gray-400">{applicant.time}</span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    applicant.status === 'new' ? 'bg-blue-100 text-blue-800' :
-                    applicant.status === 'review' ? 'bg-orange-100 text-orange-800' :
-                    applicant.status === 'interview' ? 'bg-purple-100 text-purple-800' :
-                    applicant.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {applicant.status === 'new' ? 'Baru' :
-                     applicant.status === 'review' ? 'Review' :
-                     applicant.status === 'interview' ? 'Interview' :
-                     applicant.status === 'accepted' ? 'Diterima' :
-                     'Ditolak'}
-                  </span>
-                  <span className="text-sm text-gray-500">{applicant.time}</span>
-                  
-                  {/* Enhanced Action buttons */}
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={() => handleApplicantProfileView(applicant)}
-                      className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
-                      title="Lihat Profil"
-                    >
-                      <Eye size={16} />
-                    </button>
-                    {applicant.status === 'new' && (
-                      <button 
-                        onClick={() => {
-                          setSelectedCandidate(applicant);
-                          setShowScreeningAssessment(true);
-                        }}
-                        className="p-2 text-purple-600 hover:bg-purple-50 rounded-xl transition-colors"
-                        title="Start Screening"
-                      >
-                        <Brain size={16} />
-                      </button>
-                    )}
-                    {(applicant.status === 'review' || applicant.status === 'new') && (
-                      <button 
-                        onClick={() => {
-                          setSelectedCandidate(applicant);
-                          setShowInterviewScheduler(true);
-                        }}
-                        className="p-2 text-green-600 hover:bg-green-50 rounded-xl transition-colors"
-                        title="Schedule Interview"
-                      >
-                        <Video size={16} />
-                      </button>
-                    )}
-                    <button 
-                      onClick={() => {
-                        setSelectedCandidate(applicant);
-                        setShowMessageComposer(true);
-                      }}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
-                      title="Send Message"
-                    >
-                      <MessageCircle size={16} />
-                    </button>
-                    <button className="p-2 text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
-                      <MoreVertical size={16} />
-                    </button>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => handleViewProfile(applicant)}
+                    className="px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium"
+                  >
+                    Profil
+                  </button>
+                  <button 
+                    onClick={() => handleScheduleInterview(applicant)}
+                    className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    title="Interview"
+                  >
+                    <Calendar size={16} />
+                  </button>
+                  <button 
+                    onClick={() => handleStatusUpdate(applicant.id.toString())}
+                    className="p-1.5 text-gray-600 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                    title="Status"
+                  >
+                    <Edit size={16} />
+                  </button>
                 </div>
               </div>
             ))}
-            
-            {filteredApplicants.length === 0 && (
-              <div className="text-center py-8">
-                <Users size={48} className="mx-auto text-gray-400 mb-4" />
-                <p className="text-gray-500">Tidak ada pelamar yang sesuai dengan filter</p>
-              </div>
-            )}
           </div>
+
+          {filteredApplicants.length === 0 && (
+            <div className="text-center py-8">
+              <Users size={48} className="mx-auto text-gray-400 mb-4" />
+              <p className="text-gray-500">Tidak ada pelamar yang sesuai dengan filter</p>
+            </div>
+          )}
         </div>
       </div>
-    );
+    )
   };
 
   const renderAnalytics = () => (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Analytics & Reports</h2>
           <p className="text-gray-600">Analisis performa rekrutmen dan metrik bisnis</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setShowAdvancedAnalytics(true)}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-xl hover:from-purple-700 hover:to-blue-700 transition-colors flex items-center gap-2"
-          >
-            <Activity size={18} />
-            Advanced Analytics
-          </button>
-          <select className="px-4 py-2 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option>30 Hari Terakhir</option>
-            <option>3 Bulan Terakhir</option>
-            <option>6 Bulan Terakhir</option>
-            <option>1 Tahun Terakhir</option>
-          </select>
-          <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
-            <Download size={18} />
-            Export Report
-          </button>
-        </div>
-      </div>
-
-      {/* Performance Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-              <TrendingUp size={24} className="text-white" />
-            </div>
-            <span className="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">↑ 25%</span>
-          </div>
-          <p className="text-sm text-gray-600 mb-1">Tingkat Conversion</p>
-          <p className="text-2xl font-bold text-gray-900">18.5%</p>
-        </div>
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-              <Clock size={24} className="text-white" />
-            </div>
-            <span className="text-sm font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">↓ 8%</span>
-          </div>
-          <p className="text-sm text-gray-600 mb-1">Waktu Hire Rata-rata</p>
-          <p className="text-2xl font-bold text-gray-900">12 Hari</p>
-        </div>
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-              <Award size={24} className="text-white" />
-            </div>
-            <span className="text-sm font-bold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">↑ 12%</span>
-          </div>
-          <p className="text-sm text-gray-600 mb-1">Kualitas Hire</p>
-          <p className="text-2xl font-bold text-gray-900">4.2/5</p>
-        </div>
-      </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Trend Aplikasi Bulanan</h3>
-          <div className="h-64 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl flex items-center justify-center">
-            <div className="text-center">
-              <BarChart3 size={48} className="text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Chart akan ditampilkan di sini</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Distribusi Status Pelamar</h3>
-          <div className="h-64 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl flex items-center justify-center">
-            <div className="text-center">
-              <Target size={48} className="text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Pie chart akan ditampilkan di sini</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Top Performing Jobs */}
-      <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <div className="p-2 bg-orange-100 rounded-xl">
-            <Star size={20} className="text-orange-600" />
-          </div>
-          Top Performing Jobs
-        </h3>
-        <div className="space-y-4">
-          {[
-            { position: 'Sales Officer Chaneling', applications: 89, hired: 12, rate: '13.5%' },
-            { position: 'Credit Marketing Officer', applications: 67, hired: 8, rate: '11.9%' },
-            { position: 'Telemarketing Specialist', applications: 54, hired: 6, rate: '11.1%' },
-            { position: 'Recovery Officer', applications: 43, hired: 4, rate: '9.3%' }
-          ].map((job, index) => (
-            <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-              <div>
-                <p className="font-semibold text-gray-900">{job.position}</p>
-                <p className="text-sm text-gray-600">{job.applications} aplikasi • {job.hired} diterima</p>
-              </div>
-              <div className="text-right">
-                <p className="text-lg font-bold text-green-600">{job.rate}</p>
-                <p className="text-sm text-gray-500">Success Rate</p>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>
   );
 
   const renderSettings = () => (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Pengaturan System</h2>
-          <p className="text-gray-600">Kelola preferensi dan konfigurasi sistem</p>
-        </div>
-        <button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
-          <Download size={18} />
-          Backup Data
-        </button>
-      </div>
-
-      {/* Settings Categories */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* General Settings */}
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <div className="p-2 bg-blue-100 rounded-xl">
-              <Settings size={20} className="text-blue-600" />
-            </div>
-            Pengaturan Umum
-          </h3>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-              <div>
-                <p className="font-semibold text-gray-900">Notifikasi Email</p>
-                <p className="text-sm text-gray-600">Terima notifikasi untuk pelamar baru</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-              <div>
-                <p className="font-semibold text-gray-900">Auto-Backup</p>
-                <p className="text-sm text-gray-600">Backup data otomatis setiap hari</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-              <div>
-                <p className="font-semibold text-gray-900">Dark Mode</p>
-                <p className="text-sm text-gray-600">Tema gelap untuk dashboard</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* User Management */}
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <div className="p-2 bg-purple-100 rounded-xl">
-              <Users size={20} className="text-purple-600" />
-            </div>
-            Manajemen User
-          </h3>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold">A</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Admin User</p>
-                  <p className="text-sm text-gray-600">admin@swapro.com</p>
-                </div>
-              </div>
-              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">Active</span>
-            </div>
-            <button className="w-full p-4 border-2 border-dashed border-gray-300 rounded-2xl text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-2">
-              <Plus size={20} />
-              Tambah User Baru
-            </button>
-          </div>
-        </div>
-
-        {/* System Info */}
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <div className="p-2 bg-green-100 rounded-xl">
-              <Activity size={20} className="text-green-600" />
-            </div>
-            System Info
-          </h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-              <span className="text-gray-600">Version</span>
-              <span className="font-semibold text-gray-900">v2.1.0</span>
-            </div>
-            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-              <span className="text-gray-600">Database</span>
-              <span className="font-semibold text-green-600">Connected</span>
-            </div>
-            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-              <span className="text-gray-600">Last Backup</span>
-              <span className="font-semibold text-gray-900">2 hours ago</span>
-            </div>
-            <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-              <span className="text-gray-600">Uptime</span>
-              <span className="font-semibold text-gray-900">99.9%</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Email Templates */}
-        <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100">
-          <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <div className="p-2 bg-orange-100 rounded-xl">
-              <Mail size={20} className="text-orange-600" />
-            </div>
-            Email Templates
-          </h3>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-              <span className="text-gray-700">Welcome Email</span>
-              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">Edit</button>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-              <span className="text-gray-700">Interview Invitation</span>
-              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">Edit</button>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-              <span className="text-gray-700">Rejection Letter</span>
-              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">Edit</button>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-              <span className="text-gray-700">Job Offer</span>
-              <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">Edit</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="bg-white rounded-xl p-6 shadow-lg">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">Pengaturan Sistem</h2>
     </div>
   );
-
-  const renderInterviewsManagement = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Interview Management</h2>
-          <p className="text-gray-600">Kelola jadwal interview dan evaluasi kandidat</p>
-        </div>
-        <div className="flex gap-3">
-          <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
-            <Calendar size={20} />
-            Jadwal Baru
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900">Interview Terjadwal</h3>
-        </div>
-        <div className="divide-y divide-gray-100">
-          {[
-            {
-              candidateName: 'Maya Sari',
-              position: 'Telemarketing Specialist',
-              interviewer: 'Bu Sari',
-              date: 'Besok, 10:00 WIB',
-              type: 'Video Call',
-              status: 'scheduled',
-              link: 'https://meet.google.com/abc-defg-hij'
-            },
-            {
-              candidateName: 'Ahmad Rizki',
-              position: 'Credit Marketing Officer',
-              interviewer: 'Pak Sutrisno',
-              date: 'Hari ini, 14:30 WIB',
-              type: 'Phone',
-              status: 'scheduled'
-            },
-            {
-              candidateName: 'Budi Santoso',
-              position: 'Recovery Officer',
-              interviewer: 'Pak Joko',
-              date: '3 hari lalu',
-              type: 'In Person',
-              status: 'completed',
-              score: 85
-            }
-          ].map((interview, index) => (
-            <div key={index} className="p-6 hover:bg-gray-50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold">{interview.candidateName.charAt(0)}</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{interview.candidateName}</h4>
-                    <p className="text-sm text-gray-600">{interview.position}</p>
-                    <p className="text-xs text-gray-500">Interviewer: {interview.interviewer}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900">{interview.date}</p>
-                    <p className="text-xs text-gray-600">{interview.type}</p>
-                    {interview.score && (
-                      <p className="text-xs text-green-600 font-semibold">Score: {interview.score}/100</p>
-                    )}
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    interview.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
-                    interview.status === 'completed' ? 'bg-green-100 text-green-800' :
-                    'bg-orange-100 text-orange-800'
-                  }`}>
-                    {interview.status === 'scheduled' ? 'Terjadwal' :
-                     interview.status === 'completed' ? 'Selesai' : 'Pending'}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    {interview.link && interview.status === 'scheduled' && (
-                      <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors">
-                        <Video size={16} />
-                      </button>
-                    )}
-                    <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors">
-                      <Eye size={16} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderScreeningManagement = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Automated Screening</h2>
-          <p className="text-gray-600">Monitor dan kelola proses screening kandidat</p>
-        </div>
-        <div className="flex gap-3">
-          <button className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-green-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
-            <Brain size={20} />
-            Mulai Screening
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <Users size={24} className="text-blue-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Total Screening</h3>
-              <p className="text-2xl font-bold text-blue-600">24</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-              <CheckCircle size={24} className="text-green-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Passed</h3>
-              <p className="text-2xl font-bold text-green-600">18</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-              <Award size={24} className="text-purple-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Avg Score</h3>
-              <p className="text-2xl font-bold text-purple-600">82/100</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900">Hasil Screening</h3>
-        </div>
-        <div className="divide-y divide-gray-100">
-          {[
-            {
-              candidateName: 'Ahmad Rizki',
-              position: 'Credit Marketing Officer',
-              type: 'Skills Assessment',
-              score: 85,
-              status: 'passed',
-              completedAt: '1 hari lalu',
-              analysis: 'Kandidat menunjukkan pemahaman yang baik tentang digital marketing'
-            },
-            {
-              candidateName: 'Sarah Wijaya',
-              position: 'Sales Officer Chaneling',
-              type: 'Personality Test',
-              score: 78,
-              status: 'passed',
-              completedAt: '2 hari lalu',
-              analysis: 'Mindset positif dan customer-centric'
-            },
-            {
-              candidateName: 'Maya Sari',
-              position: 'Telemarketing Specialist',
-              type: 'Cognitive Test',
-              score: 72,
-              status: 'review',
-              completedAt: '3 hari lalu',
-              analysis: 'Perlu evaluasi lebih lanjut pada beberapa aspek'
-            }
-          ].map((screening, index) => (
-            <div key={index} className="p-6 hover:bg-gray-50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold">{screening.candidateName.charAt(0)}</span>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">{screening.candidateName}</h4>
-                    <p className="text-sm text-gray-600">{screening.position}</p>
-                    <p className="text-xs text-gray-500">{screening.type}</p>
-                    <p className="text-xs text-gray-600 mt-1">{screening.analysis}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-gray-900">{screening.score}/100</p>
-                    <p className="text-xs text-gray-500">{screening.completedAt}</p>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    screening.status === 'passed' ? 'bg-green-100 text-green-800' :
-                    screening.status === 'failed' ? 'bg-red-100 text-red-800' :
-                    'bg-orange-100 text-orange-800'
-                  }`}>
-                    {screening.status === 'passed' ? 'Lulus' :
-                     screening.status === 'failed' ? 'Tidak Lulus' : 'Review'}
-                  </span>
-                  <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors">
-                    <Eye size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderCommunication = () => (
-    <div className="space-y-6">
-      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Communication Hub</h2>
-          <p className="text-gray-600">Kelola komunikasi dengan kandidat melalui email, SMS, dan WhatsApp</p>
-        </div>
-        <div className="flex gap-3">
-          <button 
-            onClick={() => setShowCommunicationHub(true)}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2"
-          >
-            <Mail size={20} />
-            Buka Communication Hub
-          </button>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div 
-          onClick={() => {
-            setMessageType('email');
-            setShowMessageComposer(true);
-          }}
-          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-blue-300"
-        >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <Mail size={24} className="text-blue-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">Email Blast</h3>
-              <p className="text-sm text-gray-600">Kirim email ke kandidat</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500">247 terkirim bulan ini</span>
-            <span className="text-blue-600 font-semibold">98% delivery rate</span>
-          </div>
-        </div>
-
-        <div 
-          onClick={() => {
-            setMessageType('sms');
-            setShowMessageComposer(true);
-          }}
-          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-green-300"
-        >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-              <Phone size={24} className="text-green-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">SMS Notification</h3>
-              <p className="text-sm text-gray-600">Kirim SMS ke kandidat</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500">156 terkirim bulan ini</span>
-            <span className="text-green-600 font-semibold">95% delivery rate</span>
-          </div>
-        </div>
-
-        <div 
-          onClick={() => {
-            setMessageType('whatsapp');
-            setShowMessageComposer(true);
-          }}
-          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer hover:border-purple-300"
-        >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-              <MessageCircle size={24} className="text-purple-600" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">WhatsApp Chat</h3>
-              <p className="text-sm text-gray-600">Chat WhatsApp kandidat</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500">89 terkirim bulan ini</span>
-            <span className="text-purple-600 font-semibold">92% read rate</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Recent Messages */}
-      <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900">Pesan Terbaru</h3>
-        </div>
-        <div className="divide-y divide-gray-100">
-          {[
-            {
-              type: 'email',
-              recipient: 'sarah.wijaya@email.com',
-              subject: 'Interview Invitation - Sales Officer',
-              status: 'sent',
-              sentAt: '10 menit lalu'
-            },
-            {
-              type: 'sms',
-              recipient: '+62812345678',
-              message: 'Reminder: Interview Anda besok jam 10:00 WIB',
-              status: 'delivered',
-              sentAt: '2 jam lalu'
-            },
-            {
-              type: 'whatsapp',
-              recipient: '+62812345679',
-              message: 'Selamat! Aplikasi Anda untuk posisi Credit Marketing diterima',
-              status: 'read',
-              sentAt: '1 hari lalu'
-            }
-          ].map((message, index) => (
-            <div key={index} className="p-6 hover:bg-gray-50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    message.type === 'email' ? 'bg-blue-100' :
-                    message.type === 'sms' ? 'bg-green-100' : 'bg-purple-100'
-                  }`}>
-                    {message.type === 'email' ? <Mail size={20} className="text-blue-600" /> :
-                     message.type === 'sms' ? <Phone size={20} className="text-green-600" /> :
-                     <MessageCircle size={20} className="text-purple-600" />}
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{message.subject || message.message}</h4>
-                    <p className="text-sm text-gray-600">{message.recipient}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    message.status === 'sent' ? 'bg-blue-100 text-blue-800' :
-                    message.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                    'bg-purple-100 text-purple-800'
-                  }`}>
-                    {message.status === 'sent' ? 'Terkirim' :
-                     message.status === 'delivered' ? 'Diterima' : 'Dibaca'}
-                  </span>
-                  <p className="text-xs text-gray-500 mt-1">{message.sentAt}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
