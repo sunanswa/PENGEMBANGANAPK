@@ -34,11 +34,15 @@ import {
   ChevronDown,
   MoreVertical,
   RefreshCw,
-  User
+  User,
+  Brain,
+  Video
 } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest, queryClient } from '../lib/queryClient';
 import JobPostingForm from '../components/JobPostingForm';
+import InterviewScheduler from '../components/InterviewScheduler';
+import ScreeningAssessment from '../components/ScreeningAssessment';
 
 interface JobPosting {
   id: string;
@@ -64,6 +68,9 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [activeTab, setActiveTab] = useState('overview');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showInterviewScheduler, setShowInterviewScheduler] = useState(false);
+  const [showScreeningAssessment, setShowScreeningAssessment] = useState(false);
+  const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
 
   const { data: jobPostings = [], isLoading: loading } = useQuery({
     queryKey: ['/api/job-postings', statusFilter],
@@ -226,6 +233,8 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     { id: 'overview', label: 'Overview', icon: BarChart3 },
     { id: 'jobs', label: 'Kelola Lowongan', icon: Briefcase },
     { id: 'applicants', label: 'Pelamar', icon: Users },
+    { id: 'interviews', label: 'Interview', icon: Video },
+    { id: 'screening', label: 'Screening', icon: Brain },
     { id: 'analytics', label: 'Analytics', icon: TrendingUp },
     { id: 'settings', label: 'Pengaturan', icon: Settings }
   ];
@@ -634,9 +643,36 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                    'Diterima'}
                 </span>
                 <span className="text-sm text-gray-500">{applicant.time}</span>
-                <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors">
-                  <Eye size={18} />
-                </button>
+                {/* Action buttons for Interview Management */}
+                <div className="flex items-center gap-2">
+                  {applicant.status === 'new' && (
+                    <button 
+                      onClick={() => {
+                        setSelectedCandidate(applicant);
+                        setShowScreeningAssessment(true);
+                      }}
+                      className="p-2 text-purple-600 hover:bg-purple-50 rounded-xl transition-colors"
+                      title="Start Screening"
+                    >
+                      <Brain size={16} />
+                    </button>
+                  )}
+                  {(applicant.status === 'review' || applicant.status === 'new') && (
+                    <button 
+                      onClick={() => {
+                        setSelectedCandidate(applicant);
+                        setShowInterviewScheduler(true);
+                      }}
+                      className="p-2 text-green-600 hover:bg-green-50 rounded-xl transition-colors"
+                      title="Schedule Interview"
+                    >
+                      <Calendar size={16} />
+                    </button>
+                  )}
+                  <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors">
+                    <Eye size={16} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -899,6 +935,224 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     </div>
   );
 
+  const renderInterviewsManagement = () => (
+    <div className="space-y-6">
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Interview Management</h2>
+          <p className="text-gray-600">Kelola jadwal interview dan evaluasi kandidat</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-purple-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
+            <Calendar size={20} />
+            Jadwal Baru
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+        <div className="p-6 border-b border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900">Interview Terjadwal</h3>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {[
+            {
+              candidateName: 'Maya Sari',
+              position: 'Telemarketing Specialist',
+              interviewer: 'Bu Sari',
+              date: 'Besok, 10:00 WIB',
+              type: 'Video Call',
+              status: 'scheduled',
+              link: 'https://meet.google.com/abc-defg-hij'
+            },
+            {
+              candidateName: 'Ahmad Rizki',
+              position: 'Credit Marketing Officer',
+              interviewer: 'Pak Sutrisno',
+              date: 'Hari ini, 14:30 WIB',
+              type: 'Phone',
+              status: 'scheduled'
+            },
+            {
+              candidateName: 'Budi Santoso',
+              position: 'Recovery Officer',
+              interviewer: 'Pak Joko',
+              date: '3 hari lalu',
+              type: 'In Person',
+              status: 'completed',
+              score: 85
+            }
+          ].map((interview, index) => (
+            <div key={index} className="p-6 hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold">{interview.candidateName.charAt(0)}</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">{interview.candidateName}</h4>
+                    <p className="text-sm text-gray-600">{interview.position}</p>
+                    <p className="text-xs text-gray-500">Interviewer: {interview.interviewer}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-gray-900">{interview.date}</p>
+                    <p className="text-xs text-gray-600">{interview.type}</p>
+                    {interview.score && (
+                      <p className="text-xs text-green-600 font-semibold">Score: {interview.score}/100</p>
+                    )}
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    interview.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
+                    interview.status === 'completed' ? 'bg-green-100 text-green-800' :
+                    'bg-orange-100 text-orange-800'
+                  }`}>
+                    {interview.status === 'scheduled' ? 'Terjadwal' :
+                     interview.status === 'completed' ? 'Selesai' : 'Pending'}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {interview.link && interview.status === 'scheduled' && (
+                      <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors">
+                        <Video size={16} />
+                      </button>
+                    )}
+                    <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors">
+                      <Eye size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderScreeningManagement = () => (
+    <div className="space-y-6">
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Automated Screening</h2>
+          <p className="text-gray-600">Monitor dan kelola proses screening kandidat</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-green-600 hover:to-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2">
+            <Brain size={20} />
+            Mulai Screening
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <Users size={24} className="text-blue-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Total Screening</h3>
+              <p className="text-2xl font-bold text-blue-600">24</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <CheckCircle size={24} className="text-green-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Passed</h3>
+              <p className="text-2xl font-bold text-green-600">18</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+              <Award size={24} className="text-purple-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Avg Score</h3>
+              <p className="text-2xl font-bold text-purple-600">82/100</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+        <div className="p-6 border-b border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900">Hasil Screening</h3>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {[
+            {
+              candidateName: 'Ahmad Rizki',
+              position: 'Credit Marketing Officer',
+              type: 'Skills Assessment',
+              score: 85,
+              status: 'passed',
+              completedAt: '1 hari lalu',
+              analysis: 'Kandidat menunjukkan pemahaman yang baik tentang digital marketing'
+            },
+            {
+              candidateName: 'Sarah Wijaya',
+              position: 'Sales Officer Chaneling',
+              type: 'Personality Test',
+              score: 78,
+              status: 'passed',
+              completedAt: '2 hari lalu',
+              analysis: 'Mindset positif dan customer-centric'
+            },
+            {
+              candidateName: 'Maya Sari',
+              position: 'Telemarketing Specialist',
+              type: 'Cognitive Test',
+              score: 72,
+              status: 'review',
+              completedAt: '3 hari lalu',
+              analysis: 'Perlu evaluasi lebih lanjut pada beberapa aspek'
+            }
+          ].map((screening, index) => (
+            <div key={index} className="p-6 hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold">{screening.candidateName.charAt(0)}</span>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-900">{screening.candidateName}</h4>
+                    <p className="text-sm text-gray-600">{screening.position}</p>
+                    <p className="text-xs text-gray-500">{screening.type}</p>
+                    <p className="text-xs text-gray-600 mt-1">{screening.analysis}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-gray-900">{screening.score}/100</p>
+                    <p className="text-xs text-gray-500">{screening.completedAt}</p>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    screening.status === 'passed' ? 'bg-green-100 text-green-800' :
+                    screening.status === 'failed' ? 'bg-red-100 text-red-800' :
+                    'bg-orange-100 text-orange-800'
+                  }`}>
+                    {screening.status === 'passed' ? 'Lulus' :
+                     screening.status === 'failed' ? 'Tidak Lulus' : 'Review'}
+                  </span>
+                  <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-xl transition-colors">
+                    <Eye size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
@@ -907,6 +1161,10 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         return renderJobsManagement();
       case 'applicants':
         return renderApplicantsManagement();
+      case 'interviews':
+        return renderInterviewsManagement();
+      case 'screening':
+        return renderScreeningManagement();
       case 'analytics':
         return renderAnalytics();
       case 'settings':
@@ -1052,6 +1310,43 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             />
           </div>
         </div>
+      )}
+
+      {/* Interview Scheduler Modal */}
+      {showInterviewScheduler && selectedCandidate && (
+        <InterviewScheduler
+          candidateName={selectedCandidate.name}
+          candidateEmail={selectedCandidate.email}
+          jobTitle={selectedCandidate.position}
+          onSchedule={(interviewData) => {
+            console.log('Interview scheduled:', interviewData);
+            setShowInterviewScheduler(false);
+            setSelectedCandidate(null);
+            // Here you would typically save to the backend
+          }}
+          onCancel={() => {
+            setShowInterviewScheduler(false);
+            setSelectedCandidate(null);
+          }}
+        />
+      )}
+
+      {/* Screening Assessment Modal */}
+      {showScreeningAssessment && selectedCandidate && (
+        <ScreeningAssessment
+          candidateName={selectedCandidate.name}
+          jobTitle={selectedCandidate.position}
+          onComplete={(assessmentData) => {
+            console.log('Assessment completed:', assessmentData);
+            setShowScreeningAssessment(false);
+            setSelectedCandidate(null);
+            // Here you would typically save to the backend
+          }}
+          onCancel={() => {
+            setShowScreeningAssessment(false);
+            setSelectedCandidate(null);
+          }}
+        />
       )}
     </div>
   );
