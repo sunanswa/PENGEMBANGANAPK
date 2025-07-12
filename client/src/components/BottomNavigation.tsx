@@ -13,7 +13,7 @@ export default function BottomNavigation({ notificationCount = 0 }: BottomNaviga
     {
       href: "/",
       icon: Home,
-      label: "Menu",
+      label: "Dashboard",
       isActive: location === "/" || (!location.includes("/applications") && !location.includes("/profile") && !location.includes("/chat"))
     },
     {

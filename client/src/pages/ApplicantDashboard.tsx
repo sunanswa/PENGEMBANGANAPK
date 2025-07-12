@@ -6,6 +6,9 @@ import SimpleJobListings from "@/pages/applicant/SimpleJobListings";
 import SimpleApplications from "@/pages/applicant/SimpleApplications";
 import SimpleProfile from "@/pages/applicant/SimpleProfile";
 import SimpleChat from "@/pages/applicant/SimpleChat";
+import EnhancedDashboard from "@/pages/applicant/EnhancedDashboard";
+import EnhancedApplications from "@/pages/applicant/EnhancedApplications";
+import EnhancedChat from "@/pages/applicant/EnhancedChat";
 
 interface ApplicantDashboardProps {
   onLogout: () => void;
@@ -36,13 +39,13 @@ export default function ApplicantDashboard({ onLogout, userProfile }: ApplicantD
     
     switch (currentPage) {
       case "applications":
-        return <SimpleApplications />;
+        return <EnhancedApplications />;
       case "profile":
         return <SimpleProfile />;
       case "chat":
-        return <SimpleChat />;
+        return <EnhancedChat />;
       default:
-        return <SimpleJobListings />;
+        return <EnhancedDashboard />;
     }
   };
 
