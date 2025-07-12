@@ -54,6 +54,7 @@ interface JobPosting {
   title: string;
   description: string;
   locations: string[];
+  maps_links?: string[];
   status: 'active' | 'closed' | 'draft';
   requirements?: string;
   salary_range?: string;

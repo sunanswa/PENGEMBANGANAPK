@@ -5,6 +5,7 @@ interface JobPosting {
   title: string;
   description: string;
   locations: string[];
+  maps_links?: string[];
   status: 'active' | 'closed' | 'draft';
   requirements?: string;
   salary_range?: string;
@@ -30,6 +31,7 @@ const JobPostingForm: React.FC<JobPostingFormProps> = ({
     title: '',
     description: '',
     locations: [''],
+    maps_links: [''],
     status: 'active' as const,
     requirements: '',
     salary_range: '',
@@ -43,6 +45,7 @@ const JobPostingForm: React.FC<JobPostingFormProps> = ({
         title: jobPosting.title || '',
         description: jobPosting.description || '',
         locations: jobPosting.locations?.length ? jobPosting.locations : [''],
+        maps_links: jobPosting.maps_links?.length ? jobPosting.maps_links : [''],
         status: jobPosting.status || 'active',
         requirements: jobPosting.requirements || '',
         salary_range: jobPosting.salary_range || '',
@@ -77,11 +80,13 @@ const JobPostingForm: React.FC<JobPostingFormProps> = ({
     if (!validateForm()) return;
     
     const validLocations = formData.locations.filter(loc => loc.trim());
+    const validMapsLinks = formData.maps_links.filter(link => link.trim());
     
     try {
       await onSubmit({
         ...formData,
-        locations: validLocations
+        locations: validLocations,
+        maps_links: validMapsLinks
       });
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -106,6 +111,27 @@ const JobPostingForm: React.FC<JobPostingFormProps> = ({
     setFormData(prev => ({
       ...prev,
       locations: prev.locations.map((loc, i) => i === index ? value : loc)
+    }));
+  };
+
+  const addMapsLink = () => {
+    setFormData(prev => ({
+      ...prev,
+      maps_links: [...prev.maps_links, '']
+    }));
+  };
+
+  const removeMapsLink = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      maps_links: prev.maps_links.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateMapsLink = (index: number, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      maps_links: prev.maps_links.map((link, i) => i === index ? value : link)
     }));
   };
 
@@ -230,6 +256,51 @@ const JobPostingForm: React.FC<JobPostingFormProps> = ({
                 {errors.locations}
               </p>
             )}
+          </div>
+
+          {/* Google Maps Links */}
+          <div className="space-y-2">
+            <label className="block text-sm font-bold text-gray-700">
+              <div className="flex items-center gap-2">
+                <div className="p-1 bg-red-100 rounded-lg">
+                  <MapPin size={14} className="text-red-600" />
+                </div>
+                Link Google Maps (Opsional)
+              </div>
+            </label>
+            <p className="text-xs text-gray-500 mb-3">
+              Tambahkan link Google Maps untuk memudahkan pelamar menemukan lokasi kantor
+            </p>
+            <div className="space-y-3">
+              {formData.maps_links.map((link, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="url"
+                    value={link}
+                    onChange={(e) => updateMapsLink(index, e.target.value)}
+                    className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-400"
+                    placeholder="https://maps.google.com/..."
+                  />
+                  {formData.maps_links.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeMapsLink(index)}
+                      className="p-3 text-red-500 hover:bg-red-50 rounded-2xl transition-colors"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addMapsLink}
+                className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors font-semibold"
+              >
+                <Plus size={16} />
+                Tambah Link Maps
+              </button>
+            </div>
           </div>
 
           {/* Additional Fields */}

@@ -15,6 +15,7 @@ export const jobPostings = pgTable("job_postings", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   locations: text("locations").array().notNull().default([]),
+  maps_links: text("maps_links").array().default([]),
   status: text("status", { enum: ["active", "closed", "draft"] }).notNull().default("draft"),
   requirements: text("requirements"),
   salary_range: text("salary_range"),

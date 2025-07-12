@@ -24,6 +24,7 @@ interface JobPosting {
   title: string;
   description: string;
   locations: string[];
+  maps_links?: string[];
   status: 'active' | 'closed' | 'draft';
   requirements?: string;
   salary_range?: string;
@@ -173,11 +174,23 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ onLogout, userP
 
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3">Lokasi Penempatan</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {job.locations.map((location, index) => (
-                <div key={index} className="flex items-center gap-2 p-3 bg-blue-50 rounded-xl">
-                  <MapPin size={16} className="text-blue-600" />
-                  <span className="text-blue-800 font-semibold">{location}</span>
+                <div key={index} className="p-3 bg-blue-50 rounded-xl border border-blue-100">
+                  <div className="flex items-center gap-2 mb-2">
+                    <MapPin size={16} className="text-blue-600" />
+                    <span className="text-blue-800 font-semibold">{location}</span>
+                  </div>
+                  {job.maps_links && job.maps_links[index] && (
+                    <a
+                      href={job.maps_links[index]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium hover:underline"
+                    >
+                      📍 Lihat di Google Maps
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
