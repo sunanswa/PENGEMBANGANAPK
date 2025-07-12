@@ -7,27 +7,54 @@ export default function SimpleJobListings() {
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [applicationData, setApplicationData] = useState({
-    // Personal Info
+    // Data Pribadi
     fullName: "",
-    email: "",
+    nik: "",
     phone: "",
-    address: "",
-    dateOfBirth: "",
+    birthPlace: "",
+    birthDate: "",
+    age: "",
+    gender: "",
+    maritalStatus: "",
+    religion: "",
+    fatherName: "",
+    motherName: "",
     
-    // Professional Info
-    position: "",
-    experience: "",
-    expectedSalary: "",
-    availableDate: "",
+    // Alamat
+    ktpAddress: "",
+    currentAddress: "",
+    rtRw: "",
+    houseNumber: "",
+    subDistrict: "",
+    district: "",
+    city: "",
+    postalCode: "",
     
-    // Documents
+    // Pendidikan
+    educationLevel: "",
+    schoolName: "",
+    major: "",
+    graduationYear: "",
+    gpa: "",
+    
+    // Pengalaman
+    hasWorkExperience: "",
+    
+    // Dokumen
+    hasVehicle: "",
+    hasOriginalKTP: "",
+    hasSIMC: "",
+    hasSIMA: "",
+    hasSKCK: "",
+    hasNPWP: "",
+    hasCreditHistory: "",
+    
+    // CV dan Motivasi
     cv: null as File | null,
-    coverLetter: "",
-    portfolio: "",
-    
-    // Additional
     motivation: "",
-    skills: ""
+    
+    // Job specific
+    position: ""
   });
 
   // Mock job data
@@ -103,19 +130,40 @@ export default function SimpleJobListings() {
     setCurrentStep(1);
     setApplicationData({
       fullName: "",
-      email: "",
+      nik: "",
       phone: "",
-      address: "",
-      dateOfBirth: "",
-      position: "",
-      experience: "",
-      expectedSalary: "",
-      availableDate: "",
+      birthPlace: "",
+      birthDate: "",
+      age: "",
+      gender: "",
+      maritalStatus: "",
+      religion: "",
+      fatherName: "",
+      motherName: "",
+      ktpAddress: "",
+      currentAddress: "",
+      rtRw: "",
+      houseNumber: "",
+      subDistrict: "",
+      district: "",
+      city: "",
+      postalCode: "",
+      educationLevel: "",
+      schoolName: "",
+      major: "",
+      graduationYear: "",
+      gpa: "",
+      hasWorkExperience: "",
+      hasVehicle: "",
+      hasOriginalKTP: "",
+      hasSIMC: "",
+      hasSIMA: "",
+      hasSKCK: "",
+      hasNPWP: "",
+      hasCreditHistory: "",
       cv: null,
-      coverLetter: "",
-      portfolio: "",
       motivation: "",
-      skills: ""
+      position: ""
     });
   };
 
@@ -124,53 +172,175 @@ export default function SimpleJobListings() {
       case 1:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Informasi Pribadi</h3>
+            <div className="border-l-4 border-purple-500 pl-4 mb-6">
+              <h3 className="text-lg font-semibold text-purple-700 dark:text-purple-300">Data Pribadi</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  👤 Nama Lengkap *
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.fullName}
+                  onChange={(e) => handleInputChange("fullName", e.target.value)}
+                  placeholder="Masukkan nama lengkap"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  👤 NIK *
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.nik}
+                  onChange={(e) => handleInputChange("nik", e.target.value)}
+                  placeholder="Masukkan nik"
+                  maxLength={16}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+                <div className="text-right text-xs text-gray-500 mt-1">0/16</div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📞 Nomor HP *
+                </label>
+                <input
+                  type="tel"
+                  value={applicationData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  placeholder="Masukkan nomor hp"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📍 Tempat Lahir *
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.birthPlace}
+                  onChange={(e) => handleInputChange("birthPlace", e.target.value)}
+                  placeholder="Masukkan tempat lahir"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📅 Tanggal Lahir *
+                </label>
+                <input
+                  type="date"
+                  value={applicationData.birthDate}
+                  onChange={(e) => handleInputChange("birthDate", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  🎂 Umur
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.age}
+                  onChange={(e) => handleInputChange("age", e.target.value)}
+                  placeholder="Otomatis terisi"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  👤 Jenis Kelamin *
+                </label>
+                <select
+                  value={applicationData.gender}
+                  onChange={(e) => handleInputChange("gender", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                >
+                  <option value="">Pilih Jenis Kelamin</option>
+                  <option value="laki-laki">Laki-laki</option>
+                  <option value="perempuan">Perempuan</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  💍 Status Perkawinan *
+                </label>
+                <select
+                  value={applicationData.maritalStatus}
+                  onChange={(e) => handleInputChange("maritalStatus", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                >
+                  <option value="">Pilih Status Perkawinan</option>
+                  <option value="belum-menikah">Belum Menikah</option>
+                  <option value="menikah">Menikah</option>
+                  <option value="cerai">Cerai</option>
+                  <option value="janda-duda">Janda/Duda</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  💙 Agama *
+                </label>
+                <select
+                  value={applicationData.religion}
+                  onChange={(e) => handleInputChange("religion", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                >
+                  <option value="">Pilih Agama</option>
+                  <option value="islam">Islam</option>
+                  <option value="kristen">Kristen</option>
+                  <option value="katolik">Katolik</option>
+                  <option value="hindu">Hindu</option>
+                  <option value="buddha">Buddha</option>
+                  <option value="konghucu">Konghucu</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  👤 Nama Ayah *
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.fatherName}
+                  onChange={(e) => handleInputChange("fatherName", e.target.value)}
+                  placeholder="Masukkan nama ayah"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+              </div>
+            </div>
+            
             <div>
-              <label className="block text-sm font-medium mb-2">Nama Lengkap *</label>
+              <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                👤 Nama Ibu *
+              </label>
               <input
                 type="text"
-                value={applicationData.fullName}
-                onChange={(e) => handleInputChange("fullName", e.target.value)}
+                value={applicationData.motherName}
+                onChange={(e) => handleInputChange("motherName", e.target.value)}
+                placeholder="Masukkan nama ibu"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Email *</label>
-              <input
-                type="email"
-                value={applicationData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Nomor Telepon *</label>
-              <input
-                type="tel"
-                value={applicationData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Alamat</label>
-              <textarea
-                value={applicationData.address}
-                onChange={(e) => handleInputChange("address", e.target.value)}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Tanggal Lahir</label>
-              <input
-                type="date"
-                value={applicationData.dateOfBirth}
-                onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
           </div>
@@ -179,71 +349,480 @@ export default function SimpleJobListings() {
       case 2:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Informasi Profesional</h3>
-            <div>
-              <label className="block text-sm font-medium mb-2">Posisi yang Dilamar</label>
-              <input
-                type="text"
-                value={applicationData.position}
-                onChange={(e) => handleInputChange("position", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                readOnly
-              />
+            <div className="border-l-4 border-green-500 pl-4 mb-6">
+              <h3 className="text-lg font-semibold text-green-700 dark:text-green-300">Alamat</h3>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Pengalaman Kerja *</label>
-              <select
-                value={applicationData.experience}
-                onChange={(e) => handleInputChange("experience", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                required
-              >
-                <option value="">Pilih pengalaman</option>
-                <option value="fresh-graduate">Fresh Graduate</option>
-                <option value="1-2-years">1-2 Tahun</option>
-                <option value="3-5-years">3-5 Tahun</option>
-                <option value="5-plus-years">5+ Tahun</option>
-              </select>
+            
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📍 Alamat KTP *
+                </label>
+                <textarea
+                  value={applicationData.ktpAddress}
+                  onChange={(e) => handleInputChange("ktpAddress", e.target.value)}
+                  placeholder="Masukkan alamat ktp"
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📍 Alamat Domisili (Tempat Tinggal Sekarang) *
+                </label>
+                <textarea
+                  value={applicationData.currentAddress}
+                  onChange={(e) => handleInputChange("currentAddress", e.target.value)}
+                  placeholder="Masukkan alamat domisili (tempat tinggal sekarang)"
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📍 RT/RW
+                  </label>
+                  <input
+                    type="text"
+                    value={applicationData.rtRw}
+                    onChange={(e) => handleInputChange("rtRw", e.target.value)}
+                    placeholder="001/002"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📍 Nomor Rumah
+                  </label>
+                  <input
+                    type="text"
+                    value={applicationData.houseNumber}
+                    onChange={(e) => handleInputChange("houseNumber", e.target.value)}
+                    placeholder="Masukkan nomor rumah"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📍 Kelurahan *
+                  </label>
+                  <input
+                    type="text"
+                    value={applicationData.subDistrict}
+                    onChange={(e) => handleInputChange("subDistrict", e.target.value)}
+                    placeholder="Masukkan kelurahan"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📍 Kecamatan *
+                  </label>
+                  <input
+                    type="text"
+                    value={applicationData.district}
+                    onChange={(e) => handleInputChange("district", e.target.value)}
+                    placeholder="Masukkan kecamatan"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📍 Kota *
+                  </label>
+                  <input
+                    type="text"
+                    value={applicationData.city}
+                    onChange={(e) => handleInputChange("city", e.target.value)}
+                    placeholder="Masukkan kota"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                    📍 Kode Pos
+                  </label>
+                  <input
+                    type="text"
+                    value={applicationData.postalCode}
+                    onChange={(e) => handleInputChange("postalCode", e.target.value)}
+                    placeholder="Masukkan kode pos"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  />
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Gaji yang Diharapkan</label>
-              <input
-                type="text"
-                value={applicationData.expectedSalary}
-                onChange={(e) => handleInputChange("expectedSalary", e.target.value)}
-                placeholder="Contoh: Rp 8.000.000"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Tanggal Dapat Mulai Kerja</label>
-              <input
-                type="date"
-                value={applicationData.availableDate}
-                onChange={(e) => handleInputChange("availableDate", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Keahlian *</label>
-              <textarea
-                value={applicationData.skills}
-                onChange={(e) => handleInputChange("skills", e.target.value)}
-                placeholder="Sebutkan keahlian yang relevan (pisahkan dengan koma)"
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                required
-              />
-            </div>
+            <div className="text-right text-xs text-gray-500">0/5</div>
           </div>
         );
       
       case 3:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Dokumen Lamaran</h3>
+            <div className="border-l-4 border-orange-500 pl-4 mb-6">
+              <h3 className="text-lg font-semibold text-orange-700 dark:text-orange-300">Pendidikan</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  🎓 Tingkat Pendidikan *
+                </label>
+                <select
+                  value={applicationData.educationLevel}
+                  onChange={(e) => handleInputChange("educationLevel", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                >
+                  <option value="">Pilih Tingkat Pendidikan</option>
+                  <option value="sd">SD</option>
+                  <option value="smp">SMP</option>
+                  <option value="sma">SMA</option>
+                  <option value="smk">SMK</option>
+                  <option value="d3">Diploma 3</option>
+                  <option value="s1">Sarjana (S1)</option>
+                  <option value="s2">Magister (S2)</option>
+                  <option value="s3">Doktor (S3)</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  🎓 Nama Sekolah/Universitas *
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.schoolName}
+                  onChange={(e) => handleInputChange("schoolName", e.target.value)}
+                  placeholder="Masukkan nama sekolah/universitas"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  🎓 Jurusan
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.major}
+                  onChange={(e) => handleInputChange("major", e.target.value)}
+                  placeholder="Masukkan jurusan"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📅 Tahun Masuk
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.graduationYear}
+                  onChange={(e) => handleInputChange("graduationYear", e.target.value)}
+                  placeholder="Masukkan tahun masuk"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📅 Tahun Lulus
+                </label>
+                <input
+                  type="text"
+                  placeholder="Masukkan tahun lulus"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  🎓 IPK/Nilai Rata-rata
+                </label>
+                <input
+                  type="text"
+                  value={applicationData.gpa}
+                  onChange={(e) => handleInputChange("gpa", e.target.value)}
+                  placeholder="3.50"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
+              </div>
+            </div>
+            
+            <div className="border-l-4 border-red-500 pl-4 mt-8">
+              <h3 className="text-lg font-semibold text-red-700 dark:text-red-300 mb-4">Pengalaman</h3>
+            </div>
+            
             <div>
-              <label className="block text-sm font-medium mb-2">Upload CV/Resume *</label>
+              <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                🏢 Apakah Anda memiliki pengalaman kerja?
+              </label>
+              <div className="flex space-x-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="hasWorkExperience"
+                    value="ya"
+                    checked={applicationData.hasWorkExperience === "ya"}
+                    onChange={(e) => handleInputChange("hasWorkExperience", e.target.value)}
+                    className="mr-2"
+                  />
+                  Ya
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="hasWorkExperience"
+                    value="tidak"
+                    checked={applicationData.hasWorkExperience === "tidak"}
+                    onChange={(e) => handleInputChange("hasWorkExperience", e.target.value)}
+                    className="mr-2"
+                  />
+                  Tidak
+                </label>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 4:
+        return (
+          <div className="space-y-4">
+            <div className="border-l-4 border-teal-500 pl-4 mb-6">
+              <h3 className="text-lg font-semibold text-teal-700 dark:text-teal-300">Dokumen</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  🚗 Apakah Anda memiliki kendaraan pribadi?
+                </label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasVehicle"
+                      value="ya"
+                      checked={applicationData.hasVehicle === "ya"}
+                      onChange={(e) => handleInputChange("hasVehicle", e.target.value)}
+                      className="mr-2"
+                    />
+                    Ya
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasVehicle"
+                      value="tidak"
+                      checked={applicationData.hasVehicle === "tidak"}
+                      onChange={(e) => handleInputChange("hasVehicle", e.target.value)}
+                      className="mr-2"
+                    />
+                    Tidak
+                  </label>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  👤 Apakah Anda memiliki KTP Asli?
+                </label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasOriginalKTP"
+                      value="ya"
+                      checked={applicationData.hasOriginalKTP === "ya"}
+                      onChange={(e) => handleInputChange("hasOriginalKTP", e.target.value)}
+                      className="mr-2"
+                    />
+                    Ya
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasOriginalKTP"
+                      value="tidak"
+                      checked={applicationData.hasOriginalKTP === "tidak"}
+                      onChange={(e) => handleInputChange("hasOriginalKTP", e.target.value)}
+                      className="mr-2"
+                    />
+                    Tidak
+                  </label>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📄 Apakah Anda memiliki SIM C?
+                </label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasSIMC"
+                      value="ya"
+                      checked={applicationData.hasSIMC === "ya"}
+                      onChange={(e) => handleInputChange("hasSIMC", e.target.value)}
+                      className="mr-2"
+                    />
+                    Ya
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasSIMC"
+                      value="tidak"
+                      checked={applicationData.hasSIMC === "tidak"}
+                      onChange={(e) => handleInputChange("hasSIMC", e.target.value)}
+                      className="mr-2"
+                    />
+                    Tidak
+                  </label>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📄 Apakah Anda memiliki SIM A?
+                </label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasSIMA"
+                      value="ya"
+                      checked={applicationData.hasSIMA === "ya"}
+                      onChange={(e) => handleInputChange("hasSIMA", e.target.value)}
+                      className="mr-2"
+                    />
+                    Ya
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasSIMA"
+                      value="tidak"
+                      checked={applicationData.hasSIMA === "tidak"}
+                      onChange={(e) => handleInputChange("hasSIMA", e.target.value)}
+                      className="mr-2"
+                    />
+                    Tidak
+                  </label>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📄 Apakah Anda memiliki SKCK?
+                </label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasSKCK"
+                      value="ya"
+                      checked={applicationData.hasSKCK === "ya"}
+                      onChange={(e) => handleInputChange("hasSKCK", e.target.value)}
+                      className="mr-2"
+                    />
+                    Ya
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasSKCK"
+                      value="tidak"
+                      checked={applicationData.hasSKCK === "tidak"}
+                      onChange={(e) => handleInputChange("hasSKCK", e.target.value)}
+                      className="mr-2"
+                    />
+                    Tidak
+                  </label>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                  📄 Apakah Anda memiliki NPWP?
+                </label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasNPWP"
+                      value="ya"
+                      checked={applicationData.hasNPWP === "ya"}
+                      onChange={(e) => handleInputChange("hasNPWP", e.target.value)}
+                      className="mr-2"
+                    />
+                    Ya
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="hasNPWP"
+                      value="tidak"
+                      checked={applicationData.hasNPWP === "tidak"}
+                      onChange={(e) => handleInputChange("hasNPWP", e.target.value)}
+                      className="mr-2"
+                    />
+                    Tidak
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                📄 Apakah Anda memiliki riwayat buruk kredit?
+              </label>
+              <div className="flex space-x-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="hasCreditHistory"
+                    value="ya"
+                    checked={applicationData.hasCreditHistory === "ya"}
+                    onChange={(e) => handleInputChange("hasCreditHistory", e.target.value)}
+                    className="mr-2"
+                  />
+                  Ya
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="hasCreditHistory"
+                    value="tidak"
+                    checked={applicationData.hasCreditHistory === "tidak"}
+                    onChange={(e) => handleInputChange("hasCreditHistory", e.target.value)}
+                    className="mr-2"
+                  />
+                  Tidak
+                </label>
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                📄 Upload CV/Resume *
+              </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                 <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
                 <input
@@ -262,71 +841,20 @@ export default function SimpleJobListings() {
                 )}
               </div>
             </div>
+            
             <div>
-              <label className="block text-sm font-medium mb-2">Cover Letter</label>
-              <textarea
-                value={applicationData.coverLetter}
-                onChange={(e) => handleInputChange("coverLetter", e.target.value)}
-                placeholder="Tuliskan cover letter Anda..."
-                rows={5}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Portfolio/Website</label>
-              <input
-                type="url"
-                value={applicationData.portfolio}
-                onChange={(e) => handleInputChange("portfolio", e.target.value)}
-                placeholder="https://portfolio-anda.com"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
-            </div>
-          </div>
-        );
-      
-      case 4:
-        return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Review & Submit</h3>
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
-              <h4 className="font-medium">Ringkasan Lamaran:</h4>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="font-medium">Nama:</span> {applicationData.fullName}
-                </div>
-                <div>
-                  <span className="font-medium">Email:</span> {applicationData.email}
-                </div>
-                <div>
-                  <span className="font-medium">Telepon:</span> {applicationData.phone}
-                </div>
-                <div>
-                  <span className="font-medium">Posisi:</span> {applicationData.position}
-                </div>
-                <div>
-                  <span className="font-medium">Pengalaman:</span> {applicationData.experience}
-                </div>
-                <div>
-                  <span className="font-medium">CV:</span> {applicationData.cv ? "✓ Uploaded" : "Belum upload"}
-                </div>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Motivasi Bergabung *</label>
+              <label className="block text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">
+                📄 Alasan Melamar *
+              </label>
               <textarea
                 value={applicationData.motivation}
                 onChange={(e) => handleInputChange("motivation", e.target.value)}
-                placeholder="Mengapa Anda tertarik bergabung dengan perusahaan ini?"
+                placeholder="Jelaskan mengapa Anda tertarik dengan posisi ini dan perusahaan kami..."
                 rows={4}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 required
               />
-            </div>
-            <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                Dengan mengirim lamaran ini, Anda menyetujui bahwa data yang diberikan adalah benar dan dapat diverifikasi.
-              </p>
+              <div className="text-right text-xs text-gray-500 mt-1">0/500</div>
             </div>
           </div>
         );
@@ -458,10 +986,10 @@ export default function SimpleJobListings() {
                 ))}
               </div>
               <div className="flex justify-between mt-2 text-xs text-gray-600 dark:text-gray-400">
-                <span>Pribadi</span>
-                <span>Profesional</span>
+                <span>Data Pribadi</span>
+                <span>Alamat</span>
+                <span>Pendidikan</span>
                 <span>Dokumen</span>
-                <span>Review</span>
               </div>
             </div>
 
@@ -492,9 +1020,10 @@ export default function SimpleJobListings() {
                   <button
                     onClick={handleNextStep}
                     disabled={
-                      (currentStep === 1 && (!applicationData.fullName || !applicationData.email || !applicationData.phone)) ||
-                      (currentStep === 2 && (!applicationData.experience || !applicationData.skills)) ||
-                      (currentStep === 3 && !applicationData.cv)
+                      (currentStep === 1 && (!applicationData.fullName || !applicationData.nik || !applicationData.phone || !applicationData.birthPlace || !applicationData.birthDate || !applicationData.gender || !applicationData.maritalStatus || !applicationData.religion || !applicationData.fatherName || !applicationData.motherName)) ||
+                      (currentStep === 2 && (!applicationData.ktpAddress || !applicationData.currentAddress || !applicationData.subDistrict || !applicationData.district || !applicationData.city)) ||
+                      (currentStep === 3 && (!applicationData.educationLevel || !applicationData.schoolName)) ||
+                      (currentStep === 4 && (!applicationData.cv || !applicationData.motivation))
                     }
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
@@ -503,7 +1032,7 @@ export default function SimpleJobListings() {
                 ) : (
                   <button
                     onClick={handleSubmitApplication}
-                    disabled={!applicationData.motivation}
+                    disabled={!applicationData.cv || !applicationData.motivation}
                     className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Kirim Lamaran
