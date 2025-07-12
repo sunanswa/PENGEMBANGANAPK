@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Switch, Route } from "wouter";
 import BottomNavigation from "@/components/BottomNavigation";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import SimpleJobListings from "@/pages/applicant/SimpleJobListings";
 import SimpleApplications from "@/pages/applicant/SimpleApplications";
 import SimpleProfile from "@/pages/applicant/SimpleProfile";
@@ -13,34 +13,50 @@ interface ApplicantDashboardProps {
 }
 
 export default function ApplicantDashboard({ onLogout, userProfile }: ApplicantDashboardProps) {
-  // Mock notification count - replace with actual API call
+  const [location] = useLocation();
+  const [currentPage, setCurrentPage] = useState("menu");
   const notificationCount = 3;
 
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Main Content */}
-      <main className="min-h-screen pb-20">
-        <Switch>
-          <Route path="/applicant/applications">
-            <SimpleApplications />
-          </Route>
-          <Route path="/applicant/profile">
-            <SimpleProfile />
-          </Route>
-          <Route path="/applicant/chat">
-            <SimpleChat />
-          </Route>
-          <Route path="/applicant" nest>
-            <SimpleJobListings />
-          </Route>
-          <Route path="/">
-            <SimpleJobListings />
-          </Route>
-        </Switch>
-      </main>
+  // Determine current page based on URL
+  useEffect(() => {
+    if (location.includes("/applications")) {
+      setCurrentPage("applications");
+    } else if (location.includes("/profile")) {
+      setCurrentPage("profile");
+    } else if (location.includes("/chat")) {
+      setCurrentPage("chat");
+    } else {
+      setCurrentPage("menu");
+    }
+  }, [location]);
 
-      {/* Bottom Navigation */}
-      <BottomNavigation notificationCount={notificationCount} />
-    </div>
+  // Render content based on current page
+  const renderContent = () => {
+    console.log("Rendering page:", currentPage); // Debug log
+    
+    switch (currentPage) {
+      case "applications":
+        return <SimpleApplications />;
+      case "profile":
+        return <SimpleProfile />;
+      case "chat":
+        return <SimpleChat />;
+      default:
+        return <SimpleJobListings />;
+    }
+  };
+
+  return (
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Main Content */}
+        <main className="min-h-screen pb-20">
+          {renderContent()}
+        </main>
+
+        {/* Bottom Navigation */}
+        <BottomNavigation notificationCount={notificationCount} />
+      </div>
+    </ErrorBoundary>
   );
 }

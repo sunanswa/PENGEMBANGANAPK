@@ -11,28 +11,28 @@ export default function BottomNavigation({ notificationCount = 0 }: BottomNaviga
 
   const navItems = [
     {
-      href: "/applicant",
+      href: "/",
       icon: Home,
       label: "Menu",
-      isActive: location === "/applicant" || location === "/applicant/"
+      isActive: location === "/" || (!location.includes("/applications") && !location.includes("/profile") && !location.includes("/chat"))
     },
     {
       href: "/applicant/applications",
       icon: FileText,
       label: "Lamaran",
-      isActive: location.startsWith("/applicant/applications")
+      isActive: location.includes("/applications")
     },
     {
       href: "/applicant/profile",
       icon: User,
       label: "Profile",
-      isActive: location.startsWith("/applicant/profile")
+      isActive: location.includes("/profile")
     },
     {
       href: "/applicant/chat",
       icon: MessageCircle,
       label: "Chat",
-      isActive: location.startsWith("/applicant/chat"),
+      isActive: location.includes("/chat"),
       hasNotification: notificationCount > 0
     }
   ];

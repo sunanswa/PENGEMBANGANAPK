@@ -113,21 +113,13 @@ function App() {
             )}
           </>
         ) : (
-          <Switch>
-            <Route path="/admin/:rest*">
+          <>
+            {user.role === 'admin' ? (
               <RecruiterDashboard onLogout={handleLogout} />
-            </Route>
-            <Route path="/applicant/:rest*">
+            ) : (
               <ApplicantDashboard onLogout={handleLogout} userProfile={user} />
-            </Route>
-            <Route path="/">
-              {user.role === 'admin' ? (
-                <RecruiterDashboard onLogout={handleLogout} />
-              ) : (
-                <ApplicantDashboard onLogout={handleLogout} userProfile={user} />
-              )}
-            </Route>
-          </Switch>
+            )}
+          </>
         )}
       </div>
     </QueryClientProvider>
