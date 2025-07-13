@@ -108,26 +108,62 @@
     border-image: linear-gradient(135deg, #8B5CF6 0%, #F97316 100%) 1;
   }
   
-  /* Enhanced Card Styles */
+  /* Enhanced Card Styles with Modern Design */
   .card-enhanced {
-    @apply bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300;
+    @apply bg-white/90 dark:bg-gray-800/90 rounded-2xl border border-white/20 dark:border-gray-700/20 shadow-xl hover:shadow-2xl transition-all duration-500;
+    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+    transform: perspective(1000px) rotateX(0deg);
+  }
+  
+  .card-enhanced:hover {
+    transform: perspective(1000px) rotateX(5deg) translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(139, 92, 246, 0.15);
   }
   
   .card-elevated {
-    @apply card-enhanced shadow-lg hover:shadow-xl transform hover:-translate-y-1;
+    @apply card-enhanced shadow-2xl;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(249, 115, 22, 0.05));
   }
   
-  /* Button Variants dengan SWAPRO Branding */
+  .card-elevated:hover {
+    transform: perspective(1000px) rotateX(10deg) translateY(-12px) scale(1.05);
+    box-shadow: 0 30px 60px rgba(139, 92, 246, 0.2);
+  }
+  
+  /* Modern Button Variants */
   .btn-swapro {
-    @apply swapro-gradient text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5;
+    @apply swapro-gradient text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-swapro::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+  
+  .btn-swapro:hover::before {
+    width: 300px;
+    height: 300px;
   }
   
   .btn-swapro-outline {
-    @apply border-2 border-purple-500 text-purple-500 font-semibold py-3 px-6 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200;
+    @apply border-2 border-purple-500 text-purple-500 font-bold py-4 px-8 rounded-full hover:bg-gradient-to-r hover:from-purple-500 hover:to-orange-500 hover:text-white hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+    position: relative;
+    overflow: hidden;
   }
   
   .btn-swapro-ghost {
-    @apply text-purple-600 font-semibold py-2 px-4 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200;
+    @apply text-purple-600 font-semibold py-3 px-6 rounded-xl hover:bg-gradient-to-r hover:from-purple-50 hover:to-orange-50 hover:shadow-md transition-all duration-300;
   }
   
   /* Loading Animation */
@@ -168,6 +204,60 @@
     }
     100% {
       background-position: 0% 50%;
+    }
+  }
+  
+  /* Modern UI Enhancements */
+  .glassmorphism {
+    backdrop-filter: blur(30px);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+  }
+  
+  .neon-border {
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, #8B5CF6, #F97316) padding-box,
+                linear-gradient(135deg, #8B5CF6, #F97316) border-box;
+    border-radius: 1rem;
+  }
+  
+  .floating {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .animate-slide-in {
+    animation: slide-in 0.5s ease-out;
+  }
+  
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out;
+  }
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 }
