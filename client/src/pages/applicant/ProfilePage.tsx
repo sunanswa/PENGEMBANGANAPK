@@ -176,16 +176,16 @@ export default function ProfilePage() {
 
         <div className="flex items-center gap-6 mb-6">
           <div className="relative">
-            <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+            <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center shadow-lg">
               <User size={32} className="text-white" />
             </div>
-            <button className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-purple-500">
-              <Camera size={14} className="text-purple-600" />
+            <button className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-indigo-500">
+              <Camera size={14} className="text-indigo-600" />
             </button>
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{profileData.personalInfo.fullName}</h2>
-            <p className="text-gray-600">Job Seeker</p>
+            <h2 className="text-2xl font-bold text-slate-800">{profileData.personalInfo.fullName}</h2>
+            <p className="text-slate-600">Job Seeker</p>
             <div className="flex items-center gap-2 mt-2">
               <Star className="h-4 w-4 text-yellow-500 fill-current" />
               <span className="text-sm text-gray-600">Profile Score: 85/100</span>
@@ -201,40 +201,44 @@ export default function ProfilePage() {
                 <input 
                   type="text" 
                   value={profileData.personalInfo.fullName}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                  onChange={(e) => setProfileData(prev => ({
+                    ...prev,
+                    personalInfo: { ...prev.personalInfo, fullName: e.target.value }
+                  }))}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-slate-800"
                 />
               ) : (
-                <p className="text-gray-900">{profileData.personalInfo.fullName}</p>
+                <p className="text-slate-800">{profileData.personalInfo.fullName}</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Email</label>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-gray-500" />
-                <p className="text-gray-900">{profileData.personalInfo.email}</p>
+                <Mail className="h-4 w-4 text-slate-500" />
+                <p className="text-slate-800">{profileData.personalInfo.email}</p>
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Nomor Telepon</label>
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-gray-500" />
-                <p className="text-gray-900">{profileData.personalInfo.phone}</p>
+                <Phone className="h-4 w-4 text-slate-500" />
+                <p className="text-slate-800">{profileData.personalInfo.phone}</p>
               </div>
             </div>
           </div>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Tanggal Lahir</label>
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-gray-500" />
-                <p className="text-gray-900">{new Date(profileData.personalInfo.dateOfBirth).toLocaleDateString('id-ID')}</p>
+                <Calendar className="h-4 w-4 text-slate-500" />
+                <p className="text-slate-800">{new Date(profileData.personalInfo.dateOfBirth).toLocaleDateString('id-ID')}</p>
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Alamat</label>
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-gray-500" />
-                <p className="text-gray-900">{profileData.personalInfo.address}</p>
+                <MapPin className="h-4 w-4 text-slate-500" />
+                <p className="text-slate-800">{profileData.personalInfo.address}</p>
               </div>
             </div>
           </div>
@@ -244,11 +248,11 @@ export default function ProfilePage() {
           <div className="flex justify-end gap-3 mt-6 pt-6 border-t border-gray-200">
             <button 
               onClick={() => setIsEditing(false)}
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 text-slate-600 border border-slate-300 rounded-lg hover:bg-slate-50"
             >
               Batal
             </button>
-            <button className="btn-swapro flex items-center gap-2">
+            <button className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-violet-500 text-white rounded-lg font-semibold hover:from-indigo-600 hover:to-violet-600 transition-all flex items-center gap-2">
               <Save size={16} />
               Simpan
             </button>
@@ -273,14 +277,14 @@ export default function ProfilePage() {
             <div key={edu.id} className="border border-gray-200 rounded-lg p-4">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <GraduationCap className="h-5 w-5 text-purple-600" />
+                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <GraduationCap className="h-5 w-5 text-indigo-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">{edu.degree}</h4>
-                    <p className="text-gray-600">{edu.institution}</p>
-                    <p className="text-sm text-gray-500">{edu.year}</p>
-                    {edu.gpa && <p className="text-sm text-gray-500">GPA: {edu.gpa}</p>}
+                    <h4 className="font-semibold text-slate-800">{edu.degree}</h4>
+                    <p className="text-slate-600">{edu.institution}</p>
+                    <p className="text-sm text-slate-500">{edu.year}</p>
+                    {edu.gpa && <p className="text-sm text-slate-500">GPA: {edu.gpa}</p>}
                   </div>
                 </div>
                 <button className="text-gray-400 hover:text-gray-600">
