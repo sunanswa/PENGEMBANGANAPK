@@ -243,7 +243,10 @@ export default function EnhancedDashboard() {
   );
 
   const renderJobRecommendations = () => (
-    <EnhancedJobListings />
+    <div className="mt-6">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Rekomendasi Pekerjaan</h3>
+      <EnhancedJobListings />
+    </div>
   );
 
   return (
@@ -258,34 +261,34 @@ export default function EnhancedDashboard() {
       
       <div className="p-4 pb-20">
         {/* Tab Navigation */}
-      <div className="flex space-x-1 mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-        <button
-          onClick={() => setActiveTab('dashboard')}
-          className={`flex-1 py-2 px-4 rounded-md transition-colors ${
-            activeTab === 'dashboard'
-              ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-          }`}
-        >
-          <div className="flex items-center justify-center space-x-2">
-            <Target className="h-4 w-4" />
-            <span>Overview</span>
-          </div>
-        </button>
-        <button
-          onClick={() => setActiveTab('jobs')}
-          className={`flex-1 py-2 px-4 rounded-md transition-colors ${
-            activeTab === 'jobs'
-              ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-          }`}
-        >
-          <div className="flex items-center justify-center space-x-2">
-            <Briefcase className="h-4 w-4" />
-            <span>Jobs</span>
-          </div>
-        </button>
-      </div>
+        <div className="flex space-x-1 mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <button
+            onClick={() => setActiveTab('dashboard')}
+            className={`flex-1 py-3 px-4 rounded-md transition-colors font-semibold ${
+              activeTab === 'dashboard'
+                ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                : 'text-gray-600 dark:text-gray-400 hover:text-purple-500'
+            }`}
+          >
+            <div className="flex items-center justify-center space-x-2">
+              <Target className="h-4 w-4" />
+              <span>Overview</span>
+            </div>
+          </button>
+          <button
+            onClick={() => setActiveTab('jobs')}
+            className={`flex-1 py-3 px-4 rounded-md transition-colors font-semibold ${
+              activeTab === 'jobs'
+                ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                : 'text-gray-600 dark:text-gray-400 hover:text-purple-500'
+            }`}
+          >
+            <div className="flex items-center justify-center space-x-2">
+              <Briefcase className="h-4 w-4" />
+              <span>Pekerjaan</span>
+            </div>
+          </button>
+        </div>
 
         {/* Content */}
         {activeTab === 'dashboard' ? renderDashboard() : renderJobRecommendations()}

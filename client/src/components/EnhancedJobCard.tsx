@@ -215,7 +215,7 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
               }}
               className="px-6 py-2 bg-gradient-to-r from-purple-500 to-orange-500 hover:from-purple-600 hover:to-orange-600 text-white text-sm font-bold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              Walk-in Interview
+              Lamar Sekarang
             </button>
           </div>
         </div>

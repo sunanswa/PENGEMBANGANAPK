@@ -430,17 +430,15 @@ export default function EnhancedJobListings() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
-      {/* SWAPRO Header */}
-      <SwaprosHeader 
-        title="Cari Pekerjaan" 
-        subtitle="Temukan pekerjaan impian Anda dengan SWAPRO"
-        showSearch={true}
-        userRole="applicant"
-      />
-      
       <div className="p-4 pb-20">
+        {/* Page Title */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold swapro-text-gradient mb-2">Cari Pekerjaan</h1>
+          <p className="text-gray-600 dark:text-gray-400">Temukan pekerjaan impian Anda dengan SWAPRO</p>
+        </div>
+
         {/* Search and Filters */}
-      <div className="card-enhanced p-6 mb-8 backdrop-blur-sm bg-white/90 dark:bg-gray-800/90">
+        <div className="card-enhanced p-6 mb-8 backdrop-blur-sm bg-white/90 dark:bg-gray-800/90">
         <div className="flex space-x-4 mb-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
