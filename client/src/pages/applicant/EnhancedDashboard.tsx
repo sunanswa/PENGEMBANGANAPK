@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import EnhancedJobListings from './EnhancedJobListings';
+import ApplicationsPage from './ApplicationsPage';
+import ChatPage from './ChatPage';
+import ProfilePage from './ProfilePage';
+import InterviewPage from './InterviewPage';
 import SwaprosHeader from '@/components/SwaprosHeader';
 import SwaprosBottomNav from '@/components/SwaprosBottomNav';
 import { useSync } from '@/hooks/useSync';
@@ -51,6 +55,7 @@ interface Job {
 
 export default function EnhancedDashboard() {
   const { stats, jobs, applications, interviews, notifications } = useSync('applicant', 'candidate1');
+  const [currentPage, setCurrentPage] = useState('menu');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [savedJobs, setSavedJobs] = useState<number[]>([1, 3]);
   const [showFilters, setShowFilters] = useState(false);
@@ -249,50 +254,79 @@ export default function EnhancedDashboard() {
     </div>
   );
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
-      {/* SWAPRO Header */}
-      <SwaprosHeader 
-        title="Dashboard SWAPRO" 
-        subtitle="Kelola karir dan lamaran Anda dengan mudah"
-        showSearch={false}
-        userRole="applicant"
-      />
-      
-      <div className="p-4 pb-20">
-        {/* Tab Navigation */}
-        <div className="flex space-x-1 mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`flex-1 py-3 px-4 rounded-md transition-colors font-semibold ${
-              activeTab === 'dashboard'
-                ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-purple-500'
-            }`}
-          >
-            <div className="flex items-center justify-center space-x-2">
-              <Target className="h-4 w-4" />
-              <span>Overview</span>
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveTab('jobs')}
-            className={`flex-1 py-3 px-4 rounded-md transition-colors font-semibold ${
-              activeTab === 'jobs'
-                ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-purple-500'
-            }`}
-          >
-            <div className="flex items-center justify-center space-x-2">
-              <Briefcase className="h-4 w-4" />
-              <span>Pekerjaan</span>
-            </div>
-          </button>
-        </div>
+  // Handle navigation
+  const handleNavigate = (page: string) => {
+    console.log('Rendering page:', currentPage, '->', page);
+    setCurrentPage(page);
+  };
 
-        {/* Content */}
-        {activeTab === 'dashboard' ? renderDashboard() : renderJobRecommendations()}
-      </div>
+  // Render different pages based on currentPage
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'jobs':
+        return <EnhancedJobListings />;
+      case 'applications':
+        return <ApplicationsPage />;
+      case 'interviews':
+        return <InterviewPage />;
+      case 'chat':
+        return <ChatPage />;
+      case 'profile':
+        return <ProfilePage />;
+      default:
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
+            {/* SWAPRO Header */}
+            <SwaprosHeader 
+              title="Dashboard SWAPRO" 
+              subtitle="Kelola karir dan lamaran Anda dengan mudah"
+              showSearch={false}
+              userRole="applicant"
+            />
+            
+            <div className="p-4 pb-20">
+              {/* Tab Navigation */}
+              <div className="flex space-x-1 mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+                <button
+                  onClick={() => setActiveTab('dashboard')}
+                  className={`flex-1 py-3 px-4 rounded-md transition-colors font-semibold ${
+                    activeTab === 'dashboard'
+                      ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-purple-500'
+                  }`}
+                >
+                  <div className="flex items-center justify-center space-x-2">
+                    <Target className="h-4 w-4" />
+                    <span>Overview</span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => setActiveTab('jobs')}
+                  className={`flex-1 py-3 px-4 rounded-md transition-colors font-semibold ${
+                    activeTab === 'jobs'
+                      ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-purple-500'
+                  }`}
+                >
+                  <div className="flex items-center justify-center space-x-2">
+                    <Briefcase className="h-4 w-4" />
+                    <span>Pekerjaan</span>
+                  </div>
+                </button>
+              </div>
+
+              {/* Content */}
+              {activeTab === 'dashboard' ? renderDashboard() : renderJobRecommendations()}
+            </div>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="relative">
+      {renderCurrentPage()}
+      <SwaprosBottomNav currentPage={currentPage} onNavigate={handleNavigate} />
     </div>
   );
 }

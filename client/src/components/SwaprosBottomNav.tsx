@@ -1,17 +1,17 @@
 import React from 'react';
-import { Home, Search, Briefcase, MessageCircle, User } from 'lucide-react';
+import { Home, Search, Briefcase, MessageCircle, User, Calendar } from 'lucide-react';
 
 interface SwaprosBottomNavProps {
   currentPage: string;
-  onPageChange: (page: string) => void;
+  onNavigate: (page: string) => void;
 }
 
-export default function SwaprosBottomNav({ currentPage, onPageChange }: SwaprosBottomNavProps) {
+export default function SwaprosBottomNav({ currentPage, onNavigate }: SwaprosBottomNavProps) {
   const navItems = [
     { id: 'menu', label: 'Dashboard', icon: Home },
     { id: 'jobs', label: 'Pekerjaan', icon: Search },
     { id: 'applications', label: 'Lamaran', icon: Briefcase },
-    { id: 'chat', label: 'Chat', icon: MessageCircle },
+    { id: 'interviews', label: 'Interview', icon: Calendar },
     { id: 'profile', label: 'Profil', icon: User },
   ];
 
@@ -25,7 +25,7 @@ export default function SwaprosBottomNav({ currentPage, onPageChange }: SwaprosB
           return (
             <button
               key={item.id}
-              onClick={() => onPageChange(item.id)}
+              onClick={() => onNavigate(item.id)}
               className={`flex flex-col items-center justify-center space-y-1 transition-all duration-200 ${
                 isActive 
                   ? 'text-purple-600 bg-purple-50 dark:bg-purple-900/20' 
