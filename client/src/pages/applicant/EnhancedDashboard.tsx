@@ -303,8 +303,14 @@ export default function EnhancedDashboard() {
         return <ProfilePage />;
       default:
         return (
-          <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 relative">
-            <div className="absolute inset-0 gradient-mesh opacity-30"></div>
+          <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-100 relative overflow-hidden">
+            <div className="absolute inset-0 gradient-mesh opacity-50"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/60 via-transparent to-white/60"></div>
+            
+            {/* Floating Background Elements */}
+            <div className="absolute top-20 right-20 w-64 h-64 glow-purple rounded-full blur-3xl morphing-blob opacity-20"></div>
+            <div className="absolute bottom-20 left-20 w-48 h-48 glow-orange rounded-full blur-2xl parallax-float opacity-30"></div>
+            <div className="absolute top-40 left-1/2 w-32 h-32 glow-cyan rounded-full blur-xl floating opacity-25"></div>
             
             {/* SWAPRO Header */}
             <SwaprosHeader 
@@ -315,32 +321,32 @@ export default function EnhancedDashboard() {
             />
             
             <div className="relative z-10 p-6 pb-24">
-              {/* Professional Tab Navigation */}
-              <div className="flex space-x-1 mb-6 glass-effect rounded-xl p-1 border border-gray-200">
+              {/* Enhanced Tab Navigation */}
+              <div className="flex space-x-2 mb-8 glass-effect rounded-2xl p-2 border-2 border-purple-200/50">
                 <button
                   onClick={() => setActiveTab('dashboard')}
-                  className={`flex-1 py-3 px-4 rounded-lg transition-all duration-300 font-semibold text-sm ${
+                  className={`flex-1 py-4 px-6 rounded-xl transition-all duration-500 font-bold text-sm uppercase tracking-widest ${
                     activeTab === 'dashboard'
-                      ? 'bg-white text-purple-600 shadow-md border border-purple-200'
-                      : 'text-gray-600 hover:text-purple-600 hover:bg-gray-50'
+                      ? 'glass-effect text-purple-600 glow-purple border-2 border-purple-300/50 shadow-xl'
+                      : 'text-gray-600 hover:text-purple-600 hover:glow-purple hover:bg-purple-50'
                   }`}
                 >
-                  <div className="flex items-center justify-center space-x-2">
-                    <Target className="h-4 w-4" />
-                    <span>Overview</span>
+                  <div className="flex items-center justify-center space-x-3">
+                    <Target className="h-5 w-5" />
+                    <span>OVERVIEW</span>
                   </div>
                 </button>
                 <button
                   onClick={() => setActiveTab('jobs')}
-                  className={`flex-1 py-3 px-4 rounded-lg transition-all duration-300 font-semibold text-sm ${
+                  className={`flex-1 py-4 px-6 rounded-xl transition-all duration-500 font-bold text-sm uppercase tracking-widest ${
                     activeTab === 'jobs'
-                      ? 'bg-white text-purple-600 shadow-md border border-purple-200'
-                      : 'text-gray-600 hover:text-purple-600 hover:bg-gray-50'
+                      ? 'glass-effect text-purple-600 glow-purple border-2 border-purple-300/50 shadow-xl'
+                      : 'text-gray-600 hover:text-purple-600 hover:glow-purple hover:bg-purple-50'
                   }`}
                 >
-                  <div className="flex items-center justify-center space-x-2">
-                    <Briefcase className="h-4 w-4" />
-                    <span>Pekerjaan</span>
+                  <div className="flex items-center justify-center space-x-3">
+                    <Briefcase className="h-5 w-5" />
+                    <span>PEKERJAAN</span>
                   </div>
                 </button>
               </div>
