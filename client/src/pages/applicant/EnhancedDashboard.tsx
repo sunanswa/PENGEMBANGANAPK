@@ -118,103 +118,125 @@ export default function EnhancedDashboard() {
 
   const renderDashboard = () => (
     <div className="space-y-6">
-      {/* Welcome Section with Ultra Modern Design */}
-      <div className="relative overflow-hidden rounded-3xl p-8 animate-scale-in tilt-effect">
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500">
-          <div className="absolute inset-0 gradient-mesh"></div>
-          <div className="absolute top-4 right-4 w-32 h-32 bg-white/10 rounded-full blur-2xl morphing-blob"></div>
-          <div className="absolute bottom-4 left-4 w-24 h-24 bg-orange-400/20 rounded-full blur-xl parallax-float"></div>
+      {/* Cyberpunk Welcome Section */}
+      <div className="relative overflow-hidden rounded-3xl p-10 animate-scale-in tilt-effect card-enhanced">
+        {/* Cyberpunk Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-black">
+          <div className="absolute inset-0 gradient-mesh opacity-40"></div>
+          <div className="absolute top-6 right-6 w-40 h-40 glow-cyan rounded-full blur-3xl morphing-blob opacity-20"></div>
+          <div className="absolute bottom-6 left-6 w-32 h-32 glow-pink rounded-full blur-2xl parallax-float opacity-30"></div>
+          
+          {/* Neon Grid Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="w-full h-full" style={{
+              backgroundImage: `linear-gradient(rgba(0,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.3) 1px, transparent 1px)`,
+              backgroundSize: '30px 30px'
+            }}></div>
+          </div>
         </div>
         
         <div className="relative z-10 flex items-center justify-between">
           <div className="animate-fade-in">
-            <h2 className="text-3xl font-bold text-white drop-shadow-2xl text-animate-gradient">Selamat Datang, John!</h2>
-            <p className="text-white/90 mt-3 font-medium text-lg">Mari temukan pekerjaan impian Anda bersama SWAPRO</p>
+            <h2 className="text-4xl font-black text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text drop-shadow-2xl">Selamat Datang, John!</h2>
+            <p className="text-cyan-100 mt-4 font-bold text-xl tracking-wide">Mari temukan pekerjaan impian Anda bersama SWAPRO</p>
+            <div className="flex items-center gap-3 mt-2">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-ping"></div>
+              <span className="text-green-300 text-sm font-mono uppercase tracking-widest">CONNECTION ESTABLISHED</span>
+            </div>
           </div>
-          <div className="text-right glass-effect rounded-2xl p-4">
-            <div className="text-sm text-white/80 font-medium">Profil Completion</div>
-            <div className="text-4xl font-bold text-white drop-shadow-lg">{profileCompletion}%</div>
-            <div className="text-xs text-white/70">Almost Perfect!</div>
+          <div className="text-right glass-effect rounded-3xl p-6 border-2 border-cyan-400/50 glow-cyan">
+            <div className="text-sm text-cyan-300 font-bold uppercase tracking-wider">Profile Status</div>
+            <div className="text-5xl font-black text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text drop-shadow-lg">{profileCompletion}%</div>
+            <div className="text-xs text-cyan-200 font-mono">OPTIMIZATION LEVEL</div>
           </div>
         </div>
         
-        <div className="mt-8 relative">
-          <div className="bg-white/20 rounded-full h-4 backdrop-blur-sm border border-white/30">
+        <div className="mt-10 relative">
+          <div className="glass-effect rounded-full h-6 border-2 border-cyan-400/30">
             <div 
-              className="bg-gradient-to-r from-white via-yellow-200 to-orange-300 rounded-full h-4 transition-all duration-700 glow-orange shadow-lg"
+              className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded-full h-6 transition-all duration-1000 glow-cyan shadow-2xl relative overflow-hidden"
               style={{ width: `${profileCompletion}%` }}
-            />
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+            </div>
           </div>
-          <div className="absolute -top-2 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold text-sm shadow-lg floating">
-            ✨
+          <div className="absolute -top-3 right-0 w-12 h-12 bg-gradient-to-r from-pink-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-black text-lg shadow-2xl floating glow-pink">
+            ⚡
           </div>
         </div>
       </div>
 
       {/* Revolutionary Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div className="card-enhanced p-6 animate-scale-in tilt-effect magnetic ripple-effect group">
+        <div className="card-enhanced p-8 animate-scale-in tilt-effect magnetic ripple-effect group">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-bold">Total Lamaran</p>
-              <p className="text-4xl font-black text-gray-900 mt-3 group-hover:text-blue-600 transition-colors">{jobStats.totalApplications}</p>
-              <p className="text-xs text-blue-600 mt-2 font-semibold">+3 bulan ini 📈</p>
+              <p className="text-sm text-cyan-300 font-bold uppercase tracking-widest">Total Lamaran</p>
+              <p className="text-5xl font-black text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text mt-4 group-hover:scale-110 transition-transform">{jobStats.totalApplications}</p>
+              <p className="text-xs text-cyan-400 mt-3 font-mono">+3 MONTH CYCLE ↗</p>
             </div>
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-purple">
-              <Briefcase className="h-10 w-10 text-white" />
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 via-cyan-500 to-purple-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-cyan border-2 border-cyan-400/50">
+              <Briefcase className="h-12 w-12 text-white drop-shadow-lg" />
             </div>
           </div>
-          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full w-3/4 animate-pulse"></div>
+          <div className="mt-6 h-3 glass-effect rounded-full overflow-hidden border border-cyan-400/30">
+            <div className="h-full bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 rounded-full w-3/4 glow-cyan relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-pulse"></div>
+            </div>
           </div>
         </div>
 
-        <div className="card-enhanced p-6 animate-scale-in tilt-effect magnetic ripple-effect group">
+        <div className="card-enhanced p-8 animate-scale-in tilt-effect magnetic ripple-effect group">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-bold">Dalam Proses</p>
-              <p className="text-4xl font-black text-gray-900 mt-3 group-hover:text-yellow-600 transition-colors">{jobStats.pending}</p>
-              <p className="text-xs text-yellow-600 mt-2 font-semibold">Menunggu review ⏳</p>
+              <p className="text-sm text-orange-300 font-bold uppercase tracking-widest">Dalam Proses</p>
+              <p className="text-5xl font-black text-transparent bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text mt-4 group-hover:scale-110 transition-transform">{jobStats.pending}</p>
+              <p className="text-xs text-orange-400 mt-3 font-mono">REVIEW QUEUE ⏳</p>
             </div>
-            <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 via-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-orange">
-              <Clock className="h-10 w-10 text-white" />
+            <div className="w-24 h-24 bg-gradient-to-br from-yellow-500 via-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-orange border-2 border-orange-400/50">
+              <Clock className="h-12 w-12 text-white drop-shadow-lg" />
             </div>
           </div>
-          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full w-1/2 animate-pulse"></div>
+          <div className="mt-6 h-3 glass-effect rounded-full overflow-hidden border border-orange-400/30">
+            <div className="h-full bg-gradient-to-r from-orange-400 via-yellow-400 to-red-400 rounded-full w-1/2 glow-orange relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-pulse"></div>
+            </div>
           </div>
         </div>
 
-        <div className="card-enhanced p-6 animate-scale-in tilt-effect magnetic ripple-effect group">
+        <div className="card-enhanced p-8 animate-scale-in tilt-effect magnetic ripple-effect group">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-bold">Interview</p>
-              <p className="text-4xl font-black text-gray-900 mt-3 group-hover:text-purple-600 transition-colors">{jobStats.interviews}</p>
-              <p className="text-xs text-purple-600 mt-2 font-semibold">Terjadwal 🎯</p>
+              <p className="text-sm text-purple-300 font-bold uppercase tracking-widest">Interview</p>
+              <p className="text-5xl font-black text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text mt-4 group-hover:scale-110 transition-transform">{jobStats.interviews}</p>
+              <p className="text-xs text-purple-400 mt-3 font-mono">SCHEDULED ⚡</p>
             </div>
-            <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-purple">
-              <Calendar className="h-10 w-10 text-white" />
+            <div className="w-24 h-24 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-purple border-2 border-purple-400/50">
+              <Calendar className="h-12 w-12 text-white drop-shadow-lg" />
             </div>
           </div>
-          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full w-2/3 animate-pulse"></div>
+          <div className="mt-6 h-3 glass-effect rounded-full overflow-hidden border border-purple-400/30">
+            <div className="h-full bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 rounded-full w-2/3 glow-purple relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-pulse"></div>
+            </div>
           </div>
         </div>
 
-        <div className="card-enhanced p-6 animate-scale-in tilt-effect magnetic ripple-effect group">
+        <div className="card-enhanced p-8 animate-scale-in tilt-effect magnetic ripple-effect group">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-bold">Diterima</p>
-              <p className="text-4xl font-black text-gray-900 mt-3 group-hover:text-green-600 transition-colors">{jobStats.accepted}</p>
-              <p className="text-xs text-green-600 mt-2 font-semibold">Selamat! 🎉</p>
+              <p className="text-sm text-green-300 font-bold uppercase tracking-widest">Diterima</p>
+              <p className="text-5xl font-black text-transparent bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text mt-4 group-hover:scale-110 transition-transform">{jobStats.accepted}</p>
+              <p className="text-xs text-green-400 mt-3 font-mono">SUCCESS ✓</p>
             </div>
-            <div className="w-20 h-20 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-orange">
-              <CheckCircle className="h-10 w-10 text-white" />
+            <div className="w-24 h-24 bg-gradient-to-br from-green-500 via-emerald-500 to-cyan-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-cyan border-2 border-green-400/50">
+              <CheckCircle className="h-12 w-12 text-white drop-shadow-lg" />
             </div>
           </div>
-          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-green-400 to-emerald-400 rounded-full w-4/5 animate-pulse"></div>
+          <div className="mt-6 h-3 glass-effect rounded-full overflow-hidden border border-green-400/30">
+            <div className="h-full bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 rounded-full w-4/5 glow-cyan relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent animate-pulse"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -306,7 +328,11 @@ export default function EnhancedDashboard() {
         return <ProfilePage />;
       default:
         return (
-          <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
+          <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-900 relative overflow-hidden">
+            {/* Cyberpunk Background Effects */}
+            <div className="absolute inset-0 gradient-mesh opacity-20"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-cyan-500/5 via-purple-500/10 to-pink-500/5"></div>
+            
             {/* SWAPRO Header */}
             <SwaprosHeader 
               title="Dashboard SWAPRO" 
@@ -315,33 +341,33 @@ export default function EnhancedDashboard() {
               userRole="applicant"
             />
             
-            <div className="p-4 pb-20">
-              {/* Tab Navigation */}
-              <div className="flex space-x-1 mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+            <div className="relative z-10 p-6 pb-24">
+              {/* Cyberpunk Tab Navigation */}
+              <div className="flex space-x-2 mb-8 glass-effect rounded-2xl p-2 border-2 border-cyan-400/30">
                 <button
                   onClick={() => setActiveTab('dashboard')}
-                  className={`flex-1 py-3 px-4 rounded-md transition-colors font-semibold ${
+                  className={`flex-1 py-4 px-6 rounded-xl transition-all duration-500 font-black text-sm uppercase tracking-widest ${
                     activeTab === 'dashboard'
-                      ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-purple-500'
+                      ? 'glass-effect text-cyan-300 glow-cyan border-2 border-cyan-400/50 shadow-2xl'
+                      : 'text-cyan-100/60 hover:text-cyan-300 hover:glow-cyan'
                   }`}
                 >
-                  <div className="flex items-center justify-center space-x-2">
-                    <Target className="h-4 w-4" />
-                    <span>Overview</span>
+                  <div className="flex items-center justify-center space-x-3">
+                    <Target className="h-5 w-5" />
+                    <span>OVERVIEW</span>
                   </div>
                 </button>
                 <button
                   onClick={() => setActiveTab('jobs')}
-                  className={`flex-1 py-3 px-4 rounded-md transition-colors font-semibold ${
+                  className={`flex-1 py-4 px-6 rounded-xl transition-all duration-500 font-black text-sm uppercase tracking-widest ${
                     activeTab === 'jobs'
-                      ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-purple-500'
+                      ? 'glass-effect text-cyan-300 glow-cyan border-2 border-cyan-400/50 shadow-2xl'
+                      : 'text-cyan-100/60 hover:text-cyan-300 hover:glow-cyan'
                   }`}
                 >
-                  <div className="flex items-center justify-center space-x-2">
-                    <Briefcase className="h-4 w-4" />
-                    <span>Pekerjaan</span>
+                  <div className="flex items-center justify-center space-x-3">
+                    <Briefcase className="h-5 w-5" />
+                    <span>PEKERJAAN</span>
                   </div>
                 </button>
               </div>

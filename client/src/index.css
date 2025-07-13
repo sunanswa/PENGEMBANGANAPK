@@ -108,22 +108,24 @@
     border-image: linear-gradient(135deg, #8B5CF6 0%, #F97316 100%) 1;
   }
   
-  /* Ultra Modern Card Styles with Advanced 3D Effects */
+  /* Cyberpunk Neon Card Styles with Hologram Effects */
   .card-enhanced {
-    @apply rounded-3xl border transition-all duration-500;
+    @apply rounded-3xl border transition-all duration-700;
     background: linear-gradient(145deg, 
-      rgba(255, 255, 255, 0.98) 0%, 
-      rgba(255, 255, 255, 0.95) 50%, 
-      rgba(248, 250, 252, 0.98) 100%);
-    backdrop-filter: blur(30px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+      rgba(15, 15, 30, 0.95) 0%, 
+      rgba(30, 15, 60, 0.90) 30%,
+      rgba(15, 30, 45, 0.95) 70%,
+      rgba(0, 0, 20, 0.98) 100%);
+    backdrop-filter: blur(40px) saturate(200%) brightness(120%);
+    border: 2px solid transparent;
+    background-clip: padding-box;
     box-shadow: 
-      0 15px 45px rgba(147, 51, 234, 0.06),
-      0 8px 25px rgba(249, 115, 22, 0.04),
-      0 3px 10px rgba(0, 0, 0, 0.02),
-      inset 0 1px 0 rgba(255, 255, 255, 0.8),
-      inset 0 -1px 0 rgba(147, 51, 234, 0.03);
-    transform: perspective(1200px) rotateX(0deg) translateZ(0);
+      0 0 30px rgba(147, 51, 234, 0.4),
+      0 0 60px rgba(249, 115, 22, 0.2),
+      0 20px 80px rgba(0, 255, 255, 0.1),
+      inset 0 2px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -2px 0 rgba(147, 51, 234, 0.2);
+    transform: perspective(1500px) rotateX(0deg) translateZ(0);
     transform-style: preserve-3d;
     position: relative;
     overflow: hidden;
@@ -135,14 +137,22 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 4px;
     background: linear-gradient(90deg, 
       transparent 0%, 
-      rgba(147, 51, 234, 0.7) 25%, 
-      rgba(249, 115, 22, 0.7) 75%, 
+      rgba(0, 255, 255, 0.8) 10%,
+      rgba(147, 51, 234, 0.9) 30%, 
+      rgba(255, 0, 150, 0.8) 60%,
+      rgba(249, 115, 22, 0.9) 90%, 
       transparent 100%);
     opacity: 0;
-    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    animation: neonPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes neonPulse {
+    0%, 100% { filter: brightness(100%) saturate(100%); }
+    50% { filter: brightness(150%) saturate(200%); }
   }
 
   .card-enhanced::after {
@@ -152,34 +162,50 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at center, 
-      rgba(147, 51, 234, 0.02) 0%, 
-      rgba(249, 115, 22, 0.02) 50%, 
-      transparent 70%);
+    background: conic-gradient(from 0deg at 50% 50%, 
+      rgba(0, 255, 255, 0.05) 0deg,
+      rgba(147, 51, 234, 0.08) 72deg,
+      rgba(255, 0, 150, 0.06) 144deg,
+      rgba(249, 115, 22, 0.08) 216deg,
+      rgba(0, 255, 127, 0.05) 288deg,
+      rgba(0, 255, 255, 0.05) 360deg);
     opacity: 0;
-    transition: all 0.6s ease;
-    transform: scale(0.8);
+    transition: all 0.8s ease;
+    transform: scale(0.8) rotate(0deg);
     pointer-events: none;
+    animation: hologramSpin 20s linear infinite;
+  }
+
+  @keyframes hologramSpin {
+    from { transform: scale(0.8) rotate(0deg); }
+    to { transform: scale(0.8) rotate(360deg); }
   }
   
   .card-enhanced:hover {
-    transform: perspective(1200px) rotateX(3deg) rotateY(1deg) translateY(-12px) translateZ(20px) scale(1.04);
+    transform: perspective(1500px) rotateX(5deg) rotateY(2deg) translateY(-20px) translateZ(40px) scale(1.06);
     box-shadow: 
-      0 30px 80px rgba(147, 51, 234, 0.15),
-      0 20px 50px rgba(249, 115, 22, 0.12),
-      0 8px 25px rgba(0, 0, 0, 0.08),
-      inset 0 2px 0 rgba(255, 255, 255, 0.9),
-      inset 0 -2px 0 rgba(147, 51, 234, 0.08);
-    border-color: rgba(147, 51, 234, 0.4);
+      0 0 50px rgba(0, 255, 255, 0.6),
+      0 0 100px rgba(147, 51, 234, 0.4),
+      0 0 150px rgba(255, 0, 150, 0.3),
+      0 40px 120px rgba(249, 115, 22, 0.25),
+      inset 0 3px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -3px 0 rgba(0, 255, 255, 0.3);
+    border-image: linear-gradient(45deg, 
+      rgba(0, 255, 255, 0.8), 
+      rgba(147, 51, 234, 0.9), 
+      rgba(255, 0, 150, 0.8), 
+      rgba(249, 115, 22, 0.9)) 1;
   }
 
   .card-enhanced:hover::before {
     opacity: 1;
+    filter: brightness(200%) saturate(300%);
   }
 
   .card-enhanced:hover::after {
     opacity: 1;
-    transform: scale(1.2);
+    transform: scale(1.4) rotate(180deg);
+    filter: brightness(150%) saturate(200%);
   }
   
   .card-elevated {
@@ -381,40 +407,108 @@
     transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale3d(1.02, 1.02, 1.02);
   }
 
-  /* Modern Glow Effects */
+  /* Cyberpunk Neon Glow Effects */
   .glow-purple {
-    box-shadow: 0 0 30px rgba(147, 51, 234, 0.3),
-                0 0 60px rgba(147, 51, 234, 0.1);
+    box-shadow: 
+      0 0 20px rgba(147, 51, 234, 0.8),
+      0 0 40px rgba(147, 51, 234, 0.6),
+      0 0 80px rgba(147, 51, 234, 0.4),
+      0 0 120px rgba(147, 51, 234, 0.2);
+    animation: neonFlicker 2s ease-in-out infinite alternate;
   }
 
   .glow-orange {
-    box-shadow: 0 0 30px rgba(249, 115, 22, 0.3),
-                0 0 60px rgba(249, 115, 22, 0.1);
+    box-shadow: 
+      0 0 20px rgba(249, 115, 22, 0.8),
+      0 0 40px rgba(249, 115, 22, 0.6),
+      0 0 80px rgba(249, 115, 22, 0.4),
+      0 0 120px rgba(249, 115, 22, 0.2);
+    animation: neonFlicker 2.5s ease-in-out infinite alternate;
   }
 
-  /* Backdrop Blur Variants */
+  .glow-cyan {
+    box-shadow: 
+      0 0 20px rgba(0, 255, 255, 0.8),
+      0 0 40px rgba(0, 255, 255, 0.6),
+      0 0 80px rgba(0, 255, 255, 0.4),
+      0 0 120px rgba(0, 255, 255, 0.2);
+    animation: neonFlicker 3s ease-in-out infinite alternate;
+  }
+
+  .glow-pink {
+    box-shadow: 
+      0 0 20px rgba(255, 0, 150, 0.8),
+      0 0 40px rgba(255, 0, 150, 0.6),
+      0 0 80px rgba(255, 0, 150, 0.4),
+      0 0 120px rgba(255, 0, 150, 0.2);
+    animation: neonFlicker 2.2s ease-in-out infinite alternate;
+  }
+
+  @keyframes neonFlicker {
+    0%, 100% { filter: brightness(100%) saturate(100%); }
+    50% { filter: brightness(120%) saturate(150%); }
+    75% { filter: brightness(90%) saturate(80%); }
+  }
+
+  /* Cyberpunk Glass Effects */
   .glass-effect {
-    backdrop-filter: blur(40px) saturate(180%) brightness(110%);
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(50px) saturate(200%) brightness(130%) contrast(120%);
+    background: linear-gradient(135deg, 
+      rgba(0, 255, 255, 0.08) 0%,
+      rgba(147, 51, 234, 0.12) 50%,
+      rgba(255, 0, 150, 0.08) 100%);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(255, 255, 255, 0.4) 50%, 
+      transparent 100%);
+    animation: hologramSweep 3s ease-in-out infinite;
+  }
+
+  @keyframes hologramSweep {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
   }
 
   .glass-dark {
-    backdrop-filter: blur(40px) saturate(180%) brightness(80%);
-    background: rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(50px) saturate(200%) brightness(70%) contrast(150%);
+    background: linear-gradient(135deg, 
+      rgba(15, 15, 30, 0.90) 0%,
+      rgba(30, 15, 60, 0.85) 50%,
+      rgba(15, 30, 45, 0.90) 100%);
+    border: 2px solid rgba(0, 255, 255, 0.4);
   }
 
-  /* Enhanced Gradient Backgrounds */
+  /* Cyberpunk Neon Gradient Backgrounds */
   .gradient-mesh {
     background: 
-      radial-gradient(at 40% 20%, hsla(280, 100%, 70%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsla(30, 100%, 70%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsla(245, 100%, 70%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsla(340, 100%, 70%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(22, 100%, 70%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 100%, hsla(242, 100%, 70%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 0%, hsla(343, 100%, 70%, 0.1) 0px, transparent 50%);
+      radial-gradient(at 40% 20%, hsla(180, 100%, 50%, 0.15) 0px, transparent 40%),
+      radial-gradient(at 80% 0%, hsla(280, 100%, 50%, 0.2) 0px, transparent 40%),
+      radial-gradient(at 0% 50%, hsla(320, 100%, 50%, 0.15) 0px, transparent 40%),
+      radial-gradient(at 80% 50%, hsla(30, 100%, 50%, 0.2) 0px, transparent 40%),
+      radial-gradient(at 0% 100%, hsla(240, 100%, 50%, 0.15) 0px, transparent 40%),
+      radial-gradient(at 80% 100%, hsla(120, 100%, 50%, 0.1) 0px, transparent 40%),
+      radial-gradient(at 20% 80%, hsla(60, 100%, 50%, 0.1) 0px, transparent 40%);
+    animation: gradientShift 15s ease-in-out infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { filter: hue-rotate(0deg) saturate(100%); }
+    25% { filter: hue-rotate(90deg) saturate(150%); }
+    50% { filter: hue-rotate(180deg) saturate(200%); }
+    75% { filter: hue-rotate(270deg) saturate(150%); }
   }
 
   /* Morphing Shape Animations */
