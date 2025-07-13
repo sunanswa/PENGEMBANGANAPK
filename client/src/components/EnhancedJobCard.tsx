@@ -55,14 +55,14 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
         onClick={onClick}
       >
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500 to-orange-500 rounded-full -translate-y-16 translate-x-16"></div>
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full translate-y-12 -translate-x-12"></div>
+        <div className="absolute inset-0 opacity-3">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-violet-500 to-purple-500 rounded-full translate-y-12 -translate-x-12"></div>
         </div>
 
         {/* Featured Badge */}
         {job.featured && (
-          <div className="absolute top-0 right-0 bg-gradient-to-r from-purple-500 to-orange-500 text-white px-3 py-1 rounded-bl-lg text-xs font-semibold shadow-lg z-20">
+          <div className="absolute top-0 right-0 bg-gradient-to-r from-indigo-500 to-violet-500 text-white px-3 py-1 rounded-bl-lg text-xs font-semibold shadow-lg z-20">
             ⭐ Featured
           </div>
         )}
@@ -79,7 +79,7 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
           <div className="flex items-center gap-3 flex-1 min-w-0">
             {/* Company Logo */}
             <div className="relative flex-shrink-0">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-purple-600 to-orange-500 rounded-xl flex items-center justify-center shadow-md transform rotate-2 group-hover:rotate-0 transition-transform duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-500 rounded-xl flex items-center justify-center shadow-md transform rotate-2 group-hover:rotate-0 transition-transform duration-300">
                 {job.companyLogo ? (
                   <img src={job.companyLogo} alt={job.company} className="w-8 h-8 object-contain" />
                 ) : (
@@ -87,17 +87,17 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
                 )}
               </div>
               {/* Company verification badge */}
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-indigo-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-xs">✓</span>
               </div>
             </div>
             
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-purple-600 transition-colors duration-300 line-clamp-2 mb-1">
+              <h3 className="font-bold text-lg text-slate-800 group-hover:text-indigo-600 transition-colors duration-300 line-clamp-2 mb-1">
                 {job.title}
               </h3>
               <div className="flex items-center gap-2 mb-2">
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">{job.company}</p>
+                <p className="text-sm font-semibold text-slate-600">{job.company}</p>
                 {job.rating && (
                   <div className="flex items-center gap-1 bg-yellow-50 px-2 py-0.5 rounded-full">
                     <Star size={12} className="text-yellow-500 fill-current" />
@@ -125,8 +125,8 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
               }}
               className={`p-2 rounded-lg transition-all duration-200 transform hover:scale-110 ${
                 job.saved 
-                ? 'bg-purple-100 text-purple-600 shadow-purple-200' 
-                : 'bg-gray-100 text-gray-600 hover:bg-purple-50 hover:text-purple-600'
+                ? 'bg-indigo-100 text-indigo-600 shadow-indigo-200' 
+                : 'bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'
               }`}
             >
               {job.saved ? <Bookmark className="h-3 w-3 fill-current" /> : <BookmarkPlus className="h-3 w-3" />}
@@ -137,26 +137,26 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
         {/* Job Details */}
         <div className="space-y-3 mb-4 relative z-10">
           {/* Location & Work Type */}
-          <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 flex-wrap">
+          <div className="flex items-center gap-4 text-sm text-slate-600 flex-wrap">
             <div className="flex items-center gap-1">
-              <MapPin size={14} className="text-purple-500 flex-shrink-0" />
+              <MapPin size={14} className="text-indigo-500 flex-shrink-0" />
               <span className="font-medium">{job.location}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Clock size={14} className="text-orange-500 flex-shrink-0" />
+              <Clock size={14} className="text-violet-500 flex-shrink-0" />
               <span className="font-medium">{job.type} • {job.workType}</span>
             </div>
           </div>
 
           {/* Salary */}
           <div className="flex items-center gap-2">
-            <DollarSign size={16} className="text-green-500 flex-shrink-0" />
-            <span className="font-bold text-base text-green-700 dark:text-green-400">{formatSalary(job.salary)}</span>
+            <DollarSign size={16} className="text-emerald-500 flex-shrink-0" />
+            <span className="font-bold text-base text-emerald-700">{formatSalary(job.salary)}</span>
           </div>
 
           {/* Description Preview */}
           {job.description && (
-            <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2 leading-relaxed">
+            <p className="text-sm text-slate-700 line-clamp-2 leading-relaxed">
               {job.description}
             </p>
           )}
@@ -169,13 +169,13 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
               {job.benefits.slice(0, 3).map((benefit, index) => (
                 <span 
                   key={index}
-                  className="px-2 py-1 bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 text-xs font-medium rounded-full border border-blue-200"
+                  className="px-2 py-1 bg-gradient-to-r from-indigo-50 to-violet-50 text-indigo-700 text-xs font-medium rounded-full border border-indigo-200"
                 >
                   {benefit}
                 </span>
               ))}
               {job.benefits.length > 3 && (
-                <span className="px-2 py-1 bg-gray-50 text-gray-600 text-xs font-medium rounded-full border border-gray-200">
+                <span className="px-2 py-1 bg-slate-50 text-slate-600 text-xs font-medium rounded-full border border-slate-200">
                   +{job.benefits.length - 3}
                 </span>
               )}
@@ -184,8 +184,8 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700 relative z-10">
-          <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+        <div className="flex items-center justify-between pt-4 border-t border-slate-100 relative z-10">
+          <div className="flex items-center gap-4 text-xs text-slate-500">
             <div className="flex items-center gap-1">
               <Users size={12} />
               <span className="font-medium">{job.applicants} pelamar</span>
@@ -203,7 +203,7 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
                 e.stopPropagation();
                 onClick?.();
               }}
-              className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-all duration-200 flex items-center gap-1"
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition-all duration-200 flex items-center gap-1"
             >
               <Eye size={12} />
               Detail
@@ -213,7 +213,7 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
                 e.stopPropagation();
                 onApply?.();
               }}
-              className="px-4 py-1.5 bg-gradient-to-r from-purple-500 to-orange-500 hover:from-purple-600 hover:to-orange-600 text-white text-xs font-bold rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+              className="px-4 py-1.5 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white text-xs font-bold rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
             >
               Lamar Sekarang
             </button>
@@ -221,7 +221,7 @@ export default function EnhancedJobCard({ job, onClick, onSave, onApply }: Enhan
         </div>
 
         {/* Hover overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"></div>
       </div>
     </div>
   );

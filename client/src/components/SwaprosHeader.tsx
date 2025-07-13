@@ -68,14 +68,14 @@ export default function SwaprosHeader({
           <div className="flex items-center gap-6">
             {showSearch && (
               <div className="relative group">
-                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-white/70 group-hover:text-white transition-all group-hover:scale-110" />
+                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 h-6 w-6 text-slate-500 group-hover:text-slate-600 transition-all group-hover:scale-110" />
                 <input 
                   type="text"
                   placeholder="Cari pekerjaan impian..."
-                  className="w-96 glass-effect border border-white/40 rounded-3xl pl-14 pr-6 py-4 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/60 focus:glow-purple transition-all duration-500 font-medium"
+                  className="w-96 glass-effect border border-slate-300 rounded-2xl pl-14 pr-6 py-4 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 font-medium"
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-orange-500 rounded-full flex items-center justify-center ripple-effect">
+                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full flex items-center justify-center">
                     <span className="text-white text-xs font-bold">🔍</span>
                   </div>
                 </div>
@@ -83,22 +83,22 @@ export default function SwaprosHeader({
             )}
             
             {showNotifications && (
-              <button className="relative p-4 glass-effect rounded-3xl hover:glow-orange transition-all duration-500 group magnetic">
-                <Bell className="h-7 w-7 text-white group-hover:scale-125 transition-transform" />
-                <div className="absolute -top-3 -right-3 h-7 w-7 bg-gradient-to-r from-orange-400 to-red-500 rounded-full text-xs flex items-center justify-center text-white font-black shadow-2xl morphing-blob">3</div>
+              <button className="relative p-4 glass-effect rounded-2xl hover:shadow-lg transition-all duration-300 group">
+                <Bell className="h-6 w-6 text-slate-600 group-hover:text-slate-800 group-hover:scale-110 transition-all" />
+                <div className="absolute -top-2 -right-2 h-6 w-6 bg-gradient-to-r from-orange-500 to-red-500 rounded-full text-xs flex items-center justify-center text-white font-bold shadow-lg">3</div>
               </button>
             )}
             
-            <div className="flex items-center gap-4 glass-effect rounded-3xl px-6 py-3 border border-white/40 magnetic tilt-effect">
-              <div className="w-12 h-12 bg-gradient-to-br from-white via-purple-100 to-orange-100 rounded-2xl flex items-center justify-center shadow-2xl floating">
-                <User className="h-6 w-6 text-purple-600" />
+            <div className="flex items-center gap-4 glass-effect rounded-2xl px-6 py-3 border border-slate-200">
+              <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-violet-100 rounded-xl flex items-center justify-center shadow-lg">
+                <User className="h-6 w-6 text-indigo-600" />
               </div>
               <div>
-                <span className="font-black text-white text-lg block">
+                <span className="font-bold text-slate-800 text-lg block">
                   {userRole === 'admin' ? 'Admin Panel' : 'Kandidat'}
                 </span>
-                <span className="text-sm text-white/80 font-medium">
-                  {userRole === 'admin' ? 'Super User 👑' : 'Job Seeker 🚀'}
+                <span className="text-sm text-slate-600 font-medium">
+                  {userRole === 'admin' ? 'Super User' : 'Job Seeker'}
                 </span>
               </div>
             </div>
@@ -107,15 +107,15 @@ export default function SwaprosHeader({
         
         {/* Page Title and Subtitle */}
         <div className="animate-fade-in">
-          <h2 className="text-5xl font-black mb-3 text-white drop-shadow-2xl text-animate-gradient">{title}</h2>
+          <h2 className="text-4xl font-bold mb-3 text-slate-800">{title}</h2>
           {subtitle && (
-            <p className="text-white/90 text-xl font-bold tracking-wide">{subtitle}</p>
+            <p className="text-slate-600 text-lg font-medium tracking-wide">{subtitle}</p>
           )}
         </div>
       </div>
       
       {/* Bottom gradient decoration */}
-      <div className="h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-orange-400 animate-pulse"></div>
+      <div className="h-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500"></div>
     </div>
   );
 }
