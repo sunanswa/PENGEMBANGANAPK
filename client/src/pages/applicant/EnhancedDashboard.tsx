@@ -118,32 +118,32 @@ export default function EnhancedDashboard() {
 
   const renderDashboard = () => (
     <div className="space-y-6">
-      {/* Professional Welcome Section */}
-      <div className="card-enhanced p-8 mb-6">
+      {/* Welcome Section */}
+      <div className="card-enhanced p-6 mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Selamat Datang, John!</h2>
-            <p className="text-gray-600 mt-2 text-lg">Mari temukan pekerjaan impian Anda bersama SWAPRO</p>
+            <h2 className="text-2xl font-bold text-slate-800">Selamat Datang, John!</h2>
+            <p className="text-slate-600 mt-2 text-lg">Mari temukan pekerjaan impian Anda bersama SWAPRO</p>
             <div className="flex items-center gap-2 mt-3">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-gray-500 text-sm font-medium">Profil Aktif</span>
+              <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+              <span className="text-slate-500 text-sm font-medium">Profil Aktif</span>
             </div>
           </div>
-          <div className="text-right glass-effect rounded-xl p-4 border border-gray-200">
-            <div className="text-sm text-gray-600 font-medium">Kelengkapan Profil</div>
-            <div className="text-3xl font-bold text-purple-600 mt-1">{profileCompletion}%</div>
-            <div className="text-xs text-gray-500">Hampir Sempurna!</div>
+          <div className="text-right glass-effect rounded-xl p-4 border border-slate-200">
+            <div className="text-sm text-slate-600 font-medium">Kelengkapan Profil</div>
+            <div className="text-3xl font-bold text-indigo-600 mt-1">{profileCompletion}%</div>
+            <div className="text-xs text-slate-500">Hampir Sempurna!</div>
           </div>
         </div>
         
         <div className="mt-6 relative">
-          <div className="bg-gray-200 rounded-full h-3 overflow-hidden">
+          <div className="bg-slate-200 rounded-full h-3 overflow-hidden">
             <div 
-              className="bg-gradient-to-r from-purple-500 to-orange-500 rounded-full h-3 transition-all duration-700"
+              className="bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full h-3 transition-all duration-700"
               style={{ width: `${profileCompletion}%` }}
             />
           </div>
-          <div className="absolute -top-1 right-0 w-5 h-5 bg-gradient-to-r from-purple-500 to-orange-500 rounded-full flex items-center justify-center shadow-md">
+          <div className="absolute -top-1 right-0 w-5 h-5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full flex items-center justify-center shadow-md">
             <span className="text-white text-xs font-bold">✓</span>
           </div>
         </div>
@@ -154,15 +154,15 @@ export default function EnhancedDashboard() {
         <div className="card-enhanced p-6 group hover:shadow-lg transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-semibold">Total Lamaran</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2 group-hover:text-blue-600 transition-colors">{jobStats.totalApplications}</p>
+              <p className="text-sm text-slate-600 font-semibold">Total Lamaran</p>
+              <p className="text-3xl font-bold text-slate-800 mt-2 group-hover:text-blue-600 transition-colors">{jobStats.totalApplications}</p>
               <p className="text-xs text-blue-600 mt-1 font-medium">+3 bulan ini</p>
             </div>
             <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
               <Briefcase className="h-8 w-8 text-white" />
             </div>
           </div>
-          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full w-3/4"></div>
           </div>
         </div>
@@ -170,48 +170,48 @@ export default function EnhancedDashboard() {
         <div className="card-enhanced p-6 group hover:shadow-lg transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-semibold">Dalam Proses</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2 group-hover:text-orange-600 transition-colors">{jobStats.pending}</p>
-              <p className="text-xs text-orange-600 mt-1 font-medium">Menunggu review</p>
+              <p className="text-sm text-slate-600 font-semibold">Dalam Proses</p>
+              <p className="text-3xl font-bold text-slate-800 mt-2 group-hover:text-amber-600 transition-colors">{jobStats.pending}</p>
+              <p className="text-xs text-amber-600 mt-1 font-medium">Menunggu review</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
               <Clock className="h-8 w-8 text-white" />
             </div>
           </div>
-          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-orange-500 to-orange-600 rounded-full w-1/2"></div>
+          <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full w-1/2"></div>
           </div>
         </div>
 
         <div className="card-enhanced p-6 group hover:shadow-lg transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-semibold">Interview</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2 group-hover:text-purple-600 transition-colors">{jobStats.interviews}</p>
-              <p className="text-xs text-purple-600 mt-1 font-medium">Terjadwal</p>
+              <p className="text-sm text-slate-600 font-semibold">Interview</p>
+              <p className="text-3xl font-bold text-slate-800 mt-2 group-hover:text-violet-600 transition-colors">{jobStats.interviews}</p>
+              <p className="text-xs text-violet-600 mt-1 font-medium">Terjadwal</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
               <Calendar className="h-8 w-8 text-white" />
             </div>
           </div>
-          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-full w-2/3"></div>
+          <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-violet-500 to-purple-500 rounded-full w-2/3"></div>
           </div>
         </div>
 
         <div className="card-enhanced p-6 group hover:shadow-lg transition-all">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-semibold">Diterima</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2 group-hover:text-green-600 transition-colors">{jobStats.accepted}</p>
-              <p className="text-xs text-green-600 mt-1 font-medium">Selamat!</p>
+              <p className="text-sm text-slate-600 font-semibold">Diterima</p>
+              <p className="text-3xl font-bold text-slate-800 mt-2 group-hover:text-emerald-600 transition-colors">{jobStats.accepted}</p>
+              <p className="text-xs text-emerald-600 mt-1 font-medium">Selamat!</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-lg">
               <CheckCircle className="h-8 w-8 text-white" />
             </div>
           </div>
-          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-green-500 to-green-600 rounded-full w-4/5"></div>
+          <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-emerald-500 to-green-500 rounded-full w-4/5"></div>
           </div>
         </div>
       </div>
@@ -303,14 +303,8 @@ export default function EnhancedDashboard() {
         return <ProfilePage />;
       default:
         return (
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-100 relative overflow-hidden">
-            <div className="absolute inset-0 gradient-mesh opacity-50"></div>
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/60 via-transparent to-white/60"></div>
-            
-            {/* Floating Background Elements */}
-            <div className="absolute top-20 right-20 w-64 h-64 glow-purple rounded-full blur-3xl morphing-blob opacity-20"></div>
-            <div className="absolute bottom-20 left-20 w-48 h-48 glow-orange rounded-full blur-2xl parallax-float opacity-30"></div>
-            <div className="absolute top-40 left-1/2 w-32 h-32 glow-cyan rounded-full blur-xl floating opacity-25"></div>
+          <div className="min-h-screen bg-gradient-to-br from-gray-50 via-slate-50 to-blue-50 relative">
+            <div className="absolute inset-0 gradient-mesh opacity-30"></div>
             
             {/* SWAPRO Header */}
             <SwaprosHeader 
@@ -321,32 +315,32 @@ export default function EnhancedDashboard() {
             />
             
             <div className="relative z-10 p-6 pb-24">
-              {/* Enhanced Tab Navigation */}
-              <div className="flex space-x-2 mb-8 glass-effect rounded-2xl p-2 border-2 border-purple-200/50">
+              {/* Clean Tab Navigation */}
+              <div className="flex space-x-1 mb-6 glass-effect rounded-xl p-1 border border-slate-200">
                 <button
                   onClick={() => setActiveTab('dashboard')}
-                  className={`flex-1 py-4 px-6 rounded-xl transition-all duration-500 font-bold text-sm uppercase tracking-widest ${
+                  className={`flex-1 py-3 px-4 rounded-lg transition-all duration-300 font-semibold text-sm ${
                     activeTab === 'dashboard'
-                      ? 'glass-effect text-purple-600 glow-purple border-2 border-purple-300/50 shadow-xl'
-                      : 'text-gray-600 hover:text-purple-600 hover:glow-purple hover:bg-purple-50'
+                      ? 'bg-white text-indigo-600 shadow-md border border-indigo-100'
+                      : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
                   }`}
                 >
-                  <div className="flex items-center justify-center space-x-3">
-                    <Target className="h-5 w-5" />
-                    <span>OVERVIEW</span>
+                  <div className="flex items-center justify-center space-x-2">
+                    <Target className="h-4 w-4" />
+                    <span>Overview</span>
                   </div>
                 </button>
                 <button
                   onClick={() => setActiveTab('jobs')}
-                  className={`flex-1 py-4 px-6 rounded-xl transition-all duration-500 font-bold text-sm uppercase tracking-widest ${
+                  className={`flex-1 py-3 px-4 rounded-lg transition-all duration-300 font-semibold text-sm ${
                     activeTab === 'jobs'
-                      ? 'glass-effect text-purple-600 glow-purple border-2 border-purple-300/50 shadow-xl'
-                      : 'text-gray-600 hover:text-purple-600 hover:glow-purple hover:bg-purple-50'
+                      ? 'bg-white text-indigo-600 shadow-md border border-indigo-100'
+                      : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
                   }`}
                 >
-                  <div className="flex items-center justify-center space-x-3">
-                    <Briefcase className="h-5 w-5" />
-                    <span>PEKERJAAN</span>
+                  <div className="flex items-center justify-center space-x-2">
+                    <Briefcase className="h-4 w-4" />
+                    <span>Pekerjaan</span>
                   </div>
                 </button>
               </div>
