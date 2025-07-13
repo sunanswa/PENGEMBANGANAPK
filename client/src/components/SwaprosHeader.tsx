@@ -19,30 +19,21 @@ export default function SwaprosHeader({
 }: SwaprosHeaderProps) {
   return (
     <div className="relative overflow-hidden">
-      {/* Cyberpunk Neon Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-black">
-        <div className="absolute inset-0 gradient-mesh opacity-60"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/20 to-pink-500/10"></div>
+      {/* Professional Clean Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+        <div className="absolute inset-0 gradient-mesh opacity-40"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-transparent to-white/80"></div>
         
-        {/* Floating Neon Orbs */}
-        <div className="absolute top-20 right-32 w-64 h-64 glow-cyan rounded-full blur-3xl morphing-blob opacity-30"></div>
-        <div className="absolute bottom-20 left-32 w-48 h-48 glow-pink rounded-full blur-2xl parallax-float opacity-40"></div>
-        <div className="absolute top-32 left-1/2 w-32 h-32 glow-orange rounded-full blur-xl floating opacity-50"></div>
+        {/* Subtle Floating Elements */}
+        <div className="absolute top-20 right-32 w-32 h-32 bg-purple-100 rounded-full blur-3xl opacity-30"></div>
+        <div className="absolute bottom-20 left-32 w-24 h-24 bg-orange-100 rounded-full blur-2xl opacity-40"></div>
         
-        {/* Matrix-style Grid Pattern */}
-        <div className="absolute inset-0 opacity-10">
+        {/* Professional Grid Pattern */}
+        <div className="absolute inset-0 opacity-5">
           <div className="w-full h-full" style={{
-            backgroundImage: `linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '20px 20px'
+            backgroundImage: `linear-gradient(rgba(147, 51, 234, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(147, 51, 234, 0.2) 1px, transparent 1px)`,
+            backgroundSize: '32px 32px'
           }}></div>
-        </div>
-        
-        {/* Scanning Lines */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50 animate-pulse" 
-               style={{ top: '30%', animation: 'scanLine 4s ease-in-out infinite' }}></div>
-          <div className="absolute w-full h-1 bg-gradient-to-r from-transparent via-pink-400 to-transparent opacity-30" 
-               style={{ top: '70%', animation: 'scanLine 6s ease-in-out infinite reverse' }}></div>
         </div>
       </div>
       
@@ -53,28 +44,23 @@ export default function SwaprosHeader({
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-6">
             <div className="relative group">
-              <div className="w-24 h-24 glass-effect rounded-3xl flex items-center justify-center shadow-2xl border-2 border-cyan-400/60 floating magnetic tilt-effect glow-cyan">
+              <div className="w-20 h-20 glass-effect rounded-2xl flex items-center justify-center shadow-lg border border-gray-200">
                 <img 
                   src={swaproLogo} 
                   alt="SWAPRO" 
-                  className="w-14 h-14 object-contain transition-all group-hover:scale-125 group-hover:rotate-12 filter drop-shadow-lg"
+                  className="w-12 h-12 object-contain transition-transform group-hover:scale-110"
                 />
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-cyan-400/20 to-purple-400/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
-              <div className="absolute -top-4 -right-4 w-10 h-10 bg-gradient-to-r from-pink-500 to-cyan-500 rounded-full morphing-blob shadow-2xl flex items-center justify-center glow-pink">
-                <span className="text-white text-sm font-black">⚡</span>
-              </div>
-              <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full floating glow-orange">
-                <span className="text-white text-xs font-bold flex items-center justify-center w-full h-full">★</span>
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-purple-500 to-orange-500 rounded-full shadow-lg flex items-center justify-center">
+                <span className="text-white text-xs font-bold">✓</span>
               </div>
             </div>
-            <div className="animate-scale-in">
-              <h1 className="text-4xl font-black text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text drop-shadow-2xl animate-pulse">PT SWAPRO</h1>
-              <p className="text-cyan-100 text-base font-bold mt-2 tracking-widest uppercase glow-cyan">Smart Workforce Analytics & Professional Recruitment Operations</p>
-              <div className="flex items-center gap-2 mt-1">
-                <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-                <span className="text-cyan-300 text-xs font-mono">SYSTEM ONLINE</span>
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">PT SWAPRO</h1>
+              <p className="text-gray-600 text-sm font-medium mt-1">Smart Workforce Analytics & Professional Recruitment Operations</p>
+              <div className="flex items-center gap-2 mt-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-gray-500 text-xs font-medium">System Active</span>
               </div>
             </div>
           </div>
