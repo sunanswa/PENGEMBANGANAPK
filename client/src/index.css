@@ -65,7 +65,126 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
+  
+  /* Custom scrollbar dengan warna SWAPRO */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #8B5CF6, #F97316);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #7C3AED, #EA580C);
+  }
+}
+
+@layer components {
+  /* SWAPRO Brand Colors & Styles */
+  .swapro-gradient {
+    background: linear-gradient(135deg, #8B5CF6 0%, #F97316 100%);
+  }
+  
+  .swapro-gradient-subtle {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%);
+  }
+  
+  .swapro-text-gradient {
+    background: linear-gradient(135deg, #8B5CF6 0%, #F97316 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .swapro-border {
+    border-image: linear-gradient(135deg, #8B5CF6 0%, #F97316 100%) 1;
+  }
+  
+  /* Enhanced Card Styles */
+  .card-enhanced {
+    @apply bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300;
+  }
+  
+  .card-elevated {
+    @apply card-enhanced shadow-lg hover:shadow-xl transform hover:-translate-y-1;
+  }
+  
+  /* Button Variants dengan SWAPRO Branding */
+  .btn-swapro {
+    @apply swapro-gradient text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5;
+  }
+  
+  .btn-swapro-outline {
+    @apply border-2 border-purple-500 text-purple-500 font-semibold py-3 px-6 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200;
+  }
+  
+  .btn-swapro-ghost {
+    @apply text-purple-600 font-semibold py-2 px-4 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-200;
+  }
+  
+  /* Loading Animation */
+  .animate-pulse-soft {
+    animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes pulse-soft {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  /* Glowing Effect untuk highlight */
+  .glow-swapro {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  
+  /* Gradient Text Animation */
+  .text-animate-gradient {
+    background: linear-gradient(45deg, #8B5CF6, #F97316, #3B82F6, #8B5CF6);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient 3s ease infinite;
+  }
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 @layer utilities {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import JobCard from '@/components/JobCard';
+import EnhancedJobCard from '@/components/EnhancedJobCard';
+import SwaprosHeader from '@/components/SwaprosHeader';
 import { 
   Search, 
   Filter, 
@@ -427,17 +429,18 @@ export default function EnhancedJobListings() {
   };
 
   return (
-    <div className="p-4 pb-20">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Cari Pekerjaan</h1>
-          <p className="text-gray-600 dark:text-gray-400">Temukan pekerjaan impian Anda</p>
-        </div>
-      </div>
-
-      {/* Search and Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
+      {/* SWAPRO Header */}
+      <SwaprosHeader 
+        title="Cari Pekerjaan" 
+        subtitle="Temukan pekerjaan impian Anda dengan SWAPRO"
+        showSearch={true}
+        userRole="applicant"
+      />
+      
+      <div className="p-4 pb-20">
+        {/* Search and Filters */}
+      <div className="card-enhanced p-6 mb-8 backdrop-blur-sm bg-white/90 dark:bg-gray-800/90">
         <div className="flex space-x-4 mb-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -446,12 +449,12 @@ export default function EnhancedJobListings() {
               placeholder="Cari pekerjaan atau perusahaan..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white transition-all duration-200"
             />
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center space-x-2"
+            className="btn-swapro-outline flex items-center space-x-2"
           >
             <SlidersHorizontal className="h-4 w-4" />
             <span>Filter</span>
@@ -539,7 +542,7 @@ export default function EnhancedJobListings() {
           </div>
         ) : (
           filteredJobs.map((job) => (
-            <JobCard 
+            <EnhancedJobCard 
               key={job.id}
               job={{
                 id: job.id.toString(),
@@ -557,9 +560,13 @@ export default function EnhancedJobListings() {
                 requirements: job.requirements,
                 description: job.description,
                 rating: 4.5,
-                featured: job.saved
+                featured: job.saved,
+                match: job.match,
+                saved: job.saved
               }}
               onClick={() => setSelectedJob(job)}
+              onSave={() => handleSaveJob(job.id)}
+              onApply={() => setSelectedJob(job)}
             />
           ))
         )}
@@ -574,8 +581,9 @@ export default function EnhancedJobListings() {
         </div>
       )}
 
-      {/* Job Detail Modal */}
-      {renderJobDetail()}
+        {/* Job Detail Modal */}
+        {renderJobDetail()}
+      </div>
     </div>
   );
 }

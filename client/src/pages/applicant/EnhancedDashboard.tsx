@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import EnhancedJobListings from './EnhancedJobListings';
+import SwaprosHeader from '@/components/SwaprosHeader';
+import SwaprosBottomNav from '@/components/SwaprosBottomNav';
 import { useSync } from '@/hooks/useSync';
 import { 
   Briefcase, 
@@ -245,24 +247,17 @@ export default function EnhancedDashboard() {
   );
 
   return (
-    <div className="p-4 pb-20">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Dashboard
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Kelola karir dan lamaran Anda
-          </p>
-        </div>
-        <div className="relative">
-          <Bell className="h-6 w-6 text-gray-600 dark:text-gray-400" />
-          <div className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></div>
-        </div>
-      </div>
-
-      {/* Tab Navigation */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
+      {/* SWAPRO Header */}
+      <SwaprosHeader 
+        title="Dashboard SWAPRO" 
+        subtitle="Kelola karir dan lamaran Anda dengan mudah"
+        showSearch={false}
+        userRole="applicant"
+      />
+      
+      <div className="p-4 pb-20">
+        {/* Tab Navigation */}
       <div className="flex space-x-1 mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
         <button
           onClick={() => setActiveTab('dashboard')}
@@ -292,8 +287,9 @@ export default function EnhancedDashboard() {
         </button>
       </div>
 
-      {/* Content */}
-      {activeTab === 'dashboard' ? renderDashboard() : renderJobRecommendations()}
+        {/* Content */}
+        {activeTab === 'dashboard' ? renderDashboard() : renderJobRecommendations()}
+      </div>
     </div>
   );
 }
