@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import JobCard from '@/components/JobCard';
 import { 
   Search, 
   Filter, 
@@ -60,32 +61,32 @@ export default function EnhancedJobListings() {
   const jobs: Job[] = [
     {
       id: 1,
-      title: "Senior Software Developer",
-      company: "PT Tech Solutions",
+      title: "Sales Promotion Boy (SPB)",
+      company: "PT BESS TREND INDONESIA",
       companyLogo: "🏢",
-      location: "Jakarta",
-      salary: "Rp 15.000.000 - Rp 20.000.000",
+      location: "Kota Adm. Jakarta Selatan, DKI J...",
+      salary: "Rp 2.500.000 - Rp 3.800.000",
       type: "Full-time",
-      experience: "3-5 tahun",
+      experience: "SMP",
       postedDate: "2 hari lalu",
-      applicants: 45,
+      applicants: 800,
       match: 92,
       saved: true,
       urgent: true,
-      description: "Kami mencari Senior Software Developer yang berpengalaman untuk bergabung dengan tim engineering kami. Anda akan bertanggung jawab untuk mengembangkan aplikasi web dan mobile yang inovatif.",
+      description: "Kami mencari Sales Promotion Boy yang energik untuk bergabung dengan tim sales kami. Anda akan bertanggung jawab untuk mempromosikan produk dan layanan perusahaan.",
       requirements: [
-        "Minimal 3 tahun pengalaman development",
-        "Menguasai React, Node.js, dan Python",
-        "Pengalaman dengan cloud platforms (AWS/GCP)",
-        "Familiar dengan metodologi Agile/Scrum"
+        "Minimal pendidikan SMP",
+        "Usia maksimal 25 tahun",
+        "Memiliki kendaraan pribadi (motor)",
+        "Komunikatif dan ramah"
       ],
       benefits: [
-        "Asuransi kesehatan premium",
-        "Bonus tahunan",
-        "Flexible working hours",
-        "Training & development budget"
+        "Walk-in Interview",
+        "800 Kuota Daftar",
+        "Bonus penjualan",
+        "Asuransi kesehatan"
       ],
-      skills: ["React", "Node.js", "Python", "AWS", "Docker"]
+      skills: ["Sales", "Communication", "Marketing", "Customer Service"]
     },
     {
       id: 2,
@@ -537,7 +538,30 @@ export default function EnhancedJobListings() {
             </p>
           </div>
         ) : (
-          filteredJobs.map(renderJobCard)
+          filteredJobs.map((job) => (
+            <JobCard 
+              key={job.id}
+              job={{
+                id: job.id.toString(),
+                title: job.title,
+                company: job.company,
+                companyLogo: job.companyLogo,
+                location: job.location,
+                salary: job.salary,
+                type: job.type as 'Full-Time' | 'Part-Time' | 'Contract' | 'Internship',
+                workType: 'Onsite' as 'Onsite' | 'Remote' | 'Hybrid',
+                postedDate: job.postedDate,
+                applicants: job.applicants,
+                urgency: job.urgent ? 'high' : 'medium',
+                benefits: job.benefits,
+                requirements: job.requirements,
+                description: job.description,
+                rating: 4.5,
+                featured: job.saved
+              }}
+              onClick={() => setSelectedJob(job)}
+            />
+          ))
         )}
       </div>
 
