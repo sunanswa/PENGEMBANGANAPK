@@ -139,38 +139,47 @@ export default function ApplicationsPage() {
       />
       
       <div className="p-4 pb-20">
-        {/* Status Statistics */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-          {Object.entries(statusCounts).map(([status, count]) => (
+        {/* Revolutionary Status Statistics */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          {Object.entries(statusCounts).map(([status, count], index) => (
             <button
               key={status}
               onClick={() => setStatusFilter(status)}
-              className={`p-3 rounded-xl text-center transition-all duration-200 ${
+              style={{ animationDelay: `${index * 0.1}s` }}
+              className={`card-enhanced p-4 text-center transition-all duration-500 animate-scale-in magnetic ripple-effect ${
                 statusFilter === status 
-                ? 'bg-purple-100 border-2 border-purple-500 text-purple-700' 
-                : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
+                ? 'glow-purple border-2 border-purple-500 text-purple-700 scale-105' 
+                : 'text-gray-700 hover:glow-orange hover:scale-105'
               }`}
             >
-              <div className="text-lg font-bold">{count}</div>
-              <div className="text-xs capitalize">
+              <div className="text-2xl font-black">{count}</div>
+              <div className="text-xs capitalize font-bold">
                 {status === 'all' ? 'Semua' : getStatusText(status)}
               </div>
+              {statusFilter === status && (
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-2 bg-gradient-to-r from-purple-500 to-orange-500 rounded-full"></div>
+              )}
             </button>
           ))}
         </div>
 
-        {/* Search and Filter */}
-        <div className="card-enhanced p-4 mb-6">
-          <div className="flex gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+        {/* Ultra Modern Search and Filter */}
+        <div className="card-enhanced p-6 mb-8 tilt-effect magnetic">
+          <div className="flex gap-6">
+            <div className="flex-1 relative group">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400 group-hover:text-purple-500 transition-all group-hover:scale-110" />
               <input
                 type="text"
                 placeholder="Cari berdasarkan posisi atau perusahaan..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="w-full pl-12 pr-6 py-4 glass-effect border-2 border-white/30 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:glow-purple transition-all duration-500 font-medium text-gray-700"
               />
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-orange-500 rounded-full flex items-center justify-center ripple-effect">
+                  <span className="text-white text-xs font-bold">🔍</span>
+                </div>
+              </div>
             </div>
             <select
               value={statusFilter}

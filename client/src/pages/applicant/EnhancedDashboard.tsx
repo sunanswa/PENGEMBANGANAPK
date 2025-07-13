@@ -118,78 +118,103 @@ export default function EnhancedDashboard() {
 
   const renderDashboard = () => (
     <div className="space-y-6">
-      {/* Welcome Section with Modern Design */}
-      <div className="card-enhanced p-8 bg-gradient-to-r from-purple-600 via-purple-500 to-orange-500 text-white animate-slide-in">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold drop-shadow-lg">Selamat Datang, John!</h2>
-            <p className="text-purple-100 mt-2 font-medium">Mari temukan pekerjaan impian Anda bersama SWAPRO</p>
+      {/* Welcome Section with Ultra Modern Design */}
+      <div className="relative overflow-hidden rounded-3xl p-8 animate-scale-in tilt-effect">
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500">
+          <div className="absolute inset-0 gradient-mesh"></div>
+          <div className="absolute top-4 right-4 w-32 h-32 bg-white/10 rounded-full blur-2xl morphing-blob"></div>
+          <div className="absolute bottom-4 left-4 w-24 h-24 bg-orange-400/20 rounded-full blur-xl parallax-float"></div>
+        </div>
+        
+        <div className="relative z-10 flex items-center justify-between">
+          <div className="animate-fade-in">
+            <h2 className="text-3xl font-bold text-white drop-shadow-2xl text-animate-gradient">Selamat Datang, John!</h2>
+            <p className="text-white/90 mt-3 font-medium text-lg">Mari temukan pekerjaan impian Anda bersama SWAPRO</p>
           </div>
-          <div className="text-right">
-            <div className="text-sm text-purple-100 font-medium">Profil Completion</div>
-            <div className="text-3xl font-bold drop-shadow-lg">{profileCompletion}%</div>
-            <div className="text-xs text-purple-200">Hampir sempurna!</div>
+          <div className="text-right glass-effect rounded-2xl p-4">
+            <div className="text-sm text-white/80 font-medium">Profil Completion</div>
+            <div className="text-4xl font-bold text-white drop-shadow-lg">{profileCompletion}%</div>
+            <div className="text-xs text-white/70">Almost Perfect!</div>
           </div>
         </div>
-        <div className="mt-6 bg-white/20 rounded-full h-3 shadow-inner">
-          <div 
-            className="bg-gradient-to-r from-white to-orange-200 rounded-full h-3 transition-all duration-500 shadow-lg"
-            style={{ width: `${profileCompletion}%` }}
-          />
+        
+        <div className="mt-8 relative">
+          <div className="bg-white/20 rounded-full h-4 backdrop-blur-sm border border-white/30">
+            <div 
+              className="bg-gradient-to-r from-white via-yellow-200 to-orange-300 rounded-full h-4 transition-all duration-700 glow-orange shadow-lg"
+              style={{ width: `${profileCompletion}%` }}
+            />
+          </div>
+          <div className="absolute -top-2 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold text-sm shadow-lg floating">
+            ✨
+          </div>
         </div>
       </div>
 
-      {/* Quick Stats with Modern Design */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div className="card-enhanced p-6 animate-slide-in">
+      {/* Revolutionary Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="card-enhanced p-6 animate-scale-in tilt-effect magnetic ripple-effect group">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-medium">Total Lamaran</p>
-              <p className="text-3xl font-bold text-gray-900 mt-2">{jobStats.totalApplications}</p>
-              <p className="text-xs text-blue-600 mt-1">+3 bulan ini</p>
+              <p className="text-sm text-gray-600 font-bold">Total Lamaran</p>
+              <p className="text-4xl font-black text-gray-900 mt-3 group-hover:text-blue-600 transition-colors">{jobStats.totalApplications}</p>
+              <p className="text-xs text-blue-600 mt-2 font-semibold">+3 bulan ini 📈</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg floating">
-              <Briefcase className="h-8 w-8 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-purple">
+              <Briefcase className="h-10 w-10 text-white" />
             </div>
+          </div>
+          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full w-3/4 animate-pulse"></div>
           </div>
         </div>
 
-        <div className="card-enhanced p-6 animate-slide-in">
+        <div className="card-enhanced p-6 animate-scale-in tilt-effect magnetic ripple-effect group">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-medium">Dalam Proses</p>
-              <p className="text-3xl font-bold text-yellow-600 mt-2">{jobStats.pending}</p>
-              <p className="text-xs text-yellow-600 mt-1">Menunggu review</p>
+              <p className="text-sm text-gray-600 font-bold">Dalam Proses</p>
+              <p className="text-4xl font-black text-gray-900 mt-3 group-hover:text-yellow-600 transition-colors">{jobStats.pending}</p>
+              <p className="text-xs text-yellow-600 mt-2 font-semibold">Menunggu review ⏳</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl flex items-center justify-center shadow-lg floating">
-              <Clock className="h-8 w-8 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 via-orange-500 to-red-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-orange">
+              <Clock className="h-10 w-10 text-white" />
             </div>
+          </div>
+          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full w-1/2 animate-pulse"></div>
           </div>
         </div>
 
-        <div className="card-enhanced p-6 animate-slide-in">
+        <div className="card-enhanced p-6 animate-scale-in tilt-effect magnetic ripple-effect group">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-medium">Interview</p>
-              <p className="text-3xl font-bold text-purple-600 mt-2">{jobStats.interviews}</p>
-              <p className="text-xs text-purple-600 mt-1">Terjadwal</p>
+              <p className="text-sm text-gray-600 font-bold">Interview</p>
+              <p className="text-4xl font-black text-gray-900 mt-3 group-hover:text-purple-600 transition-colors">{jobStats.interviews}</p>
+              <p className="text-xs text-purple-600 mt-2 font-semibold">Terjadwal 🎯</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg floating">
-              <Calendar className="h-8 w-8 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-purple">
+              <Calendar className="h-10 w-10 text-white" />
             </div>
+          </div>
+          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full w-2/3 animate-pulse"></div>
           </div>
         </div>
 
-        <div className="card-enhanced p-6 animate-slide-in">
+        <div className="card-enhanced p-6 animate-scale-in tilt-effect magnetic ripple-effect group">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 font-medium">Diterima</p>
-              <p className="text-3xl font-bold text-green-600 mt-2">{jobStats.accepted}</p>
-              <p className="text-xs text-green-600 mt-1">Selamat!</p>
+              <p className="text-sm text-gray-600 font-bold">Diterima</p>
+              <p className="text-4xl font-black text-gray-900 mt-3 group-hover:text-green-600 transition-colors">{jobStats.accepted}</p>
+              <p className="text-xs text-green-600 mt-2 font-semibold">Selamat! 🎉</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg floating">
-              <CheckCircle className="h-8 w-8 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 rounded-3xl flex items-center justify-center shadow-2xl floating glow-orange">
+              <CheckCircle className="h-10 w-10 text-white" />
             </div>
+          </div>
+          <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-green-400 to-emerald-400 rounded-full w-4/5 animate-pulse"></div>
           </div>
         </div>
       </div>
