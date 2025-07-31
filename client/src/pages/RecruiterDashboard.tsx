@@ -120,24 +120,10 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   // Real-time updates
   const { lastUpdate } = useRealTimeUpdates();
 
-  // Advanced search hooks
-  const jobsSearch = useAdvancedSearch(syncedJobs, {
-    searchableFields: ['title', 'description', 'location'],
-    filterableFields: ['status', 'location'],
-    sortableFields: ['title', 'postedDate', 'status']
-  });
-
-  const applicationsSearch = useAdvancedSearch(syncedApplications, {
-    searchableFields: ['applicantName', 'jobTitle', 'applicantEmail'],
-    filterableFields: ['status', 'jobTitle'],
-    sortableFields: ['appliedAt', 'status', 'applicantName']
-  });
-
-  const candidatesSearch = useAdvancedSearch(syncedCandidates, {
-    searchableFields: ['name', 'email', 'skills'],
-    filterableFields: ['status', 'experience'],
-    sortableFields: ['name', 'appliedDate', 'status']
-  });
+  // Advanced search hooks with correct parameters
+  const jobsSearch = useAdvancedSearch(syncedJobs, 'jobs');
+  const applicationsSearch = useAdvancedSearch(syncedApplications, 'applications');
+  const candidatesSearch = useAdvancedSearch(syncedCandidates, 'candidates');
 
   // Clean data arrays for search (remove duplicates)
 
@@ -1237,7 +1223,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                         <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
                           <div className="flex items-center gap-1">
                             <Calendar size={14} />
-                            {new Date(job.postedDate || job.createdAt || Date.now()).toLocaleDateString('id-ID')}
+                            {new Date(job.postedDate || Date.now()).toLocaleDateString('id-ID')}
                           </div>
                           <div className="flex items-center gap-1">
                             <MapPin size={14} />
@@ -1247,10 +1233,10 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                             <Users size={14} />
                             {Math.floor(Math.random() * 50) + 10} pelamar
                           </div>
-                          {job.positionsNeeded && (
+                          {job.positions && (
                             <div className="flex items-center gap-1">
                               <Users size={14} />
-                              Butuh {job.positionsNeeded} orang
+                              Butuh {job.positions} orang
                             </div>
                           )}
                         </div>
@@ -1280,7 +1266,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                       <Eye size={16} />
                     </button>
                     <button
-                      onClick={() => handleEdit(job)}
+                      onClick={() => handleEdit(job as any)}
                       className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                       title="Edit"
                     >
@@ -2126,28 +2112,38 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Mobile Header */}
-          <MobileOptimizedHeader
-            title={sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
-            subtitle={
-              activeTab === 'overview' ? 'Dashboard dan statistik sistem rekrutmen SWAPRO' :
-              activeTab === 'jobs' ? 'Kelola dan pantau lowongan pekerjaan dengan mudah' :
-              activeTab === 'applicants' ? 'Data pelamar dan proses rekrutmen terkini' :
-              activeTab === 'interviews' ? 'Kelola jadwal dan proses interview kandidat' :
-              activeTab === 'screening' ? 'Assessment dan screening otomatis kandidat' :
-              activeTab === 'communication' ? 'Hub komunikasi email, SMS, dan WhatsApp' :
-              activeTab === 'analytics' ? 'Analisis mendalam dengan AI dan prediksi sukses kandidat' :
-              'Pengaturan sistem dan preferensi admin'
-            }
-            onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            isMobileMenuOpen={isMobileMenuOpen}
-            notificationCount={3}
-          />
+          {/* Unified Header - Responsive */}
+          <div className="bg-white shadow-sm border-b border-gray-100">
+            {/* Mobile Header */}
+            <div className="lg:hidden px-4 py-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                  >
+                    {isMobileMenuOpen ? <X size={20} /> : <Bell size={20} />}
+                  </button>
+                  <div>
+                    <h1 className="font-semibold text-gray-900 text-sm">{sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}</h1>
+                    <p className="text-xs text-gray-600 hidden sm:block">Dashboard dan statistik sistem rekrutmen SWAPRO</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <RealTimeIndicator lastUpdate={lastUpdate} />
+                  <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg relative">
+                    <Bell size={18} />
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
+                  </button>
+                </div>
+              </div>
+            </div>
 
-          {/* Desktop Header */}
-          <div className="hidden lg:block bg-white shadow-sm border-b border-gray-100 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
+            {/* Desktop Header */}
+            <div className="hidden lg:block px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div>
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-6 h-6 bg-blue-500 rounded-lg flex items-center justify-center">
                     {(() => {
@@ -2173,9 +2169,9 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                   {activeTab === 'analytics' && 'Analisis mendalam dengan AI dan prediksi sukses kandidat'}
                   {activeTab === 'settings' && 'Pengaturan sistem dan preferensi admin'}
                 </p>
-              </div>
-              
-              <div className="flex items-center gap-3">
+                </div>
+                
+                <div className="flex items-center gap-3">
                 {/* Real-time indicator */}
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-800 rounded-lg text-sm">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -2206,6 +2202,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                   <LogOut size={18} />
                   <span className="font-semibold text-sm">Logout</span>
                 </button>
+                </div>
               </div>
             </div>
           </div>
