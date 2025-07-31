@@ -391,7 +391,7 @@ class SyncStore {
 
   // Initialize with mock data
   initializeMockData() {
-    // Add mock jobs
+    // Add comprehensive mock jobs
     this.setJobs([
       {
         id: '1',
@@ -407,15 +407,75 @@ class SyncStore {
         match: 92,
         saved: true,
         urgent: true,
-        description: 'Looking for experienced software developer...',
+        description: 'Looking for experienced software developer to join our growing team...',
         requirements: ['3+ years experience', 'React expertise', 'Node.js knowledge'],
         benefits: ['Health insurance', 'Flexible hours', 'Remote work'],
         skills: ['React', 'Node.js', 'TypeScript'],
         status: 'active'
+      },
+      {
+        id: '2',
+        title: 'Frontend Developer',
+        company: 'PT Digital Indonesia',
+        companyLogo: '💻',
+        location: 'Bandung',
+        salary: 'Rp 8.000.000 - Rp 12.000.000',
+        type: 'Full-time',
+        experience: '1-3 tahun',
+        postedDate: '2025-07-08',
+        applicants: 32,
+        match: 88,
+        saved: false,
+        urgent: false,
+        description: 'Join our frontend development team...',
+        requirements: ['React/Vue.js', 'CSS/SCSS', 'JavaScript ES6+'],
+        benefits: ['Medical coverage', 'Annual bonus', 'Training budget'],
+        skills: ['React', 'Vue.js', 'CSS'],
+        status: 'active'
+      },
+      {
+        id: '3',
+        title: 'Data Scientist',
+        company: 'PT Analytics Pro',
+        companyLogo: '📊',
+        location: 'Surabaya',
+        salary: 'Rp 12.000.000 - Rp 18.000.000',
+        type: 'Full-time',
+        experience: '2-4 tahun',
+        postedDate: '2025-07-05',
+        applicants: 28,
+        match: 85,
+        saved: true,
+        urgent: true,
+        description: 'Looking for data scientist with machine learning expertise...',
+        requirements: ['Python/R', 'Machine Learning', 'SQL'],
+        benefits: ['Stock options', 'Remote work', 'Conference budget'],
+        skills: ['Python', 'Machine Learning', 'SQL'],
+        status: 'active'
+      },
+      {
+        id: '4',
+        title: 'UI/UX Designer',
+        company: 'PT Creative Studio',
+        companyLogo: '🎨',
+        location: 'Yogyakarta',
+        salary: 'Rp 7.000.000 - Rp 11.000.000',
+        type: 'Full-time',
+        experience: '2-4 tahun',
+        postedDate: '2025-07-03',
+        applicants: 19,
+        match: 82,
+        saved: false,
+        urgent: false,
+        description: 'Creative UI/UX designer needed for mobile and web projects...',
+        requirements: ['Figma/Sketch', 'User Research', 'Prototyping'],
+        benefits: ['Creative freedom', 'Flexible schedule', 'Design tools'],
+        skills: ['Figma', 'User Research', 'Prototyping'],
+        status: 'closed'
       }
     ]);
 
-    // Add mock applications
+    // Add comprehensive mock applications
     this.setApplications([
       {
         id: '1',
@@ -424,8 +484,8 @@ class SyncStore {
         company: 'PT Tech Solutions',
         companyLogo: '🏢',
         candidateId: 'candidate1',
-        candidateName: 'John Doe',
-        candidateEmail: 'john@example.com',
+        candidateName: 'Ahmad Rizki',
+        candidateEmail: 'ahmad.rizki@example.com',
         candidatePhone: '+62 812-3456-7890',
         appliedDate: '2025-07-10',
         status: 'interview',
@@ -435,29 +495,329 @@ class SyncStore {
         urgency: 'high',
         location: 'Jakarta',
         salary: 'Rp 15.000.000 - Rp 20.000.000'
+      },
+      {
+        id: '2',
+        jobId: '1',
+        jobTitle: 'Senior Software Developer',
+        company: 'PT Tech Solutions',
+        companyLogo: '🏢',
+        candidateId: 'candidate2',
+        candidateName: 'Siti Nurhaliza',
+        candidateEmail: 'siti.nurhaliza@example.com',
+        candidatePhone: '+62 813-7890-1234',
+        appliedDate: '2025-07-09',
+        status: 'submitted',
+        interviewDate: undefined,
+        interviewType: undefined,
+        lastUpdate: '2025-07-09',
+        urgency: 'medium',
+        location: 'Jakarta',
+        salary: 'Rp 15.000.000 - Rp 20.000.000'
+      },
+      {
+        id: '3',
+        jobId: '2',
+        jobTitle: 'Frontend Developer',
+        company: 'PT Digital Indonesia',
+        companyLogo: '💻',
+        candidateId: 'candidate3',
+        candidateName: 'Budi Santoso',
+        candidateEmail: 'budi.santoso@example.com',
+        candidatePhone: '+62 814-5678-9012',
+        appliedDate: '2025-07-08',
+        status: 'viewed',
+        interviewDate: undefined,
+        interviewType: undefined,
+        lastUpdate: '2025-07-11',
+        urgency: 'medium',
+        location: 'Bandung',
+        salary: 'Rp 8.000.000 - Rp 12.000.000'
+      },
+      {
+        id: '4',
+        jobId: '3',
+        jobTitle: 'Data Scientist',
+        company: 'PT Analytics Pro',
+        companyLogo: '📊',
+        candidateId: 'candidate4',
+        candidateName: 'Maya Kusuma',
+        candidateEmail: 'maya.kusuma@example.com',
+        candidatePhone: '+62 815-2345-6789',
+        appliedDate: '2025-07-07',
+        status: 'accepted',
+        interviewDate: '2025-07-12',
+        interviewType: 'onsite',
+        lastUpdate: '2025-07-13',
+        urgency: 'high',
+        location: 'Surabaya',
+        salary: 'Rp 12.000.000 - Rp 18.000.000'
+      },
+      {
+        id: '5',
+        jobId: '2',
+        jobTitle: 'Frontend Developer',
+        company: 'PT Digital Indonesia',
+        companyLogo: '💻',
+        candidateId: 'candidate5',
+        candidateName: 'Rina Dewi',
+        candidateEmail: 'rina.dewi@example.com',
+        candidatePhone: '+62 816-8901-2345',
+        appliedDate: '2025-07-06',
+        status: 'rejected',
+        interviewDate: '2025-07-10',
+        interviewType: 'phone',
+        lastUpdate: '2025-07-11',
+        urgency: 'low',
+        location: 'Bandung',
+        salary: 'Rp 8.000.000 - Rp 12.000.000'
       }
     ]);
 
-    // Add mock candidates
+    // Add comprehensive mock candidates
     this.setCandidates([
       {
         id: 'candidate1',
-        fullName: 'John Doe',
-        email: 'john@example.com',
+        fullName: 'Ahmad Rizki',
+        email: 'ahmad.rizki@example.com',
         phone: '+62 812-3456-7890',
         location: 'Jakarta, Indonesia',
-        profileCompletion: 85,
+        profileCompletion: 95,
         lastActive: '2025-07-12',
+        totalApplications: 8,
+        successfulApplications: 3,
+        skillScore: 92,
+        status: 'active',
+        experience: [
+          {
+            company: 'PT Software Jaya',
+            position: 'Software Developer',
+            duration: '2021-2024',
+            description: 'Full-stack development with React and Node.js'
+          }
+        ],
+        education: [
+          {
+            institution: 'Universitas Indonesia',
+            degree: 'S1 Teknik Informatika',
+            year: '2017-2021',
+            gpa: '3.75'
+          }
+        ],
+        skills: ['React', 'Node.js', 'TypeScript', 'PostgreSQL'],
+        documents: []
+      },
+      {
+        id: 'candidate2',
+        fullName: 'Siti Nurhaliza',
+        email: 'siti.nurhaliza@example.com',
+        phone: '+62 813-7890-1234',
+        location: 'Jakarta, Indonesia',
+        profileCompletion: 88,
+        lastActive: '2025-07-11',
         totalApplications: 5,
         successfulApplications: 2,
         skillScore: 87,
         status: 'active',
-        experience: [],
-        education: [],
-        skills: [],
+        experience: [
+          {
+            company: 'PT Digital Kreatif',
+            position: 'Junior Developer',
+            duration: '2022-2025',
+            description: 'Frontend development with Vue.js'
+          }
+        ],
+        education: [
+          {
+            institution: 'Institut Teknologi Bandung',
+            degree: 'S1 Sistem Informasi',
+            year: '2018-2022',
+            gpa: '3.65'
+          }
+        ],
+        skills: ['Vue.js', 'JavaScript', 'CSS', 'PHP'],
+        documents: []
+      },
+      {
+        id: 'candidate3',
+        fullName: 'Budi Santoso',
+        email: 'budi.santoso@example.com',
+        phone: '+62 814-5678-9012',
+        location: 'Bandung, Indonesia',
+        profileCompletion: 82,
+        lastActive: '2025-07-10',
+        totalApplications: 6,
+        successfulApplications: 1,
+        skillScore: 79,
+        status: 'active',
+        experience: [
+          {
+            company: 'PT Startup Tech',
+            position: 'Frontend Developer',
+            duration: '2023-2025',
+            description: 'React development for web applications'
+          }
+        ],
+        education: [
+          {
+            institution: 'Universitas Gadjah Mada',
+            degree: 'S1 Teknik Komputer',
+            year: '2019-2023',
+            gpa: '3.50'
+          }
+        ],
+        skills: ['React', 'JavaScript', 'HTML/CSS', 'Git'],
+        documents: []
+      },
+      {
+        id: 'candidate4',
+        fullName: 'Maya Kusuma',
+        email: 'maya.kusuma@example.com',
+        phone: '+62 815-2345-6789',
+        location: 'Surabaya, Indonesia',
+        profileCompletion: 96,
+        lastActive: '2025-07-13',
+        totalApplications: 4,
+        successfulApplications: 3,
+        skillScore: 94,
+        status: 'active',
+        experience: [
+          {
+            company: 'PT Data Analytics',
+            position: 'Data Analyst',
+            duration: '2021-2025',
+            description: 'Data analysis and machine learning projects'
+          }
+        ],
+        education: [
+          {
+            institution: 'Institut Teknologi Sepuluh Nopember',
+            degree: 'S1 Statistika',
+            year: '2017-2021',
+            gpa: '3.85'
+          }
+        ],
+        skills: ['Python', 'R', 'SQL', 'Machine Learning', 'Tableau'],
+        documents: []
+      },
+      {
+        id: 'candidate5',
+        fullName: 'Rina Dewi',
+        email: 'rina.dewi@example.com',
+        phone: '+62 816-8901-2345',
+        location: 'Bandung, Indonesia',
+        profileCompletion: 75,
+        lastActive: '2025-07-09',
+        totalApplications: 7,
+        successfulApplications: 1,
+        skillScore: 72,
+        status: 'active',
+        experience: [
+          {
+            company: 'PT Web Studio',
+            position: 'Junior Frontend Developer',
+            duration: '2023-2025',
+            description: 'Web development with basic frameworks'
+          }
+        ],
+        education: [
+          {
+            institution: 'Universitas Padjadjaran',
+            degree: 'S1 Teknik Informatika',
+            year: '2019-2023',
+            gpa: '3.40'
+          }
+        ],
+        skills: ['HTML', 'CSS', 'JavaScript', 'Bootstrap'],
         documents: []
       }
     ]);
+
+    // Add mock interviews
+    this.setInterviews([
+      {
+        id: 'interview1',
+        applicationId: '1',
+        candidateId: 'candidate1',
+        candidateName: 'Ahmad Rizki',
+        jobId: '1',
+        jobTitle: 'Senior Software Developer',
+        company: 'PT Tech Solutions',
+        date: '2025-07-15',
+        time: '10:00',
+        type: 'video',
+        status: 'scheduled',
+        interviewer: 'HR Manager - Lisa',
+        notes: 'Technical interview focusing on React and Node.js experience',
+        meetingLink: 'https://zoom.us/j/1234567890',
+        preparationChecklist: [
+          'Review technical requirements',
+          'Prepare coding examples',
+          'Test video connection'
+        ]
+      },
+      {
+        id: 'interview2',
+        applicationId: '4',
+        candidateId: 'candidate4',
+        candidateName: 'Maya Kusuma',
+        jobId: '3',
+        jobTitle: 'Data Scientist',
+        company: 'PT Analytics Pro',
+        date: '2025-07-12',
+        time: '14:00',
+        type: 'onsite',
+        status: 'completed',
+        interviewer: 'Tech Lead - David',
+        notes: 'Excellent performance in technical assessment',
+        meetingLink: undefined,
+        preparationChecklist: [
+          'Bring portfolio',
+          'Prepare case studies',
+          'Review company products'
+        ]
+      }
+    ]);
+
+    // Add mock notifications for admin
+    this.createNotification({
+      id: 'notif1',
+      userId: 'admin1',
+      userRole: 'admin',
+      title: 'Lamaran Baru',
+      message: 'Ahmad Rizki melamar posisi Senior Software Developer',
+      type: 'application',
+      priority: 'high',
+      read: false,
+      relatedId: '1',
+      timestamp: new Date().toISOString()
+    });
+
+    this.createNotification({
+      id: 'notif2',
+      userId: 'admin1',
+      userRole: 'admin',
+      title: 'Interview Selesai',
+      message: 'Interview Maya Kusuma untuk posisi Data Scientist telah selesai',
+      type: 'interview',
+      priority: 'medium',
+      read: false,
+      relatedId: 'interview2',
+      timestamp: new Date(Date.now() - 3600000).toISOString()
+    });
+
+    this.createNotification({
+      id: 'notif3',
+      userId: 'admin1',
+      userRole: 'admin',
+      title: 'Profil Baru',
+      message: 'Kandidat baru Rina Dewi telah melengkapi profil',
+      type: 'profile',
+      priority: 'low',
+      read: true,
+      relatedId: 'candidate5',
+      timestamp: new Date(Date.now() - 7200000).toISOString()
+    });
   }
 }
 
