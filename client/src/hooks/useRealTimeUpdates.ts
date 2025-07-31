@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSync } from './useSync';
+import { syncStore } from '@shared/syncStore';
 
 // Real-time updates hook for admin dashboard
 export function useRealTimeUpdates() {
   const [isConnected, setIsConnected] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const { syncStore } = useSync();
 
   useEffect(() => {
     // Simulate real-time connection
@@ -15,8 +14,11 @@ export function useRealTimeUpdates() {
         // Simulate data updates
         setLastUpdate(new Date());
         
-        // Trigger data refresh from syncStore
-        syncStore.syncWithBackend();
+        // Trigger data refresh by emitting sync event
+        syncStore.emit('sync_started', null);
+        setTimeout(() => {
+          syncStore.emit('sync_completed', null);
+        }, 1000);
       }, 30000); // Update every 30 seconds
     };
 
@@ -27,11 +29,14 @@ export function useRealTimeUpdates() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [syncStore]);
+  }, []);
 
   const forceRefresh = () => {
     setLastUpdate(new Date());
-    syncStore.syncWithBackend();
+    syncStore.emit('sync_started', null);
+    setTimeout(() => {
+      syncStore.emit('sync_completed', null);
+    }, 500);
   };
 
   const getConnectionStatus = () => ({

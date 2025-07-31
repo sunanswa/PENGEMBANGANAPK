@@ -152,11 +152,20 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           <p className="text-slate-600">Kelola jadwal dan proses interview kandidat</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors flex items-center gap-2">
+          <button 
+            onClick={() => setShowInterviewScheduler(true)}
+            className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors flex items-center gap-2"
+          >
             <Calendar size={16} />
             Jadwalkan Interview
           </button>
-          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+          <button 
+            onClick={() => {
+              setExportDataType('interviews');
+              setShowDataExport(true);
+            }}
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+          >
             <Download size={16} />
             Export Jadwal
           </button>
@@ -416,11 +425,23 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           <p className="text-slate-600">Hub komunikasi email, SMS, dan WhatsApp</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2">
+          <button 
+            onClick={() => {
+              setMessageType('email');
+              setShowMessageComposer(true);
+            }}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+          >
             <Mail size={16} />
             Email Blast
           </button>
-          <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2">
+          <button 
+            onClick={() => {
+              setMessageType('whatsapp');
+              setShowMessageComposer(true);
+            }}
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2"
+          >
             <MessageCircle size={16} />
             WhatsApp
           </button>
@@ -620,16 +641,6 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     } catch (error) {
       console.error('Error deleting job posting:', error);
     }
-  };
-
-  const handleEdit = (job: JobPosting) => {
-    setEditingJob(job);
-    setShowForm(true);
-  };
-
-  const handleAddNew = () => {
-    setEditingJob(null);
-    setShowForm(true);
   };
 
   // Enhanced applicant management handlers
@@ -1233,10 +1244,10 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                             <Users size={14} />
                             {Math.floor(Math.random() * 50) + 10} pelamar
                           </div>
-                          {job.positions && (
+                          {job.positionsCount && (
                             <div className="flex items-center gap-1">
                               <Users size={14} />
-                              Butuh {job.positions} orang
+                              Butuh {job.positionsCount} orang
                             </div>
                           )}
                         </div>
@@ -1540,11 +1551,11 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                     className="rounded border-gray-300"
                   />
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-semibold text-sm">{(applicant.applicantName || applicant.name || 'N').charAt(0)}</span>
+                    <span className="text-white font-semibold text-sm">{(applicant.applicantName || 'N').charAt(0)}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-1">
-                      <p className="font-semibold text-gray-900 text-sm">{applicant.applicantName || applicant.name || 'No Name'}</p>
+                      <p className="font-semibold text-gray-900 text-sm">{applicant.applicantName || 'No Name'}</p>
                       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                         applicant.status === 'submitted' ? 'bg-green-100 text-green-800' :
                         applicant.status === 'viewed' ? 'bg-yellow-100 text-yellow-800' :
@@ -1559,12 +1570,12 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                          'Ditolak'}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-1">{applicant.jobTitle || applicant.position || 'No Position'}</p>
+                    <p className="text-sm text-gray-600 mb-1">{applicant.jobTitle || 'No Position'}</p>
                     <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span>📧 {applicant.applicantEmail || applicant.email || 'No Email'}</span>
+                      <span>📧 {applicant.applicantEmail || 'No Email'}</span>
                       <span>📍 {applicant.location || 'No Location'}</span>
                       <span>💰 Rp {(applicant.expectedSalary || 0).toLocaleString('id-ID')}</span>
-                      <span className="text-gray-400">{applicant.appliedAt || applicant.time || 'N/A'}</span>
+                      <span className="text-gray-400">{applicant.appliedAt || 'N/A'}</span>
                     </div>
                   </div>
                 </div>
@@ -1614,11 +1625,20 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           <p className="text-slate-600">Analisis mendalam dengan AI dan prediksi sukses kandidat</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors flex items-center gap-2">
+          <button 
+            onClick={() => setShowAdvancedAnalytics(true)}
+            className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors flex items-center gap-2"
+          >
             <Brain size={16} />
             AI Insights
           </button>
-          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+          <button 
+            onClick={() => {
+              setExportDataType('applications');
+              setShowDataExport(true);
+            }}
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+          >
             <Download size={16} />
             Export Report
           </button>
@@ -2131,7 +2151,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <RealTimeIndicator lastUpdate={lastUpdate} />
+                  <RealTimeIndicator />
                   <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg relative">
                     <Bell size={18} />
                     <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
