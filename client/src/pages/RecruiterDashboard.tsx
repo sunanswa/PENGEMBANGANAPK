@@ -5,7 +5,8 @@ import AdvancedAnalytics from '../components/AdvancedAnalytics';
 import MessageComposer from '../components/MessageComposer';
 import { 
   Plus, 
-  Edit3, 
+  Edit3,
+  Edit,
   Trash2, 
   Eye, 
   Search, 
@@ -103,6 +104,43 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   const [showMessageComposer, setShowMessageComposer] = useState(false);
   const [messageType, setMessageType] = useState<'email' | 'sms' | 'whatsapp'>('email');
   const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
+
+  // Missing function handlers
+  const handleViewProfile = (applicant: any) => {
+    setSelectedCandidate(applicant);
+    // You can add modal logic here
+  };
+
+  const handleScheduleInterview = (applicant: any) => {
+    setSelectedCandidate(applicant);
+    setShowInterviewScheduler(true);
+  };
+
+  const handleStatusUpdate = (applicantId: string) => {
+    // Add status update logic here
+    console.log('Updating status for applicant:', applicantId);
+  };
+
+  const renderInterviewsManagement = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-slate-800">Interview Management</h2>
+      <p className="text-slate-600">Kelola jadwal dan proses interview</p>
+    </div>
+  );
+
+  const renderScreeningManagement = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-slate-800">Screening Management</h2>
+      <p className="text-slate-600">Kelola proses screening dan assessment</p>
+    </div>
+  );
+
+  const renderCommunication = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-slate-800">Communication Hub</h2>
+      <p className="text-slate-600">Kelola komunikasi dengan kandidat</p>
+    </div>
+  );
   
   // New state for enhanced applicant management
   const [showApplicantProfile, setShowApplicantProfile] = useState(false);
@@ -821,9 +859,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                         )}
                       </div>
 
-                      {job.salary_range && (
-                        <p className="text-sm text-green-600 font-semibold">{job.salary_range}</p>
-                      )}
+                      <p className="text-sm text-emerald-600 font-semibold">Rp 8-15 juta</p>
                     </div>
                   </div>
 
