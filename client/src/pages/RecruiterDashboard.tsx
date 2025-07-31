@@ -643,6 +643,16 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
     }
   };
 
+  const handleAddNew = () => {
+    setEditingJob(null);
+    setShowForm(true);
+  };
+
+  const handleEdit = (job: any) => {
+    setEditingJob(job);
+    setShowForm(true);
+  };
+
   // Enhanced applicant management handlers
   const handleApplicantSelect = (applicantId: string) => {
     setSelectedApplicants(prev => 
