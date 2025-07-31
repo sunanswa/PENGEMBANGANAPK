@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSync } from '@/hooks/useSync';
+import { useAdvancedSearch } from '@/hooks/useAdvancedSearch';
+import { useRealTimeUpdates } from '@/hooks/useRealTimeUpdates';
 import CommunicationHub from '../components/CommunicationHub';
 import AdvancedAnalytics from '../components/AdvancedAnalytics';
 import MessageComposer from '../components/MessageComposer';
+import AdvancedSearchBar from '../components/AdvancedSearchBar';
+import EmailAutomation from '../components/EmailAutomation';
+import MobileOptimizedHeader from '../components/MobileOptimizedHeader';
+import EnhancedDataExport from '../components/EnhancedDataExport';
 import { 
   Plus, 
   Edit3,
@@ -104,6 +110,18 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   const [showMessageComposer, setShowMessageComposer] = useState(false);
   const [messageType, setMessageType] = useState<'email' | 'sms' | 'whatsapp'>('email');
   const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
+  const [showEmailAutomation, setShowEmailAutomation] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showDataExport, setShowDataExport] = useState(false);
+  const [exportDataType, setExportDataType] = useState<'jobs' | 'applications' | 'candidates'>('jobs');
+
+  // Real-time updates
+  const { lastUpdate } = useRealTimeUpdates();
+
+  // Advanced search for different data types
+  const applicationsSearch = useAdvancedSearch(syncedApplications, 'applications');
+  const candidatesSearch = useAdvancedSearch(syncedCandidates, 'candidates');
+  const jobsSearch = useAdvancedSearch(syncedJobs, 'jobs');
 
   // Missing function handlers
   const handleViewProfile = (applicant: any) => {
@@ -996,7 +1014,13 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                 <Plus size={18} />
                 <span className="font-medium text-sm">Tambah Lowongan</span>
               </button>
-              <button className="w-full flex items-center gap-3 p-3 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-all duration-300">
+              <button 
+                onClick={() => {
+                  setExportDataType('jobs');
+                  setShowDataExport(true);
+                }}
+                className="w-full flex items-center gap-3 p-3 bg-green-50 text-green-700 rounded-xl hover:bg-green-100 transition-all duration-300"
+              >
                 <Download size={18} />
                 <span className="font-medium text-sm">Export Data</span>
               </button>
@@ -1019,9 +1043,15 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                   {dailyApplicants.length}
                 </span>
               </h3>
-              <button className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors">
-                Lihat Semua
-                <ChevronRight size={14} />
+              <button 
+                onClick={() => {
+                  setExportDataType('applications');
+                  setShowDataExport(true);
+                }}
+                className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors"
+              >
+                Export Data
+                <Download size={14} />
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1106,45 +1136,40 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         </button>
       </div>
 
-      {/* Search and Filter Controls */}
+      {/* Advanced Search Controls */}
+      <AdvancedSearchBar
+        filters={jobsSearch.filters}
+        updateFilter={jobsSearch.updateFilter}
+        clearFilters={jobsSearch.clearFilters}
+        getFilterCount={jobsSearch.getFilterCount}
+        placeholder="Cari lowongan pekerjaan..."
+        type="jobs"
+      />
+
+      {/* Search Results Summary */}
       <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-          <div className="flex flex-col sm:flex-row gap-4 flex-1">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Cari lowongan..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
-              />
-            </div>
-
-            {/* Filter */}
-            <div className="relative">
-              <Filter size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="pl-10 pr-8 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all appearance-none bg-white"
-              >
-                <option value="all">Semua Status</option>
-                <option value="active">Aktif</option>
-                <option value="urgent">🚨 Urgent</option>
-                <option value="draft">Draft</option>
-                <option value="closed">Ditutup</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Refresh">
-              <RefreshCw size={16} />
-            </button>
-            <button className="p-2.5 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors" title="Export">
-              <Download size={16} />
+        <div className="flex items-center justify-between text-sm text-gray-600">
+          <span>
+            Menampilkan {jobsSearch.totalResults} dari {jobsSearch.totalItems} lowongan
+            {jobsSearch.getFilterCount() > 0 && ` (${jobsSearch.getFilterCount()} filter aktif)`}
+          </span>
+          <div className="flex items-center gap-3">
+            <span>Sort by:</span>
+            <select
+              value={jobsSearch.sortBy}
+              onChange={(e) => jobsSearch.setSortBy(e.target.value)}
+              className="px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="postedDate">Tanggal Posting</option>
+              <option value="title">Judul</option>
+              <option value="applicants">Jumlah Pelamar</option>
+            </select>
+            <button
+              onClick={() => jobsSearch.setSortOrder(jobsSearch.sortOrder === 'asc' ? 'desc' : 'asc')}
+              className="p-1 text-gray-500 hover:text-gray-700"
+              title={`Sort ${jobsSearch.sortOrder === 'asc' ? 'descending' : 'ascending'}`}
+            >
+              {jobsSearch.sortOrder === 'asc' ? '↑' : '↓'}
             </button>
           </div>
         </div>
@@ -1157,19 +1182,19 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-gray-600">Memuat data lowongan...</p>
           </div>
-        ) : filteredJobs.length === 0 ? (
+        ) : jobsSearch.filteredData.length === 0 ? (
           <div className="p-12 text-center">
             <Briefcase size={48} className="text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              {searchTerm || statusFilter !== 'all' ? 'Tidak ada lowongan yang sesuai' : 'Belum ada lowongan'}
+              {jobsSearch.getFilterCount() > 0 ? 'Tidak ada lowongan yang sesuai' : 'Belum ada lowongan'}
             </h3>
             <p className="text-gray-600 mb-6">
-              {searchTerm || statusFilter !== 'all' 
-                ? 'Coba ubah kata kunci pencarian atau filter status'
+              {jobsSearch.getFilterCount() > 0
+                ? 'Coba ubah kata kunci pencarian atau filter'
                 : 'Mulai dengan menambahkan lowongan pekerjaan pertama Anda'
               }
             </p>
-            {!searchTerm && statusFilter === 'all' && (
+            {jobsSearch.getFilterCount() === 0 && (
               <button
                 onClick={handleAddNew}
                 className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-2xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 mx-auto"
@@ -1181,7 +1206,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
-            {filteredJobs.map((job) => (
+            {jobsSearch.filteredData.map((job) => (
               <div key={job.id} className="p-4 hover:bg-gray-50 transition-colors">
                 <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                   <div className="flex-1">
@@ -1377,7 +1402,10 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           </div>
           <div className="flex items-center gap-3">
             <button 
-              onClick={() => handleBulkAction('bulk-export')}
+              onClick={() => {
+                setExportDataType('applications');
+                setShowDataExport(true);
+              }}
               className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2.5 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 flex items-center gap-2">
               <Download size={16} />
               Export
@@ -1391,11 +1419,44 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           </div>
         </div>
 
-        {/* Advanced Filter Component */}
-        <ApplicantFilter
-          onFilterChange={setApplicantFilters}
-          jobPostings={jobPostings}
+        {/* Advanced Search for Applicants */}
+        <AdvancedSearchBar
+          filters={applicationsSearch.filters}
+          updateFilter={applicationsSearch.updateFilter}
+          clearFilters={applicationsSearch.clearFilters}
+          getFilterCount={applicationsSearch.getFilterCount}
+          placeholder="Cari pelamar berdasarkan nama, email, posisi..."
+          type="applications"
         />
+
+        {/* Search Results Summary */}
+        <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
+          <div className="flex items-center justify-between text-sm text-gray-600">
+            <span>
+              Menampilkan {applicationsSearch.totalResults} dari {applicationsSearch.totalItems} pelamar
+              {applicationsSearch.getFilterCount() > 0 && ` (${applicationsSearch.getFilterCount()} filter aktif)`}
+            </span>
+            <div className="flex items-center gap-3">
+              <span>Sort by:</span>
+              <select
+                value={applicationsSearch.sortBy}
+                onChange={(e) => applicationsSearch.setSortBy(e.target.value)}
+                className="px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="appliedDate">Tanggal Lamar</option>
+                <option value="candidateName">Nama</option>
+                <option value="status">Status</option>
+              </select>
+              <button
+                onClick={() => applicationsSearch.setSortOrder(applicationsSearch.sortOrder === 'asc' ? 'desc' : 'asc')}
+                className="p-1 text-gray-500 hover:text-gray-700"
+                title={`Sort ${applicationsSearch.sortOrder === 'asc' ? 'descending' : 'ascending'}`}
+              >
+                {applicationsSearch.sortOrder === 'asc' ? '↑' : '↓'}
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Bulk Actions Component */}
         {selectedApplicants.length > 0 && (
@@ -1417,7 +1478,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
               <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-1 rounded-full">+15%</span>
             </div>
             <p className="text-sm text-gray-600 mb-1">Total Pelamar</p>
-            <p className="text-xl font-bold text-gray-900">{filteredApplicants.length}</p>
+            <p className="text-xl font-bold text-gray-900">{applicationsSearch.totalResults}</p>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
             <div className="flex items-center justify-between mb-3">
@@ -1427,7 +1488,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
               <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">+8%</span>
             </div>
             <p className="text-sm text-gray-600 mb-1">Diterima</p>
-            <p className="text-xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'accepted').length}</p>
+            <p className="text-xl font-bold text-gray-900">{applicationsSearch.filteredData.filter(a => a.status === 'accepted').length}</p>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
             <div className="flex items-center justify-between mb-3">
@@ -1437,7 +1498,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
               <span className="text-xs font-semibold text-orange-600 bg-orange-100 px-2 py-1 rounded-full">+12%</span>
             </div>
             <p className="text-sm text-gray-600 mb-1">Proses Review</p>
-            <p className="text-xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'review').length}</p>
+            <p className="text-xl font-bold text-gray-900">{applicationsSearch.filteredData.filter(a => a.status === 'submitted' || a.status === 'viewed').length}</p>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
             <div className="flex items-center justify-between mb-3">
@@ -1447,7 +1508,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
               <span className="text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-1 rounded-full">+22%</span>
             </div>
             <p className="text-sm text-gray-600 mb-1">Interview Dijadwalkan</p>
-            <p className="text-xl font-bold text-gray-900">{filteredApplicants.filter(a => a.status === 'interview').length}</p>
+            <p className="text-xl font-bold text-gray-900">{applicationsSearch.filteredData.filter(a => a.status === 'interview').length}</p>
           </div>
         </div>
 
@@ -1456,13 +1517,13 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
               <Users size={18} className="text-blue-600" />
-              Daftar Pelamar ({filteredApplicants.length})
+              Daftar Pelamar ({applicationsSearch.totalResults})
             </h3>
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
-                checked={selectedApplicants.length === filteredApplicants.length && filteredApplicants.length > 0}
-                onChange={() => handleSelectAll(filteredApplicants)}
+                checked={selectedApplicants.length === applicationsSearch.totalResults && applicationsSearch.totalResults > 0}
+                onChange={() => handleSelectAll(applicationsSearch.filteredData)}
                 className="rounded border-gray-300"
               />
               <label className="text-sm text-gray-600">Pilih Semua</label>
@@ -1470,7 +1531,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           </div>
           
           <div className="space-y-3">
-            {filteredApplicants.map((applicant) => (
+            {applicationsSearch.filteredData.map((applicant) => (
               <div key={applicant.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <div className="flex items-center gap-3">
                   <input
@@ -2052,8 +2113,26 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Clean Modern Header */}
-          <div className="bg-white shadow-sm border-b border-gray-100 px-6 py-4">
+          {/* Mobile Header */}
+          <MobileOptimizedHeader
+            title={sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
+            subtitle={
+              activeTab === 'overview' ? 'Dashboard dan statistik sistem rekrutmen SWAPRO' :
+              activeTab === 'jobs' ? 'Kelola dan pantau lowongan pekerjaan dengan mudah' :
+              activeTab === 'applicants' ? 'Data pelamar dan proses rekrutmen terkini' :
+              activeTab === 'interviews' ? 'Kelola jadwal dan proses interview kandidat' :
+              activeTab === 'screening' ? 'Assessment dan screening otomatis kandidat' :
+              activeTab === 'communication' ? 'Hub komunikasi email, SMS, dan WhatsApp' :
+              activeTab === 'analytics' ? 'Analisis mendalam dengan AI dan prediksi sukses kandidat' :
+              'Pengaturan sistem dan preferensi admin'
+            }
+            onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            isMobileMenuOpen={isMobileMenuOpen}
+            notificationCount={3}
+          />
+
+          {/* Desktop Header */}
+          <div className="hidden lg:block bg-white shadow-sm border-b border-gray-100 px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-3 mb-1">
@@ -2084,9 +2163,25 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
               </div>
               
               <div className="flex items-center gap-3">
+                {/* Real-time indicator */}
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-800 rounded-lg text-sm">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="font-medium">Live</span>
+                </div>
+                <span className="text-sm text-gray-600">
+                  Updated {new Date(lastUpdate).toLocaleTimeString()}
+                </span>
+                
                 <button className="p-3 text-gray-600 hover:bg-gray-100 rounded-2xl transition-all duration-300 hover:scale-105 relative" title="Notifications">
                   <Bell size={20} />
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+                </button>
+                <button 
+                  onClick={() => setShowEmailAutomation(true)}
+                  className="p-3 text-gray-600 hover:bg-gray-100 rounded-2xl transition-all duration-300 hover:scale-105" 
+                  title="Email Automation"
+                >
+                  <Mail size={20} />
                 </button>
                 <button className="p-3 text-gray-600 hover:bg-gray-100 rounded-2xl transition-all duration-300 hover:scale-105" title="Settings">
                   <Settings size={20} />
@@ -2186,6 +2281,44 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             console.log('Message sent:', data);
             setShowMessageComposer(false);
             // Here you would typically send to the backend
+          }}
+        />
+      )}
+
+      {/* Email Automation Modal */}
+      {showEmailAutomation && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-lg z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <h2 className="text-xl font-semibold text-slate-800">Email Automation</h2>
+              <button
+                onClick={() => setShowEmailAutomation(false)}
+                className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6 max-h-[80vh] overflow-y-auto">
+              <EmailAutomation />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Enhanced Data Export Modal */}
+      {showDataExport && (
+        <EnhancedDataExport
+          dataType={exportDataType}
+          totalRecords={
+            exportDataType === 'jobs' ? jobsSearch.totalItems :
+            exportDataType === 'applications' ? applicationsSearch.totalItems :
+            candidatesSearch.totalItems
+          }
+          onClose={() => setShowDataExport(false)}
+          onExport={(config) => {
+            console.log('Exporting data with config:', config);
+            // Here you would implement the actual export logic
+            alert(`Export started: ${config.format} format with ${config.fields.filter(f => f.selected).length} fields`);
           }}
         />
       )}
