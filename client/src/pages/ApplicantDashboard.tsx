@@ -51,10 +51,12 @@ export default function ApplicantDashboard({ onLogout, userProfile }: ApplicantD
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 safe-area">
         {/* Main Content */}
-        <main className="min-h-screen pb-20">
-          {renderContent()}
+        <main className="min-h-screen pb-20 sm:pb-24">
+          <div className="px-3 sm:px-4 lg:px-6">
+            {renderContent()}
+          </div>
         </main>
 
         {/* Bottom Navigation */}

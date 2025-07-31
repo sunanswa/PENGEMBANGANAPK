@@ -936,22 +936,23 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full transform -translate-x-16 translate-y-16"></div>
         
         <div className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                  <Building2 size={32} className="text-white" />
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div className="flex-1 w-full">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <Building2 size={24} className="sm:hidden text-white" />
+                  <Building2 size={32} className="hidden sm:block text-white" />
                 </div>
-                <div>
-                  <h2 className="text-4xl font-bold mb-1">Selamat Datang, Admin! 👋</h2>
-                  <p className="text-blue-100 text-lg">
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-1">Selamat Datang, Admin! 👋</h2>
+                  <p className="text-blue-100 text-sm sm:text-base lg:text-lg">
                     Dashboard SWAPRO - Kelola rekrutmen dengan mudah dan efisien
                   </p>
                 </div>
               </div>
               
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6 max-w-xl">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6 w-full max-w-xl">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-green-400 rounded-xl flex items-center justify-center">
                       <Activity size={20} className="text-white" />
@@ -973,20 +974,22 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                 </div>
               </div>
               
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button 
                   onClick={handleAddNew}
-                  className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-2xl font-semibold hover:bg-white/30 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-2"
+                  className="bg-white/20 backdrop-blur-sm text-white px-4 sm:px-6 py-3 rounded-2xl font-semibold hover:bg-white/30 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 btn-touch text-sm sm:text-base"
                 >
-                  <Plus size={20} />
-                  Tambah Lowongan
+                  <Plus size={18} className="sm:hidden" />
+                  <Plus size={20} className="hidden sm:block" />
+                  <span className="whitespace-nowrap">Tambah Lowongan</span>
                 </button>
                 <button 
                   onClick={() => setShowAdvancedAnalytics(true)}
-                  className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-2xl font-semibold hover:bg-white/20 transition-all duration-300 hover:scale-105 flex items-center gap-2"
+                  className="bg-white/10 backdrop-blur-sm text-white px-4 sm:px-6 py-3 rounded-2xl font-semibold hover:bg-white/20 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 btn-touch text-sm sm:text-base"
                 >
-                  <BarChart3 size={20} />
-                  Lihat Analytics
+                  <BarChart3 size={18} className="sm:hidden" />
+                  <BarChart3 size={20} className="hidden sm:block" />
+                  <span className="whitespace-nowrap">Lihat Analytics</span>
                 </button>
               </div>
             </div>

@@ -149,17 +149,17 @@ export default function EnhancedDashboard() {
         </div>
       </div>
 
-      {/* Revolutionary Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div className="card-enhanced p-6 group hover:shadow-lg transition-all">
+      {/* Revolutionary Stats Cards - Mobile Responsive */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-8">
+        <div className="card-enhanced p-3 sm:p-4 lg:p-6 group hover:shadow-lg transition-all">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-600 font-semibold">Total Lamaran</p>
-              <p className="text-3xl font-bold text-slate-800 mt-2 group-hover:text-blue-600 transition-colors">{jobStats.totalApplications}</p>
-              <p className="text-xs text-blue-600 mt-1 font-medium">+3 bulan ini</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm text-slate-600 font-semibold">Total Lamaran</p>
+              <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-slate-800 mt-1 sm:mt-2 group-hover:text-blue-600 transition-colors">{jobStats.totalApplications}</p>
+              <p className="text-xs text-blue-600 mt-1 font-medium hidden sm:block">+3 bulan ini</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Briefcase className="h-8 w-8 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+              <Briefcase className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
             </div>
           </div>
           <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
@@ -167,15 +167,15 @@ export default function EnhancedDashboard() {
           </div>
         </div>
 
-        <div className="card-enhanced p-6 group hover:shadow-lg transition-all">
+        <div className="card-enhanced p-3 sm:p-4 lg:p-6 group hover:shadow-lg transition-all">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-600 font-semibold">Dalam Proses</p>
-              <p className="text-3xl font-bold text-slate-800 mt-2 group-hover:text-amber-600 transition-colors">{jobStats.pending}</p>
-              <p className="text-xs text-amber-600 mt-1 font-medium">Menunggu review</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm text-slate-600 font-semibold">Dalam Proses</p>
+              <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-slate-800 mt-1 sm:mt-2 group-hover:text-amber-600 transition-colors">{jobStats.pending}</p>
+              <p className="text-xs text-amber-600 mt-1 font-medium hidden sm:block">Menunggu review</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-              <Clock className="h-8 w-8 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+              <Clock className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
             </div>
           </div>
           <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
@@ -183,15 +183,15 @@ export default function EnhancedDashboard() {
           </div>
         </div>
 
-        <div className="card-enhanced p-6 group hover:shadow-lg transition-all">
+        <div className="card-enhanced p-3 sm:p-4 lg:p-6 group hover:shadow-lg transition-all">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-600 font-semibold">Interview</p>
-              <p className="text-3xl font-bold text-slate-800 mt-2 group-hover:text-violet-600 transition-colors">{jobStats.interviews}</p>
-              <p className="text-xs text-violet-600 mt-1 font-medium">Terjadwal</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm text-slate-600 font-semibold">Interview</p>
+              <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-slate-800 mt-1 sm:mt-2 group-hover:text-violet-600 transition-colors">{jobStats.interviews}</p>
+              <p className="text-xs text-violet-600 mt-1 font-medium hidden sm:block">Terjadwal</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-              <Calendar className="h-8 w-8 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+              <Calendar className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
             </div>
           </div>
           <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
@@ -199,15 +199,15 @@ export default function EnhancedDashboard() {
           </div>
         </div>
 
-        <div className="card-enhanced p-6 group hover:shadow-lg transition-all">
+        <div className="card-enhanced p-3 sm:p-4 lg:p-6 group hover:shadow-lg transition-all">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-600 font-semibold">Diterima</p>
-              <p className="text-3xl font-bold text-slate-800 mt-2 group-hover:text-emerald-600 transition-colors">{jobStats.accepted}</p>
-              <p className="text-xs text-emerald-600 mt-1 font-medium">Selamat!</p>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm text-slate-600 font-semibold">Diterima</p>
+              <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-slate-800 mt-1 sm:mt-2 group-hover:text-emerald-600 transition-colors">{jobStats.accepted}</p>
+              <p className="text-xs text-emerald-600 mt-1 font-medium hidden sm:block">Selamat!</p>
             </div>
-            <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-lg">
-              <CheckCircle className="h-8 w-8 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+              <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-white" />
             </div>
           </div>
           <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
