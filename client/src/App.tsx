@@ -95,7 +95,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 safe-area">
         {!user ? (
           <>
             {showAuth ? (

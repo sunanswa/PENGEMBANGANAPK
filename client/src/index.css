@@ -2,6 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Responsive viewport units untuk semua perangkat */
+:root {
+  /* Dynamic viewport units untuk mobile yang benar */
+  --vh: 1vh;
+  --vw: 1vw;
+  --vmin: 1vmin;
+  --vmax: 1vmax;
+}
+
+/* Deteksi support untuk dynamic viewport units */
+@supports (height: 100dvh) {
+  :root {
+    --vh: 1dvh;
+    --vw: 1dvw;
+    --vmin: 1dvmin;
+    --vmax: 1dvmax;
+  }
+}
+
+/* Base responsive setup */
+html {
+  /* Prevent zoom on iOS */
+  -webkit-text-size-adjust: 100%;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  /* Touch optimization */
+  touch-action: manipulation;
+}
+
+body {
+  /* Full height yang benar untuk mobile */
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  /* Prevent horizontal scroll */
+  overflow-x: hidden;
+  /* Font optimization */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Touch optimization */
+  -webkit-tap-highlight-color: transparent;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -471,5 +513,156 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+}
+
+/* Universal Responsive System untuk Semua Perangkat */
+
+/* Adaptive text sizes menggunakan clamp() */
+.text-adaptive-xs { font-size: clamp(0.75rem, 2vw, 0.875rem); }
+.text-adaptive-sm { font-size: clamp(0.875rem, 2.5vw, 1rem); }
+.text-adaptive-base { font-size: clamp(1rem, 3vw, 1.125rem); }
+.text-adaptive-lg { font-size: clamp(1.125rem, 3.5vw, 1.25rem); }
+.text-adaptive-xl { font-size: clamp(1.25rem, 4vw, 1.5rem); }
+.text-adaptive-2xl { font-size: clamp(1.5rem, 5vw, 2rem); }
+.text-adaptive-3xl { font-size: clamp(1.875rem, 6vw, 2.5rem); }
+.text-adaptive-4xl { font-size: clamp(2.25rem, 7vw, 3rem); }
+
+/* Adaptive spacing dan padding */
+.space-adaptive-sm { margin: clamp(0.5rem, 2vw, 1rem); }
+.space-adaptive-md { margin: clamp(1rem, 3vw, 1.5rem); }
+.space-adaptive-lg { margin: clamp(1.5rem, 4vw, 2rem); }
+.space-adaptive-xl { margin: clamp(2rem, 5vw, 3rem); }
+
+.p-adaptive-sm { padding: clamp(0.5rem, 2vw, 1rem); }
+.p-adaptive-md { padding: clamp(1rem, 3vw, 1.5rem); }
+.p-adaptive-lg { padding: clamp(1.5rem, 4vw, 2rem); }
+.p-adaptive-xl { padding: clamp(2rem, 5vw, 3rem); }
+
+/* Touch-friendly buttons untuk semua perangkat */
+.btn-touch {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Responsive grid system */
+.grid-adaptive {
+  display: grid;
+  gap: clamp(1rem, 3vw, 2rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+}
+
+.flex-adaptive {
+  display: flex;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  flex-wrap: wrap;
+}
+
+/* Mobile First Responsive Breakpoints */
+@media (max-width: 480px) {
+  .hide-on-mobile { display: none !important; }
+  .show-on-mobile { display: block !important; }
+  .text-center-mobile { text-align: center !important; }
+  .px-4-mobile { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .grid-cols-1-mobile { grid-template-columns: 1fr !important; }
+  
+  /* Mobile-specific adjustments */
+  .card-enhanced {
+    padding: 1rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  .btn-swapro {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* Dashboard adjustments untuk mobile */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .stats-card {
+    min-height: auto !important;
+    padding: 1rem !important;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .hide-on-tablet { display: none !important; }
+  .show-on-tablet { display: block !important; }
+  .grid-cols-2-tablet { grid-template-columns: repeat(2, 1fr) !important; }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hide-on-laptop { display: none !important; }
+  .show-on-laptop { display: block !important; }
+  .grid-cols-3-laptop { grid-template-columns: repeat(3, 1fr) !important; }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .hide-on-desktop { display: none !important; }
+  .show-on-desktop { display: block !important; }
+  .grid-cols-4-desktop { grid-template-columns: repeat(4, 1fr) !important; }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* Orientation-based styles */
+@media (orientation: portrait) {
+  .portrait-only { display: block !important; }
+  .landscape-only { display: none !important; }
+  
+  .dashboard-layout {
+    flex-direction: column !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .portrait-only { display: none !important; }
+  .landscape-only { display: block !important; }
+  
+  .dashboard-layout {
+    flex-direction: row !important;
+  }
+}
+
+/* Accessibility optimizations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .card-enhanced {
+    border: 2px solid currentColor !important;
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print { display: none !important; }
+  .print-friendly {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
   }
 }

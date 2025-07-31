@@ -1002,8 +1002,8 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
         </div>
       </div>
 
-      {/* Stats Grid - Clean Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Stats Grid - Responsive Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 dashboard-grid">
         {dashboardStats.map((stat, index) => (
           <div key={index} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
