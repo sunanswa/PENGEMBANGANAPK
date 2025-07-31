@@ -2080,9 +2080,9 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30">
-      <div className="flex h-screen">
-        {/* Modern Clean Sidebar */}
-        <div className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white shadow-lg border-r border-gray-200 transition-all duration-300 relative flex flex-col`}>
+      <div className="lg:flex h-screen">
+        {/* Modern Clean Sidebar - Hidden on Mobile */}
+        <div className={`hidden lg:flex ${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white shadow-lg border-r border-gray-200 transition-all duration-300 relative flex-col`}>
           {/* Clean Logo Header */}
           <div className="p-4 border-b border-gray-100">
             <div className="flex items-center gap-3">
@@ -2143,32 +2143,54 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
         </div>
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Main Content Area - Full Width on Mobile */}
+        <div className="flex-1 w-full flex flex-col min-h-screen lg:overflow-hidden">
           {/* Unified Header - Responsive */}
           <div className="bg-white shadow-sm border-b border-gray-100">
             {/* Mobile Header */}
             <div className="lg:hidden px-4 py-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
-                  >
-                    {isMobileMenuOpen ? <X size={20} /> : <Bell size={20} />}
-                  </button>
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                    <Building2 size={16} className="text-white" />
+                  </div>
                   <div>
-                    <h1 className="font-semibold text-gray-900 text-sm">{sidebarItems.find(item => item.id === activeTab)?.label || 'Dashboard'}</h1>
-                    <p className="text-xs text-gray-600 hidden sm:block">Dashboard dan statistik sistem rekrutmen SWAPRO</p>
+                    <h1 className="font-semibold text-gray-900 text-sm">SWAPRO</h1>
+                    <p className="text-xs text-gray-600">Admin Dashboard</p>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <RealTimeIndicator />
                   <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg relative">
                     <Bell size={18} />
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
+                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
                   </button>
+                  <button
+                    onClick={onLogout}
+                    className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                  >
+                    <LogOut size={18} />
+                  </button>
+                </div>
+              </div>
+              
+              {/* Mobile Tab Navigation */}
+              <div className="mt-4 overflow-x-auto scrollbar-hide">
+                <div className="flex gap-2 min-w-max pb-2">
+                  {sidebarItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveTab(item.id)}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200 btn-touch ${
+                        activeTab === item.id 
+                          ? 'bg-blue-500 text-white shadow-sm' 
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <item.icon size={14} />
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -2241,7 +2263,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
           </div>
 
           {/* Clean Content Area */}
-          <div className="flex-1 p-6 overflow-y-auto bg-gray-50">
+          <div className="flex-1 p-3 sm:p-4 lg:p-6 overflow-y-auto bg-gray-50">
             <div className="max-w-6xl mx-auto space-y-4">
               {renderContent()}
             </div>
