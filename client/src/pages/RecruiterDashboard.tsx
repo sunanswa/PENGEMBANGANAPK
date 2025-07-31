@@ -123,22 +123,393 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
   const renderInterviewsManagement = () => (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-slate-800">Interview Management</h2>
-      <p className="text-slate-600">Kelola jadwal dan proses interview</p>
+      {/* Header with Actions */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Interview Management</h2>
+          <p className="text-slate-600">Kelola jadwal dan proses interview kandidat</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors flex items-center gap-2">
+            <Calendar size={16} />
+            Jadwalkan Interview
+          </button>
+          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+            <Download size={16} />
+            Export Jadwal
+          </button>
+        </div>
+      </div>
+
+      {/* Interview Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Interview Hari Ini</p>
+              <p className="text-2xl font-bold text-slate-800">3</p>
+            </div>
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <Calendar size={24} className="text-blue-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Interview Pending</p>
+              <p className="text-2xl font-bold text-slate-800">7</p>
+            </div>
+            <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+              <Clock size={24} className="text-yellow-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Interview Selesai</p>
+              <p className="text-2xl font-bold text-slate-800">15</p>
+            </div>
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <CheckCircle size={24} className="text-green-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Success Rate</p>
+              <p className="text-2xl font-bold text-slate-800">85%</p>
+            </div>
+            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+              <Target size={24} className="text-emerald-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Interview List */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+        <div className="p-6 border-b border-gray-100">
+          <h3 className="text-lg font-semibold text-slate-800">Jadwal Interview Terbaru</h3>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {syncedInterviews.map((interview) => (
+            <div key={interview.id} className="p-6 hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl flex items-center justify-center">
+                    <span className="text-white font-semibold">{interview.candidateName.charAt(0)}</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-slate-800">{interview.candidateName}</h4>
+                    <p className="text-sm text-gray-600 mb-1">{interview.jobTitle} - {interview.company}</p>
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Calendar size={14} />
+                        {interview.date} - {interview.time}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Video size={14} />
+                        {interview.type === 'video' ? 'Video Call' : interview.type === 'phone' ? 'Telepon' : 'Onsite'}
+                      </span>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        interview.status === 'scheduled' ? 'bg-blue-100 text-blue-800' :
+                        interview.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        interview.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {interview.status === 'scheduled' ? 'Terjadwal' :
+                         interview.status === 'completed' ? 'Selesai' :
+                         interview.status === 'cancelled' ? 'Dibatalkan' : interview.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Interview">
+                    <Edit size={16} />
+                  </button>
+                  <button className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors" title="Join Meeting">
+                    <Video size={16} />
+                  </button>
+                  <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Cancel">
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 
   const renderScreeningManagement = () => (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-slate-800">Screening Management</h2>
-      <p className="text-slate-600">Kelola proses screening dan assessment</p>
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Screening & Assessment</h2>
+          <p className="text-slate-600">Assessment dan screening otomatis kandidat</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center gap-2">
+            <Brain size={16} />
+            AI Assessment
+          </button>
+          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+            <FileText size={16} />
+            Template Test
+          </button>
+        </div>
+      </div>
+
+      {/* Assessment Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Total Assessment</p>
+              <p className="text-2xl font-bold text-slate-800">128</p>
+            </div>
+            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+              <Brain size={24} className="text-purple-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Rata-rata Skor</p>
+              <p className="text-2xl font-bold text-slate-800">78.5</p>
+            </div>
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <Star size={24} className="text-blue-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Pass Rate</p>
+              <p className="text-2xl font-bold text-slate-800">67%</p>
+            </div>
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <CheckCircle size={24} className="text-green-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Pending Review</p>
+              <p className="text-2xl font-bold text-slate-800">23</p>
+            </div>
+            <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+              <Clock size={24} className="text-orange-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Assessment Types */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <Brain size={20} className="text-blue-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800">Technical Test</h3>
+          </div>
+          <p className="text-gray-600 text-sm mb-4">Assessment teknikal untuk posisi IT dan engineering</p>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Completed:</span>
+              <span className="font-medium text-slate-800">45</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Average Score:</span>
+              <span className="font-medium text-slate-800">82.3</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <User size={20} className="text-green-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800">Personality Test</h3>
+          </div>
+          <p className="text-gray-600 text-sm mb-4">Assessment kepribadian dan soft skills kandidat</p>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Completed:</span>
+              <span className="font-medium text-slate-800">67</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Average Score:</span>
+              <span className="font-medium text-slate-800">75.8</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <FileText size={20} className="text-purple-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800">Case Study</h3>
+          </div>
+          <p className="text-gray-600 text-sm mb-4">Studi kasus untuk posisi strategis dan manajerial</p>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Completed:</span>
+              <span className="font-medium text-slate-800">16</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Average Score:</span>
+              <span className="font-medium text-slate-800">71.2</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 
   const renderCommunication = () => (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-slate-800">Communication Hub</h2>
-      <p className="text-slate-600">Kelola komunikasi dengan kandidat</p>
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Communication Hub</h2>
+          <p className="text-slate-600">Hub komunikasi email, SMS, dan WhatsApp</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2">
+            <Mail size={16} />
+            Email Blast
+          </button>
+          <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2">
+            <MessageCircle size={16} />
+            WhatsApp
+          </button>
+          <button className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center gap-2">
+            <Phone size={16} />
+            SMS Blast
+          </button>
+        </div>
+      </div>
+
+      {/* Communication Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Email Terkirim</p>
+              <p className="text-2xl font-bold text-slate-800">1,247</p>
+            </div>
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <Mail size={24} className="text-blue-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">WhatsApp Sent</p>
+              <p className="text-2xl font-bold text-slate-800">856</p>
+            </div>
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <MessageCircle size={24} className="text-green-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">SMS Terkirim</p>
+              <p className="text-2xl font-bold text-slate-800">423</p>
+            </div>
+            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+              <Phone size={24} className="text-purple-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Response Rate</p>
+              <p className="text-2xl font-bold text-slate-800">72%</p>
+            </div>
+            <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+              <TrendingUp size={24} className="text-orange-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Communications */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+        <div className="p-6 border-b border-gray-100">
+          <h3 className="text-lg font-semibold text-slate-800">Komunikasi Terbaru</h3>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {[
+            { id: 1, type: 'email', recipient: 'Ahmad Rizki', subject: 'Interview Confirmation', time: '2 jam lalu', status: 'delivered' },
+            { id: 2, type: 'whatsapp', recipient: 'Siti Nurhaliza', subject: 'Application Update', time: '4 jam lalu', status: 'read' },
+            { id: 3, type: 'sms', recipient: 'Budi Santoso', subject: 'Interview Reminder', time: '1 hari lalu', status: 'delivered' },
+            { id: 4, type: 'email', recipient: 'Maya Kusuma', subject: 'Job Offer', time: '1 hari lalu', status: 'opened' },
+            { id: 5, type: 'whatsapp', recipient: 'Rina Dewi', subject: 'Thank You Message', time: '2 hari lalu', status: 'read' }
+          ].map((comm) => (
+            <div key={comm.id} className="p-6 hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                    comm.type === 'email' ? 'bg-blue-100' :
+                    comm.type === 'whatsapp' ? 'bg-green-100' : 'bg-purple-100'
+                  }`}>
+                    {comm.type === 'email' ? <Mail size={20} className="text-blue-600" /> :
+                     comm.type === 'whatsapp' ? <MessageCircle size={20} className="text-green-600" /> :
+                     <Phone size={20} className="text-purple-600" />}
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-slate-800">{comm.recipient}</h4>
+                    <p className="text-sm text-gray-600">{comm.subject}</p>
+                    <p className="text-xs text-gray-500">{comm.time}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    comm.status === 'delivered' ? 'bg-blue-100 text-blue-800' :
+                    comm.status === 'read' ? 'bg-green-100 text-green-800' :
+                    comm.status === 'opened' ? 'bg-purple-100 text-purple-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {comm.status === 'delivered' ? 'Terkirim' :
+                     comm.status === 'read' ? 'Dibaca' :
+                     comm.status === 'opened' ? 'Dibuka' : comm.status}
+                  </span>
+                  <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                    <MoreVertical size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
   
@@ -1176,18 +1547,419 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
 
   const renderAnalytics = () => (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Analytics & Reports</h2>
-          <p className="text-gray-600">Analisis performa rekrutmen dan metrik bisnis</p>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Analytics & Reports</h2>
+          <p className="text-slate-600">Analisis mendalam dengan AI dan prediksi sukses kandidat</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors flex items-center gap-2">
+            <Brain size={16} />
+            AI Insights
+          </button>
+          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+            <Download size={16} />
+            Export Report
+          </button>
+        </div>
+      </div>
+
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Conversion Rate</p>
+              <p className="text-2xl font-bold text-slate-800">23.5%</p>
+              <p className="text-xs text-green-600 font-medium">+5.2% dari bulan lalu</p>
+            </div>
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <TrendingUp size={24} className="text-green-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Time to Hire</p>
+              <p className="text-2xl font-bold text-slate-800">14 hari</p>
+              <p className="text-xs text-blue-600 font-medium">-3 hari dari target</p>
+            </div>
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <Clock size={24} className="text-blue-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Quality Score</p>
+              <p className="text-2xl font-bold text-slate-800">4.8/5</p>
+              <p className="text-xs text-purple-600 font-medium">Excellent performance</p>
+            </div>
+            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+              <Star size={24} className="text-purple-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Cost Per Hire</p>
+              <p className="text-2xl font-bold text-slate-800">Rp 2.5M</p>
+              <p className="text-xs text-orange-600 font-medium">-15% dari target</p>
+            </div>
+            <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+              <Target size={24} className="text-orange-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts and Detailed Analytics */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Hiring Funnel */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Hiring Funnel</h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Applications</span>
+              <span className="font-medium text-slate-800">245</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-blue-500 h-2 rounded-full" style={{width: '100%'}}></div>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Screening</span>
+              <span className="font-medium text-slate-800">156</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-purple-500 h-2 rounded-full" style={{width: '64%'}}></div>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Interview</span>
+              <span className="font-medium text-slate-800">89</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-yellow-500 h-2 rounded-full" style={{width: '36%'}}></div>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Offer</span>
+              <span className="font-medium text-slate-800">34</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-green-500 h-2 rounded-full" style={{width: '14%'}}></div>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Hired</span>
+              <span className="font-medium text-slate-800">28</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-emerald-500 h-2 rounded-full" style={{width: '11%'}}></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Source Analytics */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Sumber Kandidat Terbaik</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <Globe size={16} className="text-white" />
+                </div>
+                <span className="font-medium text-slate-800">Job Portals</span>
+              </div>
+              <div className="text-right">
+                <p className="font-semibold text-slate-800">45%</p>
+                <p className="text-xs text-gray-600">110 candidates</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <UserPlus size={16} className="text-white" />
+                </div>
+                <span className="font-medium text-slate-800">Referrals</span>
+              </div>
+              <div className="text-right">
+                <p className="font-semibold text-slate-800">28%</p>
+                <p className="text-xs text-gray-600">69 candidates</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <Globe size={16} className="text-white" />
+                </div>
+                <span className="font-medium text-slate-800">Social Media</span>
+              </div>
+              <div className="text-right">
+                <p className="font-semibold text-slate-800">18%</p>
+                <p className="text-xs text-gray-600">44 candidates</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                  <Building2 size={16} className="text-white" />
+                </div>
+                <span className="font-medium text-slate-800">Direct Apply</span>
+              </div>
+              <div className="text-right">
+                <p className="font-semibold text-slate-800">9%</p>
+                <p className="text-xs text-gray-600">22 candidates</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Predictions */}
+      <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-6 text-white">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+            <Brain size={24} className="text-white" />
+          </div>
+          <h3 className="text-xl font-semibold">AI Insights & Predictions</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white/10 rounded-lg p-4">
+            <h4 className="font-semibold mb-2">Success Prediction</h4>
+            <p className="text-sm opacity-90">Ahmad Rizki memiliki 87% kemungkinan sukses dalam posisi Senior Developer berdasarkan profil dan pengalaman</p>
+          </div>
+          <div className="bg-white/10 rounded-lg p-4">
+            <h4 className="font-semibold mb-2">Optimal Timing</h4>
+            <p className="text-sm opacity-90">Waktu terbaik untuk posting lowongan Frontend Developer adalah hari Selasa-Kamis pukul 09:00-11:00</p>
+          </div>
+          <div className="bg-white/10 rounded-lg p-4">
+            <h4 className="font-semibold mb-2">Salary Benchmark</h4>
+            <p className="text-sm opacity-90">Gaji untuk Data Scientist di Surabaya sebaiknya berada di range Rp 12-18 juta untuk mendapat kandidat berkualitas</p>
+          </div>
         </div>
       </div>
     </div>
   );
 
   const renderSettings = () => (
-    <div className="bg-white rounded-xl p-6 shadow-lg">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Pengaturan Sistem</h2>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Pengaturan Sistem</h2>
+          <p className="text-slate-600">Kelola pengaturan dan preferensi admin dashboard</p>
+        </div>
+        <div className="flex gap-3">
+          <button className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors flex items-center gap-2">
+            <CheckCircle size={16} />
+            Simpan Pengaturan
+          </button>
+          <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
+            <RefreshCw size={16} />
+            Reset Default
+          </button>
+        </div>
+      </div>
+
+      {/* Settings Sections */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* System Preferences */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Preferensi Sistem</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-slate-800">Dark Mode</p>
+                <p className="text-sm text-gray-600">Aktifkan tampilan gelap</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-slate-800">Auto Refresh</p>
+                <p className="text-sm text-gray-600">Refresh otomatis setiap 30 detik</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" defaultChecked />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-slate-800">Email Notifications</p>
+                <p className="text-sm text-gray-600">Notifikasi email untuk aktivitas penting</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" defaultChecked />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-slate-800">Sound Alerts</p>
+                <p className="text-sm text-gray-600">Suara notifikasi untuk aktivitas baru</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Account Settings */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Pengaturan Akun</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Nama Admin</label>
+              <input 
+                type="text" 
+                defaultValue="Admin SWAPRO"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input 
+                type="email" 
+                defaultValue="admin@swapro.com"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
+              <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option>WIB (UTC+7)</option>
+                <option>WITA (UTC+8)</option>
+                <option>WIT (UTC+9)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Bahasa</label>
+              <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option>Bahasa Indonesia</option>
+                <option>English</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Security Settings */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Keamanan</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-slate-800">Two-Factor Authentication</p>
+                <p className="text-sm text-gray-600">Keamanan tambahan dengan 2FA</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" defaultChecked />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium text-slate-800">Session Timeout</p>
+                <p className="text-sm text-gray-600">Auto logout setelah 30 menit tidak aktif</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" defaultChecked />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+
+            <button className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+              Ganti Password
+            </button>
+
+            <button className="w-full px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors">
+              Logout Semua Device
+            </button>
+          </div>
+        </div>
+
+        {/* API & Integrations */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">API & Integrasi</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <CheckCircle size={16} className="text-white" />
+                </div>
+                <div>
+                  <p className="font-medium text-slate-800">WhatsApp Business API</p>
+                  <p className="text-xs text-gray-600">Connected</p>
+                </div>
+              </div>
+              <button className="text-green-600 text-sm hover:underline">Manage</button>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <CheckCircle size={16} className="text-white" />
+                </div>
+                <div>
+                  <p className="font-medium text-slate-800">SendGrid Email</p>
+                  <p className="text-xs text-gray-600">Connected</p>
+                </div>
+              </div>
+              <button className="text-blue-600 text-sm hover:underline">Manage</button>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gray-400 rounded-lg flex items-center justify-center">
+                  <AlertCircle size={16} className="text-white" />
+                </div>
+                <div>
+                  <p className="font-medium text-slate-800">LinkedIn Integration</p>
+                  <p className="text-xs text-gray-600">Not connected</p>
+                </div>
+              </div>
+              <button className="text-blue-600 text-sm hover:underline">Connect</button>
+            </div>
+
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gray-400 rounded-lg flex items-center justify-center">
+                  <AlertCircle size={16} className="text-white" />
+                </div>
+                <div>
+                  <p className="font-medium text-slate-800">Google Calendar</p>
+                  <p className="text-xs text-gray-600">Not connected</p>
+                </div>
+              </div>
+              <button className="text-blue-600 text-sm hover:underline">Connect</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
   const renderContent = () => {
@@ -1233,9 +2005,9 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             </div>
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="absolute -right-3 top-6 w-6 h-6 bg-white rounded-full shadow-md border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
+              className="absolute -right-3 top-6 w-7 h-7 bg-white rounded-full shadow-lg border-2 border-gray-200 flex items-center justify-center hover:shadow-xl transition-all duration-300 hover:scale-110 z-20"
             >
-              {sidebarCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+              <ChevronRight size={14} className={`text-gray-600 transition-transform duration-300 ${sidebarCollapsed ? '' : 'rotate-180'}`} />
             </button>
           </div>
 
@@ -1275,13 +2047,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
             </div>
           )}
 
-          {/* Collapse Toggle */}
-          <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="absolute -right-3 top-20 w-6 h-6 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-10"
-          >
-            <ChevronRight size={14} className={`text-gray-600 transition-transform ${sidebarCollapsed ? '' : 'rotate-180'}`} />
-          </button>
+
         </div>
 
         {/* Main Content Area */}
