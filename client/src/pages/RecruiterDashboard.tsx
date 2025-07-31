@@ -8,6 +8,7 @@ import MessageComposer from '../components/MessageComposer';
 import AdvancedSearchBar from '../components/AdvancedSearchBar';
 import EmailAutomation from '../components/EmailAutomation';
 import MobileOptimizedHeader from '../components/MobileOptimizedHeader';
+import RealTimeIndicator from '../components/RealTimeIndicator';
 import EnhancedDataExport from '../components/EnhancedDataExport';
 import { 
   Plus, 
@@ -50,7 +51,8 @@ import {
   Brain,
   Video,
   MessageCircle,
-  UserPlus
+  UserPlus,
+  X
 } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest, queryClient } from '../lib/queryClient';
@@ -118,10 +120,26 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
   // Real-time updates
   const { lastUpdate } = useRealTimeUpdates();
 
-  // Advanced search for different data types
-  const applicationsSearch = useAdvancedSearch(syncedApplications, 'applications');
-  const candidatesSearch = useAdvancedSearch(syncedCandidates, 'candidates');
-  const jobsSearch = useAdvancedSearch(syncedJobs, 'jobs');
+  // Advanced search hooks
+  const jobsSearch = useAdvancedSearch(syncedJobs, {
+    searchableFields: ['title', 'description', 'location'],
+    filterableFields: ['status', 'location'],
+    sortableFields: ['title', 'postedDate', 'status']
+  });
+
+  const applicationsSearch = useAdvancedSearch(syncedApplications, {
+    searchableFields: ['applicantName', 'jobTitle', 'applicantEmail'],
+    filterableFields: ['status', 'jobTitle'],
+    sortableFields: ['appliedAt', 'status', 'applicantName']
+  });
+
+  const candidatesSearch = useAdvancedSearch(syncedCandidates, {
+    searchableFields: ['name', 'email', 'skills'],
+    filterableFields: ['status', 'experience'],
+    sortableFields: ['name', 'appliedDate', 'status']
+  });
+
+  // Clean data arrays for search (remove duplicates)
 
   // Missing function handlers
   const handleViewProfile = (applicant: any) => {
@@ -1058,16 +1076,16 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
               {dailyApplicants.slice(0, 4).map((applicant) => (
                 <div key={applicant.id} className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
-                    {applicant.name.split(' ').map(n => n[0]).join('')}
+                    {applicant.name ? applicant.name.split(' ').map(n => n[0] || '').join('') : 'NA'}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="font-semibold text-gray-900 text-sm truncate">{applicant.name}</p>
-                      <span className="text-xs text-gray-500">{applicant.appliedAt}</span>
+                      <p className="font-semibold text-gray-900 text-sm truncate">{applicant.name || 'No Name'}</p>
+                      <span className="text-xs text-gray-500">{applicant.appliedAt || 'N/A'}</span>
                     </div>
-                    <p className="text-sm text-blue-600 font-medium mb-2">{applicant.position}</p>
+                    <p className="text-sm text-blue-600 font-medium mb-2">{applicant.position || 'No Position'}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">📍 {applicant.location}</span>
+                      <span className="text-xs text-gray-500">📍 {applicant.location || 'No Location'}</span>
                       <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
                         Baru
                       </span>
@@ -1219,20 +1237,20 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                         <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
                           <div className="flex items-center gap-1">
                             <Calendar size={14} />
-                            {new Date(job.created_at).toLocaleDateString('id-ID')}
+                            {new Date(job.postedDate || job.createdAt || Date.now()).toLocaleDateString('id-ID')}
                           </div>
                           <div className="flex items-center gap-1">
                             <MapPin size={14} />
-                            {job.locations.length} lokasi
+                            {job.location ? '1 lokasi' : '0 lokasi'}
                           </div>
                           <div className="flex items-center gap-1">
                             <Users size={14} />
                             {Math.floor(Math.random() * 50) + 10} pelamar
                           </div>
-                          {job.positions_needed && (
+                          {job.positionsNeeded && (
                             <div className="flex items-center gap-1">
                               <Users size={14} />
-                              Butuh {job.positions_needed} orang
+                              Butuh {job.positionsNeeded} orang
                             </div>
                           )}
                         </div>
@@ -1243,14 +1261,9 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                     
                     <div className="flex items-center justify-between">
                       <div className="flex flex-wrap gap-2">
-                        {job.locations.slice(0, 2).map((location, index) => (
-                          <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs font-medium">
-                            {location}
-                          </span>
-                        ))}
-                        {job.locations.length > 2 && (
-                          <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium">
-                            +{job.locations.length - 2}
+                        {job.location && (
+                          <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs font-medium">
+                            {job.location}
                           </span>
                         )}
                       </div>
@@ -1541,31 +1554,31 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({ onLogout }) => 
                     className="rounded border-gray-300"
                   />
                   <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-semibold text-sm">{applicant.name.charAt(0)}</span>
+                    <span className="text-white font-semibold text-sm">{(applicant.applicantName || applicant.name || 'N').charAt(0)}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-1">
-                      <p className="font-semibold text-gray-900 text-sm">{applicant.name}</p>
+                      <p className="font-semibold text-gray-900 text-sm">{applicant.applicantName || applicant.name || 'No Name'}</p>
                       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        applicant.status === 'new' ? 'bg-green-100 text-green-800' :
-                        applicant.status === 'review' ? 'bg-yellow-100 text-yellow-800' :
+                        applicant.status === 'submitted' ? 'bg-green-100 text-green-800' :
+                        applicant.status === 'viewed' ? 'bg-yellow-100 text-yellow-800' :
                         applicant.status === 'interview' ? 'bg-blue-100 text-blue-800' :
                         applicant.status === 'accepted' ? 'bg-green-100 text-green-800' :
                         'bg-red-100 text-red-800'
                       }`}>
-                        {applicant.status === 'new' ? 'Baru' :
-                         applicant.status === 'review' ? 'Review' :
+                        {applicant.status === 'submitted' ? 'Baru' :
+                         applicant.status === 'viewed' ? 'Review' :
                          applicant.status === 'interview' ? 'Interview' :
                          applicant.status === 'accepted' ? 'Diterima' :
                          'Ditolak'}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-1">{applicant.position}</p>
+                    <p className="text-sm text-gray-600 mb-1">{applicant.jobTitle || applicant.position || 'No Position'}</p>
                     <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span>📧 {applicant.email}</span>
-                      <span>📍 {applicant.location}</span>
-                      <span>💰 Rp {applicant.expectedSalary.toLocaleString('id-ID')}</span>
-                      <span className="text-gray-400">{applicant.time}</span>
+                      <span>📧 {applicant.applicantEmail || applicant.email || 'No Email'}</span>
+                      <span>📍 {applicant.location || 'No Location'}</span>
+                      <span>💰 Rp {(applicant.expectedSalary || 0).toLocaleString('id-ID')}</span>
+                      <span className="text-gray-400">{applicant.appliedAt || applicant.time || 'N/A'}</span>
                     </div>
                   </div>
                 </div>
